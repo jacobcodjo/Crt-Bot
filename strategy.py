@@ -134,6 +134,7 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles):
             setups.append({
                 "symbol": symbol,
                 "reference_tf": tf_name,
+                "ref_epoch": ref_range["epoch"],
                 "direction": sweep["direction"],
                 "range_high": ref_range["high"],
                 "range_low": ref_range["low"],

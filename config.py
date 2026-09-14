@@ -1,7 +1,7 @@
 import os
 
 # --- Deriv API ---
-DERIV_APP_ID = os.environ.get("DERIV_APP_ID", "1089")
+DERIV_APP_ID = os.environ.get("DERIV_APP_ID") or "1089"
 DERIV_WS_URL = f"wss://ws.derivws.com/websockets/v3?app_id={DERIV_APP_ID}"
 
 # --- Telegram ---

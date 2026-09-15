@@ -22,36 +22,17 @@ def send_telegram_message(text: str):
 
 
 def format_setup_message(setup: dict) -> str:
-    direction_label = "🟢 ACHAT (bullish)" if setup["direction"] == "bullish" else "🔴 VENTE (bearish)"
-    confirmations = []
-    if setup.get("fvg"):
-        confirmations.append("FVG")
-    if setup.get("order_block"):
-        confirmations.append("Order Block")
+    direction_emoji = "🟢" if setup["direction"] == "bullish" else "🔴"
+    direction_word = "ACHAT" if setup["direction"] == "bullish" else "VENTE"
 
-    speed_labels = {
-        "M5": "⚡ RAPIDE (M5) — plus réactif, plus de faux signaux possibles",
-        "M15": "🐢 FILTRÉ (M15) — plus lent, signal généralement plus fiable",
-    }
-    speed_label = speed_labels.get(setup["confirmation_tf"], setup["confirmation_tf"])
+    entry_part = f"Entrée {setup['entry']}" if setup.get("entry") is not None else "Entrée n/d"
+    tp_tag = " 🌊" if setup.get("extended_target") else ""
 
     lines = [
-        "<b>⚡ Setup CRT détecté</b>",
-        f"Symbole : <b>{setup['symbol']}</b>",
-        f"Range de référence : {setup['reference_tf']}",
-        f"Type de signal : {speed_label}",
-        f"Direction : {direction_label}",
-        f"Range : {setup['range_low']} — {setup['range_high']}",
-        f"Cassure de structure à : {setup['structure_break_level']}",
-        f"Confirmation(s) : {', '.join(confirmations)}",
+        f"{direction_emoji} <b>{setup['symbol']}</b> — {direction_word} ({setup['reference_tf']} → {setup['confirmation_tf']})",
+        f"{entry_part} | SL {setup['stop_loss']} | TP {setup['take_profit']}{tp_tag}",
     ]
-
-    if setup.get("entry") is not None:
-        lines.append(f"🎯 Entrée (bord OB/milieu FVG) : {setup['entry']}")
-    lines.append(f"🛑 Stop loss (marge incluse) : {setup['stop_loss']}")
-    tp_note = " (cible étendue — indice synthétique)" if setup.get("extended_target") else ""
-    lines.append(f"🏁 Take profit{tp_note} : {setup['take_profit']}")
     if setup.get("risk_reward"):
-        lines.append(f"⚖️ Ratio risque/récompense : ~1:{setup['risk_reward']}")
+        lines.append(f"R:R ~1:{setup['risk_reward']}")
 
     return "\n".join(lines)

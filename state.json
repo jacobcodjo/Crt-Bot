@@ -14,5 +14,9 @@
   "1HZ10V_H4_1789459200_M15": true,
   "content_1HZ10V_bearish_9606.79_9616.02561_9573.49": true,
   "1HZ100V_H4_1789459200_M15": true,
-  "content_1HZ100V_bearish_880.94_884.58207_853.625": true
+  "content_1HZ100V_bearish_880.94_884.58207_853.625": true,
+  "cryBTCUSD_D1_1789344000_M15": true,
+  "content_cryBTCUSD_bullish_76543.062_76211.662107_79561.352": true,
+  "stpRNG_D1_1789344000_M15": true,
+  "content_stpRNG_bearish_7579.9_7590.7935_7526.45": true
 }

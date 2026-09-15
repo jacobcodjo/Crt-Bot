@@ -56,5 +56,13 @@
   "stpRNG_D1_1789344000_M15": true,
   "content_stpRNG_bearish_7579.9_7590.7935_7526.45": true,
   "1HZ25V_H4_1789488000_M15": true,
-  "content_1HZ25V_bullish_883128.12_881072.56334_892337.37": true
+  "content_1HZ25V_bullish_883128.12_881072.56334_892337.37": true,
+  "R_75_H4_1789488000_M15": true,
+  "content_R_75_bearish_47047.7664_47225.292346_45276.7825": true,
+  "R_100_H4_1789488000_M15": true,
+  "content_R_100_bearish_657.43_662.37102_625.82": true,
+  "1HZ10V_H4_1789488000_M15": true,
+  "content_1HZ10V_bearish_9603.84_9607.231215_9563.43": true,
+  "1HZ50V_H4_1789488000_M15": true,
+  "content_1HZ50V_bearish_239446.95_239946.663375_236496.465": true
 }

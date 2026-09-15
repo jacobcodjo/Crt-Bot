@@ -43,6 +43,50 @@
       "risk_reward": 4.48,
       "counter_trend": false,
       "alert_epoch": 1789506900
+    },
+    "R_75_H4_1789488000_M15": {
+      "symbol": "R_75",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 47047.7664,
+      "stop_loss": 47225.29234575,
+      "take_profit": 45276.7825,
+      "risk_reward": 9.98,
+      "counter_trend": false,
+      "alert_epoch": 1789512300
+    },
+    "R_100_H4_1789488000_M15": {
+      "symbol": "R_100",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 657.43,
+      "stop_loss": 662.3710199999999,
+      "take_profit": 625.8199999999999,
+      "risk_reward": 6.4,
+      "counter_trend": false,
+      "alert_epoch": 1789512300
+    },
+    "1HZ10V_H4_1789488000_M15": {
+      "symbol": "1HZ10V",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 9603.84,
+      "stop_loss": 9607.231215,
+      "take_profit": 9563.429999999998,
+      "risk_reward": 11.92,
+      "counter_trend": false,
+      "alert_epoch": 1789505100
+    },
+    "1HZ50V_H4_1789488000_M15": {
+      "symbol": "1HZ50V",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 239446.95,
+      "stop_loss": 239946.66337499997,
+      "take_profit": 236496.465,
+      "risk_reward": 5.9,
+      "counter_trend": false,
+      "alert_epoch": 1789512300
     }
   },
   "history": [

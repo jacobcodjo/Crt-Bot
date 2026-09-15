@@ -42,8 +42,14 @@ GRANULARITY = {
 # Bougies de référence pour le range (utilisées ensemble)
 REFERENCE_TIMEFRAMES = ["D1", "H4"]
 
-# Timeframe utilisé pour détecter le sweep + la confirmation
-CONFIRMATION_TIMEFRAME = "M15"
+# Timeframes utilisés pour détecter le sweep + la confirmation.
+# Chaque timeframe tourne en parallèle et génère ses propres alertes,
+# étiquetées séparément dans le message Telegram.
+CONFIRMATION_TIMEFRAMES = ["M5", "M15"]
 
 CANDLE_COUNT = 150
 STATE_FILE = "state.json"
+
+# Timeframes où la confirmation est renforcée : FVG ET Order Block exigés
+# ensemble (au lieu de l'un ou l'autre) pour filtrer davantage le bruit.
+STRICT_CONFIRMATION_TIMEFRAMES = ["M5"]

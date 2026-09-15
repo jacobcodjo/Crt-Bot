@@ -3,11 +3,18 @@
 Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
 
 1. Range de référence = haut/bas de la dernière bougie **D1** et **H4** clôturée.
-2. Détection d'un **sweep de liquidité** (fausse cassure) de ce range sur M15.
-3. Confirmation avancée : **cassure de structure** + **Fair Value Gap** et/ou **Order Block**.
+2. Détection d'un **sweep de liquidité** (fausse cassure) de ce range, en parallèle sur
+   **deux timeframes de confirmation** : M5 (⚡ rapide, plus de bruit) et M15 (🐢 filtré,
+   signal généralement plus fiable) — chacun génère ses propres alertes, étiquetées
+   séparément dans le message Telegram.
+3. Confirmation avancée : **cassure de structure** + **Fair Value Gap** et/ou **Order Block**
+   (FVG **et** OB exigés ensemble sur M5, pour filtrer davantage le bruit — voir
+   `STRICT_CONFIRMATION_TIMEFRAMES` dans `config.py`).
 4. Envoi d'une alerte **Telegram** dès qu'un setup confirmé est détecté.
 
-Le bot tourne gratuitement via **GitHub Actions** (cron toutes les 15 minutes), sans serveur à héberger.
+Le bot tourne gratuitement via **GitHub Actions** (cron toutes les 5 minutes — le minimum
+fiable sur GitHub Actions ; en dessous, les exécutions peuvent être retardées voire
+ignorées par GitHub en cas de forte charge), sans serveur à héberger.
 
 > ⚠️ Ceci est un outil d'aide à la décision basé sur une implémentation simplifiée
 > des concepts ICT / Smart Money Concepts. Ce n'est pas un conseil financier et la
@@ -47,11 +54,19 @@ Pour un usage sérieux, crée ta propre app sur https://api.deriv.com pour obten
 
 ## 4. Personnaliser
 
-- **Symboles** : liste `SYMBOLS` dans `config.py` (paires forex `frxXXXYYY`,
-  indices synthétiques `R_10`...`R_100`, `BOOM/CRASH 500/1000`).
+- **Symboles** : liste `SYMBOLS` dans `config.py` — actuellement forex majeurs, or (`frxXAUUSD`),
+  cryptos (`cryBTCUSD`, `cryETHUSD`, `cryLTCUSD`, `cryXRPUSD`), Volatility Index classiques
+  (`R_10`...`R_100`) et 1 seconde (`1HZ10V`...`1HZ100V`), Step Index (`stpRNG`), Boom/Crash 500/1000.
 - **Fréquence de scan** : modifier le `cron` dans le workflow.
+- **Timeframes de confirmation** : liste `CONFIRMATION_TIMEFRAMES` dans `config.py`
+  (actuellement `["M5", "M15"]`, chacun tourne indépendamment) — ajouter ou retirer
+  des TF ici pour changer les pistes actives.
 - **Sensibilité de la confirmation** : ajuster `left`/`right` (détection des swing points)
   et `window` (FVG/Order Block) dans `strategy.py`.
+- **Une seule alerte par range et par piste** : le premier setup confirmé (haussier ou
+  baissier) sur un range D1/H4 donné verrouille ce range **pour ce timeframe de
+  confirmation** — pas de nouvelle alerte tant qu'une nouvelle bougie D1/H4 ne s'est
+  pas formée. Les pistes M5 et M15 restent indépendantes l'une de l'autre.
 
 ## 5. Tester en local
 
@@ -66,9 +81,9 @@ python main.py
 
 ```
 crt-bot/
-├── main.py              # Orchestration (récupération → analyse → notification)
+├── main.py              # Orchestration (récupération groupée → analyse → notification)
 ├── config.py             # Symboles, timeframes, secrets (via variables d'environnement)
-├── deriv_client.py        # Récupération des bougies via l'API Deriv (WebSocket)
+├── deriv_client.py        # Récupération des bougies via l'API Deriv (1 seule connexion WebSocket réutilisée)
 ├── strategy.py            # Logique CRT (range, sweep, structure, FVG, order block)
 ├── notifier.py             # Envoi des messages Telegram
 ├── state_manager.py         # Anti-doublons entre chaque exécution

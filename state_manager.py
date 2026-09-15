@@ -17,11 +17,12 @@ def save_state(state: dict):
 
 
 def setup_key(setup: dict) -> str:
-    # Clé basée sur le RANGE DE RÉFÉRENCE (symbole + TF + bougie D1/H4), pas sur la
-    # bougie de sweep : évite les alertes répétées (le range est "swept" plusieurs
-    # fois) et les signaux contraires (haut puis bas du même range) sur un même range.
-    # Le premier setup confirmé verrouille le range jusqu'à la bougie D1/H4 suivante.
-    return f"{setup['symbol']}_{setup['reference_tf']}_{setup['ref_epoch']}"
+    # Clé basée sur le RANGE DE RÉFÉRENCE + le TF de confirmation (symbole + TF
+    # référence + bougie D1/H4 + M5 ou M15), pas sur la bougie de sweep : évite les
+    # alertes répétées et les signaux contraires sur un même range. Le premier setup
+    # confirmé verrouille le range pour CE timeframe de confirmation jusqu'à la
+    # bougie D1/H4 suivante — les pistes M5 et M15 restent indépendantes l'une de l'autre.
+    return f"{setup['symbol']}_{setup['reference_tf']}_{setup['ref_epoch']}_{setup['confirmation_tf']}"
 
 
 def is_new_setup(state: dict, setup: dict) -> bool:

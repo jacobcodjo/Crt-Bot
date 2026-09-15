@@ -12,6 +12,8 @@ Concepts. Elle est fournie à titre d'outil d'aide à la décision, pas comme un
 système de trading garanti — à affiner et backtester avant tout usage réel.
 """
 
+from config import STRICT_CONFIRMATION_TIMEFRAMES
+
 
 def last_closed_candle(candles):
     """Retourne la dernière bougie considérée comme clôturée (avant-dernière de la liste,
@@ -107,9 +109,10 @@ def detect_order_block(candles, around_index, direction, window=5):
     return None
 
 
-def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles):
+def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles, confirmation_tf):
     """Analyse un symbole sur les TF de référence fournis (D1, H4) et cherche
-    un setup CRT confirmé (sweep + structure shift + FVG/OB) sur le TF de confirmation."""
+    un setup CRT confirmé (sweep + structure shift + FVG/OB) sur le timeframe
+    de confirmation donné (ex: M5 ou M15)."""
     setups = []
     for tf_name, htf_candles in htf_candles_by_tf.items():
         ref_range = get_reference_range(htf_candles)
@@ -128,12 +131,17 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles):
             fvg = detect_fvg(ltf_candles, structure["break_index"], sweep["direction"])
             ob = detect_order_block(ltf_candles, sweep["index"], sweep["direction"])
 
-            if not fvg and not ob:
-                continue  # pas de confirmation avancée -> setup ignoré
+            if confirmation_tf in STRICT_CONFIRMATION_TIMEFRAMES:
+                if not (fvg and ob):
+                    continue  # confirmation renforcée : FVG ET Order Block exigés ensemble
+            else:
+                if not fvg and not ob:
+                    continue  # pas de confirmation avancée -> setup ignoré
 
             setups.append({
                 "symbol": symbol,
                 "reference_tf": tf_name,
+                "confirmation_tf": confirmation_tf,
                 "ref_epoch": ref_range["epoch"],
                 "direction": sweep["direction"],
                 "range_high": ref_range["high"],

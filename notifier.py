@@ -29,10 +29,17 @@ def format_setup_message(setup: dict) -> str:
     if setup.get("order_block"):
         confirmations.append("Order Block")
 
+    speed_labels = {
+        "M5": "⚡ RAPIDE (M5) — plus réactif, plus de faux signaux possibles",
+        "M15": "🐢 FILTRÉ (M15) — plus lent, signal généralement plus fiable",
+    }
+    speed_label = speed_labels.get(setup["confirmation_tf"], setup["confirmation_tf"])
+
     return (
         f"<b>⚡ Setup CRT détecté</b>\n"
         f"Symbole : <b>{setup['symbol']}</b>\n"
         f"Range de référence : {setup['reference_tf']}\n"
+        f"Type de signal : {speed_label}\n"
         f"Direction : {direction_label}\n"
         f"Range : {setup['range_low']} — {setup['range_high']}\n"
         f"Cassure de structure à : {setup['structure_break_level']}\n"

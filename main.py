@@ -1,13 +1,22 @@
-from config import SYMBOLS, GRANULARITY, REFERENCE_TIMEFRAMES, CONFIRMATION_TIMEFRAMES, CANDLE_COUNT
+from config import SYMBOLS, GRANULARITY, REFERENCE_CONFIRMATION_MAP, CANDLE_COUNT
 from deriv_client import get_many_candles
 from strategy import analyze_symbol
 from notifier import send_telegram_message, format_setup_message
 from state_manager import load_state, save_state, is_new_setup, mark_setup_sent
 from trade_tracker import load_stats, save_stats, add_pending, resolve_pending, summarize
 
-# Union des TF de référence (D1, H4) et de tous les TF de confirmation (M15...),
-# sans doublon, pour ne récupérer chaque série de bougies qu'une seule fois.
-ALL_TIMEFRAMES = list(dict.fromkeys(REFERENCE_TIMEFRAMES + CONFIRMATION_TIMEFRAMES))
+# TF de référence réellement récupérés via l'API (W1 est dérivé des bougies D1,
+# pas de requête séparée nécessaire).
+FETCHED_REFERENCE_TIMEFRAMES = ["D1", "H4"]
+
+# Union de tous les TF de confirmation utilisés, toutes références confondues.
+CONFIRMATION_TIMEFRAMES = sorted({
+    tf for tfs in REFERENCE_CONFIRMATION_MAP.values() for tf in tfs
+})
+
+# Toutes les granularités à récupérer (références + confirmations, sans doublon
+# même si un TF sert aux deux, ex: H4 référence ET confirmation pour W1).
+ALL_TIMEFRAMES = list(dict.fromkeys(FETCHED_REFERENCE_TIMEFRAMES + CONFIRMATION_TIMEFRAMES))
 
 
 def build_specs():
@@ -43,7 +52,7 @@ def run():
         htf_candles_by_tf = {}
         skip_symbol = False
 
-        for tf in REFERENCE_TIMEFRAMES:
+        for tf in FETCHED_REFERENCE_TIMEFRAMES:
             candles = results.get((symbol, GRANULARITY[tf]))
             if isinstance(candles, Exception) or not candles:
                 print(f"[{symbol}] Erreur de récupération ({tf}) : {candles}")
@@ -54,31 +63,29 @@ def run():
         if skip_symbol:
             continue
 
-        # Chaque TF de confirmation (M15...) est analysé indépendamment et
-        # génère ses propres alertes, étiquetées séparément dans le message.
-        for confirmation_tf in CONFIRMATION_TIMEFRAMES:
-            ltf_candles = results.get((symbol, GRANULARITY[confirmation_tf]))
-            if isinstance(ltf_candles, Exception) or not ltf_candles:
-                print(f"[{symbol}] Erreur de récupération ({confirmation_tf}) : {ltf_candles}")
-                continue
+        ltf_candles_by_tf = {}
+        for tf in CONFIRMATION_TIMEFRAMES:
+            candles = results.get((symbol, GRANULARITY[tf]))
+            if not isinstance(candles, Exception) and candles:
+                ltf_candles_by_tf[tf] = candles
 
-            setups = analyze_symbol(symbol, htf_candles_by_tf, ltf_candles, confirmation_tf)
+        setups = analyze_symbol(symbol, htf_candles_by_tf, ltf_candles_by_tf)
 
-            for setup in setups:
-                if is_new_setup(state, setup):
-                    message = format_setup_message(setup)
-                    try:
-                        send_telegram_message(message)
-                        print(
-                            f"[{symbol}] Alerte envoyée : {setup['direction']} sur "
-                            f"{setup['reference_tf']} (confirmation {confirmation_tf})"
-                        )
-                    except Exception as e:
-                        print(f"[{symbol}] Échec d'envoi Telegram : {e}")
-                        continue
-                    mark_setup_sent(state, setup)
-                    add_pending(stats, setup)
-                    any_new = True
+        for setup in setups:
+            if is_new_setup(state, setup):
+                message = format_setup_message(setup)
+                try:
+                    send_telegram_message(message)
+                    print(
+                        f"[{symbol}] Alerte envoyée : {setup['direction']} sur "
+                        f"{setup['reference_tf']} (confirmation {setup['confirmation_tf']})"
+                    )
+                except Exception as e:
+                    print(f"[{symbol}] Échec d'envoi Telegram : {e}")
+                    continue
+                mark_setup_sent(state, setup)
+                add_pending(stats, setup)
+                any_new = True
 
     if any_new:
         save_state(state)

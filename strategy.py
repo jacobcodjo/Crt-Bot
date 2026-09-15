@@ -12,6 +12,8 @@ Concepts. Elle est fournie à titre d'outil d'aide à la décision, pas comme un
 système de trading garanti — à affiner et backtester avant tout usage réel.
 """
 
+from datetime import datetime, timezone
+
 from config import (
     STRICT_CONFIRMATION_TIMEFRAMES,
     STOP_LOSS_BUFFER_PCT,
@@ -22,6 +24,9 @@ from config import (
     TREND_SWING_WINDOW,
     TREND_SWING_COUNT,
     TREND_SMA_PERIOD,
+    REFERENCE_CONFIRMATION_MAP,
+    STRUCTURE_SWING_WINDOW,
+    DEFAULT_STRUCTURE_SWING_WINDOW,
 )
 
 
@@ -34,10 +39,43 @@ def last_closed_candle(candles):
 
 
 def get_reference_range(htf_candles):
+    if not htf_candles:
+        return None
     ref = last_closed_candle(htf_candles)
     if not ref:
         return None
     return {"high": ref["high"], "low": ref["low"], "epoch": ref["epoch"]}
+
+
+def build_weekly_range(d1_candles):
+    """
+    Calcule le range W1 (haut/bas de la dernière semaine calendaire complète)
+    en agrégeant des bougies D1 déjà récupérées — pas de requête API séparée,
+    Deriv ne supportant pas de façon fiable une granularité hebdomadaire directe.
+    """
+    if not d1_candles or len(d1_candles) < 2:
+        return None
+    closed = d1_candles[:-1]  # exclut la bougie du jour en cours
+
+    weeks = {}
+    for c in closed:
+        dt = datetime.fromtimestamp(c["epoch"], tz=timezone.utc)
+        key = dt.isocalendar()[:2]  # (année ISO, numéro de semaine ISO)
+        weeks.setdefault(key, []).append(c)
+
+    if len(weeks) < 2:
+        return None  # pas assez d'historique pour identifier une semaine complète
+
+    # La dernière clé triée correspond à la semaine en cours (potentiellement
+    # incomplète) -> on utilise l'avant-dernière, la dernière semaine complète.
+    last_complete_key = sorted(weeks.keys())[-2]
+    week_candles = weeks[last_complete_key]
+
+    return {
+        "high": max(c["high"] for c in week_candles),
+        "low": min(c["low"] for c in week_candles),
+        "epoch": week_candles[-1]["epoch"],
+    }
 
 
 def find_swing_highs_lows(candles, left=3, right=3):
@@ -241,82 +279,100 @@ def detect_trend(candles, swing_window=TREND_SWING_WINDOW, swing_count=TREND_SWI
     return "range"
 
 
-def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles, confirmation_tf):
-    """Analyse un symbole sur les TF de référence fournis (D1, H4) et cherche
-    un setup CRT confirmé (sweep + structure shift + FVG/OB) sur le timeframe
-    de confirmation donné (ex: M5 ou M15)."""
+def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles_by_tf):
+    """
+    Analyse un symbole sur les TF de référence (W1, D1, H4) et cherche un setup
+    CRT confirmé (sweep + structure shift + FVG/OB) sur le ou les timeframes de
+    confirmation associés à chaque référence (voir REFERENCE_CONFIRMATION_MAP).
+
+    htf_candles_by_tf : dict {"D1": [...], "H4": [...]} (le range W1 est dérivé
+    des bougies D1, pas besoin de série séparée).
+    ltf_candles_by_tf : dict {"H4": [...], "H1": [...], "M30": [...], "M15": [...]}
+    """
     setups = []
 
-    # Tendance de fond, calculée une fois sur D1 (ou à défaut la première série
-    # de référence disponible) — sert uniquement à taguer les setups à
-    # contre-tendance, jamais à les bloquer.
-    trend_source = htf_candles_by_tf.get("D1") or next(iter(htf_candles_by_tf.values()), None)
+    # Tendance de fond, calculée une fois sur D1 — sert uniquement à taguer les
+    # setups à contre-tendance, jamais à les bloquer.
+    trend_source = htf_candles_by_tf.get("D1")
     trend = detect_trend(trend_source) if trend_source else None
 
-    for tf_name, htf_candles in htf_candles_by_tf.items():
-        ref_range = get_reference_range(htf_candles)
+    for ref_tf in REFERENCE_CONFIRMATION_MAP:
+        if ref_tf == "W1":
+            ref_range = build_weekly_range(htf_candles_by_tf.get("D1"))
+        else:
+            ref_range = get_reference_range(htf_candles_by_tf.get(ref_tf))
+
         if not ref_range:
             continue
 
-        sweeps = detect_liquidity_sweep(
-            ltf_candles, ref_range["high"], ref_range["low"], ref_range["epoch"]
-        )
-
-        for sweep in sweeps:
-            structure = detect_structure_shift(ltf_candles, sweep["index"], sweep["direction"])
-            if not structure:
+        for confirmation_tf in REFERENCE_CONFIRMATION_MAP[ref_tf]:
+            ltf_candles = ltf_candles_by_tf.get(confirmation_tf)
+            if not ltf_candles:
                 continue
 
-            fvg = detect_fvg(ltf_candles, structure["break_index"], sweep["direction"])
-            ob = detect_order_block(ltf_candles, sweep["index"], sweep["direction"])
-
-            if confirmation_tf in STRICT_CONFIRMATION_TIMEFRAMES:
-                if not (fvg and ob):
-                    continue  # confirmation renforcée : FVG ET Order Block exigés ensemble
-            else:
-                if not fvg and not ob:
-                    continue  # pas de confirmation avancée -> setup ignoré
-
-            trade_levels = compute_trade_levels(
-                symbol, sweep["direction"], ref_range["high"], ref_range["low"],
-                sweep["candle"], fvg, ob
+            sweeps = detect_liquidity_sweep(
+                ltf_candles, ref_range["high"], ref_range["low"], ref_range["epoch"]
             )
 
-            # Filtre R:R minimum : un setup dont le ratio ne l'atteint pas est ignoré.
-            if trade_levels["risk_reward"] is None or trade_levels["risk_reward"] < MIN_RISK_REWARD:
-                continue
+            for sweep in sweeps:
+                swing_window = STRUCTURE_SWING_WINDOW.get(confirmation_tf, DEFAULT_STRUCTURE_SWING_WINDOW)
+                structure = detect_structure_shift(
+                    ltf_candles, sweep["index"], sweep["direction"],
+                    left=swing_window, right=swing_window
+                )
+                if not structure:
+                    continue
 
-            structure_candle = ltf_candles[structure["break_index"]]
-            fib_zone_low, fib_zone_high = compute_fib_ote(sweep["direction"], sweep["candle"], structure_candle)
-            fib_ote_confirmed = is_within_fib_ote(trade_levels["entry"], fib_zone_low, fib_zone_high)
+                fvg = detect_fvg(ltf_candles, structure["break_index"], sweep["direction"])
+                ob = detect_order_block(ltf_candles, sweep["index"], sweep["direction"])
 
-            if REQUIRE_FIB_OTE and not fib_ote_confirmed:
-                continue  # entrée hors zone Fibonacci OTE -> setup ignoré
+                if confirmation_tf in STRICT_CONFIRMATION_TIMEFRAMES:
+                    if not (fvg and ob):
+                        continue  # confirmation renforcée : FVG ET Order Block exigés ensemble
+                else:
+                    if not fvg and not ob:
+                        continue  # pas de confirmation avancée -> setup ignoré
 
-            counter_trend = (
-                (trend == "bullish" and sweep["direction"] == "bearish")
-                or (trend == "bearish" and sweep["direction"] == "bullish")
-            )
+                trade_levels = compute_trade_levels(
+                    symbol, sweep["direction"], ref_range["high"], ref_range["low"],
+                    sweep["candle"], fvg, ob
+                )
 
-            setups.append({
-                "symbol": symbol,
-                "reference_tf": tf_name,
-                "confirmation_tf": confirmation_tf,
-                "ref_epoch": ref_range["epoch"],
-                "direction": sweep["direction"],
-                "range_high": ref_range["high"],
-                "range_low": ref_range["low"],
-                "sweep_candle": sweep["candle"],
-                "structure_break_level": structure["level"],
-                "entry": trade_levels["entry"],
-                "stop_loss": trade_levels["stop_loss"],
-                "take_profit": trade_levels["take_profit"],
-                "risk_reward": trade_levels["risk_reward"],
-                "extended_target": trade_levels["extended_target"],
-                "fib_ote_confirmed": fib_ote_confirmed,
-                "trend": trend,
-                "counter_trend": counter_trend,
-                "fvg": fvg,
-                "order_block": ob,
-            })
+                # Filtre R:R minimum : un setup dont le ratio ne l'atteint pas est ignoré.
+                if trade_levels["risk_reward"] is None or trade_levels["risk_reward"] < MIN_RISK_REWARD:
+                    continue
+
+                structure_candle = ltf_candles[structure["break_index"]]
+                fib_zone_low, fib_zone_high = compute_fib_ote(sweep["direction"], sweep["candle"], structure_candle)
+                fib_ote_confirmed = is_within_fib_ote(trade_levels["entry"], fib_zone_low, fib_zone_high)
+
+                if REQUIRE_FIB_OTE and not fib_ote_confirmed:
+                    continue  # entrée hors zone Fibonacci OTE -> setup ignoré
+
+                counter_trend = (
+                    (trend == "bullish" and sweep["direction"] == "bearish")
+                    or (trend == "bearish" and sweep["direction"] == "bullish")
+                )
+
+                setups.append({
+                    "symbol": symbol,
+                    "reference_tf": ref_tf,
+                    "confirmation_tf": confirmation_tf,
+                    "ref_epoch": ref_range["epoch"],
+                    "direction": sweep["direction"],
+                    "range_high": ref_range["high"],
+                    "range_low": ref_range["low"],
+                    "sweep_candle": sweep["candle"],
+                    "structure_break_level": structure["level"],
+                    "entry": trade_levels["entry"],
+                    "stop_loss": trade_levels["stop_loss"],
+                    "take_profit": trade_levels["take_profit"],
+                    "risk_reward": trade_levels["risk_reward"],
+                    "extended_target": trade_levels["extended_target"],
+                    "fib_ote_confirmed": fib_ote_confirmed,
+                    "trend": trend,
+                    "counter_trend": counter_trend,
+                    "fvg": fvg,
+                    "order_block": ob,
+                })
     return setups

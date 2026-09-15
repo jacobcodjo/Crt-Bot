@@ -29,18 +29,39 @@ SYMBOLS = [
 ]
 
 # --- Granularités (en secondes) ---
+# Pas d'entrée W1 : Deriv ne supporte pas de façon fiable une granularité
+# hebdomadaire directe. Le range W1 est calculé en agrégeant les bougies D1
+# déjà récupérées (voir build_weekly_range dans strategy.py).
 GRANULARITY = {
     "D1": 86400,
     "H4": 14400,
+    "H1": 3600,
+    "M30": 1800,
     "M15": 900,
     "M5": 300,
 }
 
-# Bougies de référence pour le range (utilisées ensemble)
-REFERENCE_TIMEFRAMES = ["D1", "H4"]
+# Bougies de référence pour le range. "W1" est dérivé des bougies D1 (voir ci-dessus).
+REFERENCE_TIMEFRAMES = ["W1", "D1", "H4"]
 
-# Timeframe utilisé pour détecter le sweep + la confirmation.
-CONFIRMATION_TIMEFRAMES = ["M15"]
+# Répartition des timeframes de confirmation par référence : plus le range de
+# référence est large, plus la confirmation doit être sur un TF proportionnellement
+# plus grand, pour éviter le bruit d'une confirmation trop fine par rapport à
+# l'ampleur du range (ex: confirmer un range hebdomadaire sur M15 serait disproportionné).
+REFERENCE_CONFIRMATION_MAP = {
+    "W1": ["H4", "H1"],
+    "D1": ["M30", "M15"],
+    "H4": ["M15"],
+}
+
+# Fenêtre utilisée pour détecter les swing points lors de la cassure de structure
+# (detect_structure_shift), par timeframe de confirmation. Une fenêtre plus petite
+# = pivots plus proches, cassure de structure détectée plus vite (plus réactif,
+# un peu plus sensible au bruit). TF non listé -> DEFAULT_STRUCTURE_SWING_WINDOW.
+STRUCTURE_SWING_WINDOW = {
+    "M15": 1,
+}
+DEFAULT_STRUCTURE_SWING_WINDOW = 2
 
 CANDLE_COUNT = 150
 STATE_FILE = "state.json"

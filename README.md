@@ -2,8 +2,21 @@
 
 Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
 
-1. Range de référence = haut/bas de la dernière bougie **D1** et **H4** clôturée.
-2. Détection d'un **sweep de liquidité** (fausse cassure) de ce range sur **M15**.
+1. Range de référence = haut/bas de la dernière période **W1** (semaine complète,
+   dérivée des bougies D1), **D1** et **H4** clôturée.
+2. Détection d'un **sweep de liquidité** (fausse cassure) de ce range, sur un
+   timeframe de confirmation **proportionnel à la référence** (voir tableau
+   ci-dessous) — chaque paire référence/confirmation génère ses propres
+   alertes, étiquetées séparément dans le message Telegram.
+
+   | Référence | Confirmation |
+   |---|---|
+   | W1 | H4, H1 |
+   | D1 | M30, M15 |
+   | H4 | M15 |
+
+   Cette répartition (`REFERENCE_CONFIRMATION_MAP` dans `config.py`) évite de
+   confirmer un range large sur un timeframe disproportionnellement fin (bruyant).
 3. Confirmation avancée : **cassure de structure** + **Fair Value Gap** et/ou **Order Block**.
 4. Calcul de niveaux de trade indicatifs :
    - **Entrée** : bord de l'Order Block le plus proche du prix (ou milieu du FVG si pas d'OB)
@@ -83,11 +96,14 @@ Pour un usage sérieux, crée ta propre app sur https://api.deriv.com pour obten
   cryptos (`cryBTCUSD`, `cryETHUSD`, `cryLTCUSD`, `cryXRPUSD`), Volatility Index classiques
   (`R_10`...`R_100`) et 1 seconde (`1HZ10V`...`1HZ100V`), Step Index (`stpRNG`).
 - **Fréquence de scan** : modifier le `cron` dans le workflow.
-- **Timeframes de confirmation** : liste `CONFIRMATION_TIMEFRAMES` dans `config.py`
-  (actuellement `["M15"]` seul) — ajouter un TF ici pour réactiver une piste
-  supplémentaire en parallèle.
-- **Sensibilité de la confirmation** : ajuster `left`/`right` (détection des swing points)
-  et `window` (FVG/Order Block) dans `strategy.py`.
+- **Répartition référence/confirmation** : `REFERENCE_CONFIRMATION_MAP` dans
+  `config.py` — modifier quels TF de confirmation sont associés à W1/D1/H4.
+- **Sensibilité de la confirmation** : `STRUCTURE_SWING_WINDOW` dans `config.py`
+  permet d'ajuster, par timeframe de confirmation, la fenêtre de détection des
+  swing points lors de la cassure de structure (actuellement réduite à 1 pour
+  M15, pour une confirmation plus réactive sans changer de timeframe — 2 par
+  défaut ailleurs). Le paramètre `window` dans `detect_fvg`/`detect_order_block`
+  (dans `strategy.py`) reste ajustable de la même façon si besoin.
 - **Une seule alerte par range et par piste** : le premier setup confirmé (haussier ou
   baissier) sur un range D1/H4 donné verrouille ce range **pour ce timeframe de
   confirmation** — pas de nouvelle alerte tant qu'une nouvelle bougie D1/H4 ne s'est

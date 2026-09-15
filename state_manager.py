@@ -25,9 +25,21 @@ def setup_key(setup: dict) -> str:
     return f"{setup['symbol']}_{setup['reference_tf']}_{setup['ref_epoch']}_{setup['confirmation_tf']}"
 
 
+def content_key(setup: dict) -> str:
+    # Second garde-fou, indépendant du range qui a déclenché le setup : si le
+    # range D1 et le range H4 coïncident en valeur (fréquent juste après l'ouverture
+    # d'une nouvelle bougie D1), deux clés différentes peuvent produire un message
+    # strictement identique. Cette clé bloque ce cas peu importe la cause technique.
+    entry = round(setup["entry"], 6) if setup.get("entry") is not None else None
+    stop_loss = round(setup["stop_loss"], 6)
+    take_profit = round(setup["take_profit"], 6)
+    return f"content_{setup['symbol']}_{setup['direction']}_{entry}_{stop_loss}_{take_profit}"
+
+
 def is_new_setup(state: dict, setup: dict) -> bool:
-    return setup_key(setup) not in state
+    return setup_key(setup) not in state and content_key(setup) not in state
 
 
 def mark_setup_sent(state: dict, setup: dict):
     state[setup_key(setup)] = True
+    state[content_key(setup)] = True

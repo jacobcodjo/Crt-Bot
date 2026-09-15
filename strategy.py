@@ -17,6 +17,11 @@ from config import (
     STOP_LOSS_BUFFER_PCT,
     SYNTHETIC_INDEX_PREFIXES,
     SYNTHETIC_TP_EXTENSION_PCT,
+    MIN_RISK_REWARD,
+    REQUIRE_FIB_OTE,
+    TREND_SWING_WINDOW,
+    TREND_SWING_COUNT,
+    TREND_SMA_PERIOD,
 )
 
 
@@ -165,11 +170,89 @@ def compute_trade_levels(symbol, direction, range_high, range_low, sweep_candle,
     }
 
 
+def compute_fib_ote(direction, sweep_candle, structure_candle):
+    """
+    Calcule la zone Fibonacci OTE (Optimal Trade Entry, 61.8%-79%) du mouvement
+    impulsif entre l'extrême du sweep et la bougie de cassure de structure.
+    Retourne (zone_low, zone_high), avec zone_low <= zone_high.
+    """
+    if direction == "bullish":
+        leg_start = sweep_candle["low"]
+        leg_end = structure_candle["close"]
+        leg_range = leg_end - leg_start
+        zone_low = leg_end - 0.79 * leg_range
+        zone_high = leg_end - 0.618 * leg_range
+    else:
+        leg_start = sweep_candle["high"]
+        leg_end = structure_candle["close"]
+        leg_range = leg_start - leg_end
+        zone_low = leg_end + 0.618 * leg_range
+        zone_high = leg_end + 0.79 * leg_range
+
+    return zone_low, zone_high
+
+
+def is_within_fib_ote(entry, zone_low, zone_high):
+    if entry is None:
+        return False
+    return zone_low <= entry <= zone_high
+
+
+def detect_trend(candles, swing_window=TREND_SWING_WINDOW, swing_count=TREND_SWING_COUNT,
+                  sma_period=TREND_SMA_PERIOD):
+    """
+    Détecte la tendance de fond à partir d'une série de bougies (typiquement D1),
+    en combinant deux critères qui doivent être d'accord :
+    1. Structure : les `swing_count` derniers swing highs sont tous croissants ET
+       les `swing_count` derniers swing lows sont tous croissants (inversement pour
+       une tendance baissière) — filtre le bruit d'une comparaison à seulement 2 points.
+    2. Moyenne mobile : la dernière clôture doit être au-dessus (bullish) ou en
+       dessous (bearish) de la SMA sur `sma_period` bougies.
+    Retourne "bullish", "bearish", "range" (les deux critères ne s'accordent pas
+    ou pas de structure claire), ou None si pas assez de données.
+    """
+    closed = candles[:-1] if len(candles) > 1 else candles  # exclut la bougie en cours
+    if len(closed) < sma_period:
+        return None  # pas assez d'historique pour calculer la SMA
+
+    highs, lows = find_swing_highs_lows(closed, swing_window, swing_window)
+    if len(highs) < swing_count or len(lows) < swing_count:
+        return None  # pas assez de swing points pour une structure fiable
+
+    recent_highs = [closed[i]["high"] for i in highs[-swing_count:]]
+    recent_lows = [closed[i]["low"] for i in lows[-swing_count:]]
+
+    structure_bullish = (
+        all(recent_highs[i] < recent_highs[i + 1] for i in range(len(recent_highs) - 1))
+        and all(recent_lows[i] < recent_lows[i + 1] for i in range(len(recent_lows) - 1))
+    )
+    structure_bearish = (
+        all(recent_highs[i] > recent_highs[i + 1] for i in range(len(recent_highs) - 1))
+        and all(recent_lows[i] > recent_lows[i + 1] for i in range(len(recent_lows) - 1))
+    )
+
+    sma = sum(c["close"] for c in closed[-sma_period:]) / sma_period
+    last_close = closed[-1]["close"]
+
+    if structure_bullish and last_close > sma:
+        return "bullish"
+    if structure_bearish and last_close < sma:
+        return "bearish"
+    return "range"
+
+
 def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles, confirmation_tf):
     """Analyse un symbole sur les TF de référence fournis (D1, H4) et cherche
     un setup CRT confirmé (sweep + structure shift + FVG/OB) sur le timeframe
     de confirmation donné (ex: M5 ou M15)."""
     setups = []
+
+    # Tendance de fond, calculée une fois sur D1 (ou à défaut la première série
+    # de référence disponible) — sert uniquement à taguer les setups à
+    # contre-tendance, jamais à les bloquer.
+    trend_source = htf_candles_by_tf.get("D1") or next(iter(htf_candles_by_tf.values()), None)
+    trend = detect_trend(trend_source) if trend_source else None
+
     for tf_name, htf_candles in htf_candles_by_tf.items():
         ref_range = get_reference_range(htf_candles)
         if not ref_range:
@@ -199,6 +282,22 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles, confirmation_tf):
                 sweep["candle"], fvg, ob
             )
 
+            # Filtre R:R minimum : un setup dont le ratio ne l'atteint pas est ignoré.
+            if trade_levels["risk_reward"] is None or trade_levels["risk_reward"] < MIN_RISK_REWARD:
+                continue
+
+            structure_candle = ltf_candles[structure["break_index"]]
+            fib_zone_low, fib_zone_high = compute_fib_ote(sweep["direction"], sweep["candle"], structure_candle)
+            fib_ote_confirmed = is_within_fib_ote(trade_levels["entry"], fib_zone_low, fib_zone_high)
+
+            if REQUIRE_FIB_OTE and not fib_ote_confirmed:
+                continue  # entrée hors zone Fibonacci OTE -> setup ignoré
+
+            counter_trend = (
+                (trend == "bullish" and sweep["direction"] == "bearish")
+                or (trend == "bearish" and sweep["direction"] == "bullish")
+            )
+
             setups.append({
                 "symbol": symbol,
                 "reference_tf": tf_name,
@@ -214,6 +313,9 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles, confirmation_tf):
                 "take_profit": trade_levels["take_profit"],
                 "risk_reward": trade_levels["risk_reward"],
                 "extended_target": trade_levels["extended_target"],
+                "fib_ote_confirmed": fib_ote_confirmed,
+                "trend": trend,
+                "counter_trend": counter_trend,
                 "fvg": fvg,
                 "order_block": ob,
             })

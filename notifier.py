@@ -65,4 +65,11 @@ def format_setup_message(setup: dict) -> str:
     if setup.get("risk_reward"):
         lines.append(f"R:R : ~1:{setup['risk_reward']}")
 
+    if setup.get("fib_ote_confirmed"):
+        lines.append("📐 Zone Fibo OTE (61.8-79%)")
+
+    if setup.get("counter_trend"):
+        trend_word = "haussière" if setup.get("trend") == "bullish" else "baissière"
+        lines.append(f"⚠️ Contre-tendance (tendance de fond D1 {trend_word})")
+
     return "\n".join(lines)

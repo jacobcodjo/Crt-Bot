@@ -12,8 +12,30 @@ Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
    - **Take profit** : côté opposé du range — étendu pour les indices synthétiques
      (`SYNTHETIC_TP_EXTENSION_PCT`, +50% de la taille du range par défaut), qui
      offrent généralement un ratio risque/récompense plus favorable
-   - Ratio risque/récompense approximatif
-5. Envoi d'une alerte **Telegram** dès qu'un setup confirmé est détecté.
+   - Ratio risque/récompense approximatif — **seuls les setups avec un R:R ≥ 1:3
+     déclenchent une alerte** (`MIN_RISK_REWARD` dans `config.py`)
+5. Confirmation Fibonacci OTE (Optimal Trade Entry, retracement 61.8%-79% du
+   mouvement impulsif après le sweep) — indiquée dans le message quand l'entrée
+   tombe dans cette zone (`REQUIRE_FIB_OTE = True` dans `config.py` pour en faire
+   un filtre obligatoire plutôt qu'une simple indication).
+6. Détection de la **tendance de fond** en D1, en combinant 3 critères :
+   fenêtre de swing élargie (`TREND_SWING_WINDOW`, 4 par défaut), 3 swing highs
+   **et** 3 swing lows consécutifs tous croissants/décroissants
+   (`TREND_SWING_COUNT`), confirmés par la position du prix par rapport à une
+   moyenne mobile (`TREND_SMA_PERIOD`, 50 bougies D1 par défaut). Un setup à
+   contre-tendance n'est **jamais bloqué**, juste signalé par un tag
+   `⚠️ Contre-tendance` dans le message.
+7. **Suivi automatique des trades** : chaque alerte envoyée est enregistrée
+   (`trade_stats.json`). À chaque scan suivant, le bot vérifie si le SL ou le TP
+   a été touché en premier (si les deux sont touchés dans la même bougie, hypothèse
+   prudente : le SL a cédé). Un résumé du taux de réussite global, et séparé
+   contre-tendance vs dans le sens de la tendance, s'affiche dans les logs
+   GitHub Actions à chaque exécution.
+8. Envoi d'une alerte **Telegram** dès qu'un setup confirmé est détecté.
+
+> ⚠️ Le suivi ne voit que les bougies encore présentes dans l'historique récupéré
+> (150 bougies, `CANDLE_COUNT`) — un trade qui met plus de temps que ça à atteindre
+> son SL/TP peut ne jamais être résolu et rester indéfiniment "en attente".
 
 Le bot tourne gratuitement via **GitHub Actions** (cron toutes les 5 minutes — le minimum
 fiable sur GitHub Actions ; en dessous, les exécutions peuvent être retardées voire
@@ -90,6 +112,8 @@ crt-bot/
 ├── strategy.py            # Logique CRT (range, sweep, structure, FVG, order block)
 ├── notifier.py             # Envoi des messages Telegram
 ├── state_manager.py         # Anti-doublons entre chaque exécution
+├── trade_tracker.py          # Suivi des trades (résolution SL/TP, statistiques)
 ├── state.json                # État persistant (committé automatiquement par le workflow)
+├── trade_stats.json           # Historique des trades résolus (committé automatiquement)
 └── .github/workflows/crt-scan.yml  # Planification GitHub Actions
 ```

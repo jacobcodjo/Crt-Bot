@@ -5,7 +5,15 @@ Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
 1. Range de référence = haut/bas de la dernière bougie **D1** et **H4** clôturée.
 2. Détection d'un **sweep de liquidité** (fausse cassure) de ce range sur **M15**.
 3. Confirmation avancée : **cassure de structure** + **Fair Value Gap** et/ou **Order Block**.
-4. Envoi d'une alerte **Telegram** dès qu'un setup confirmé est détecté.
+4. Calcul de niveaux de trade indicatifs :
+   - **Entrée** : bord de l'Order Block le plus proche du prix (ou milieu du FVG si pas d'OB)
+   - **Stop loss** : au-delà de l'extrême de la bougie de sweep, avec une marge de
+     sécurité (`STOP_LOSS_BUFFER_PCT` dans `config.py`, 0.05% par défaut)
+   - **Take profit** : côté opposé du range — étendu pour les indices synthétiques
+     (`SYNTHETIC_TP_EXTENSION_PCT`, +50% de la taille du range par défaut), qui
+     offrent généralement un ratio risque/récompense plus favorable
+   - Ratio risque/récompense approximatif
+5. Envoi d'une alerte **Telegram** dès qu'un setup confirmé est détecté.
 
 Le bot tourne gratuitement via **GitHub Actions** (cron toutes les 5 minutes — le minimum
 fiable sur GitHub Actions ; en dessous, les exécutions peuvent être retardées voire

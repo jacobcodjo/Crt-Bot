@@ -12,7 +12,12 @@ Concepts. Elle est fournie à titre d'outil d'aide à la décision, pas comme un
 système de trading garanti — à affiner et backtester avant tout usage réel.
 """
 
-from config import STRICT_CONFIRMATION_TIMEFRAMES
+from config import (
+    STRICT_CONFIRMATION_TIMEFRAMES,
+    STOP_LOSS_BUFFER_PCT,
+    SYNTHETIC_INDEX_PREFIXES,
+    SYNTHETIC_TP_EXTENSION_PCT,
+)
 
 
 def last_closed_candle(candles):
@@ -109,6 +114,57 @@ def detect_order_block(candles, around_index, direction, window=5):
     return None
 
 
+def is_synthetic_index(symbol):
+    return symbol.startswith(SYNTHETIC_INDEX_PREFIXES)
+
+
+def compute_trade_levels(symbol, direction, range_high, range_low, sweep_candle, fvg, ob):
+    """
+    Calcule des niveaux de trade indicatifs à partir des éléments déjà détectés :
+    - Entrée : bord de l'Order Block le plus proche du prix actuel (le premier niveau
+      que le prix retesterait) si un OB est présent, sinon milieu du FVG.
+    - Stop loss : au-delà de l'extrême de la bougie de sweep, avec une marge de
+      sécurité (STOP_LOSS_BUFFER_PCT) pour éviter une sortie sur un simple spread.
+    - Take profit : le côté opposé du range de référence — étendu proportionnellement
+      à la taille du range pour les indices synthétiques (SYNTHETIC_TP_EXTENSION_PCT),
+      qui offrent généralement un ratio risque/récompense plus favorable.
+    """
+    if ob:
+        entry = ob["high"] if direction == "bullish" else ob["low"]
+    elif fvg:
+        entry = (fvg["top"] + fvg["bottom"]) / 2
+    else:
+        entry = None
+
+    if direction == "bullish":
+        stop_loss = sweep_candle["low"] * (1 - STOP_LOSS_BUFFER_PCT)
+    else:
+        stop_loss = sweep_candle["high"] * (1 + STOP_LOSS_BUFFER_PCT)
+
+    range_size = range_high - range_low
+    extended_target = is_synthetic_index(symbol)
+    extension = range_size * SYNTHETIC_TP_EXTENSION_PCT if extended_target else 0
+
+    if direction == "bullish":
+        take_profit = range_high + extension
+    else:
+        take_profit = range_low - extension
+
+    risk_reward = None
+    if entry is not None and entry != stop_loss:
+        risk = abs(entry - stop_loss)
+        reward = abs(take_profit - entry)
+        risk_reward = round(reward / risk, 2) if risk > 0 else None
+
+    return {
+        "entry": entry,
+        "stop_loss": stop_loss,
+        "take_profit": take_profit,
+        "risk_reward": risk_reward,
+        "extended_target": extended_target,
+    }
+
+
 def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles, confirmation_tf):
     """Analyse un symbole sur les TF de référence fournis (D1, H4) et cherche
     un setup CRT confirmé (sweep + structure shift + FVG/OB) sur le timeframe
@@ -138,6 +194,11 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles, confirmation_tf):
                 if not fvg and not ob:
                     continue  # pas de confirmation avancée -> setup ignoré
 
+            trade_levels = compute_trade_levels(
+                symbol, sweep["direction"], ref_range["high"], ref_range["low"],
+                sweep["candle"], fvg, ob
+            )
+
             setups.append({
                 "symbol": symbol,
                 "reference_tf": tf_name,
@@ -148,6 +209,11 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles, confirmation_tf):
                 "range_low": ref_range["low"],
                 "sweep_candle": sweep["candle"],
                 "structure_break_level": structure["level"],
+                "entry": trade_levels["entry"],
+                "stop_loss": trade_levels["stop_loss"],
+                "take_profit": trade_levels["take_profit"],
+                "risk_reward": trade_levels["risk_reward"],
+                "extended_target": trade_levels["extended_target"],
                 "fvg": fvg,
                 "order_block": ob,
             })

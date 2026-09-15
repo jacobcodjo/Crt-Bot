@@ -35,13 +35,23 @@ def format_setup_message(setup: dict) -> str:
     }
     speed_label = speed_labels.get(setup["confirmation_tf"], setup["confirmation_tf"])
 
-    return (
-        f"<b>⚡ Setup CRT détecté</b>\n"
-        f"Symbole : <b>{setup['symbol']}</b>\n"
-        f"Range de référence : {setup['reference_tf']}\n"
-        f"Type de signal : {speed_label}\n"
-        f"Direction : {direction_label}\n"
-        f"Range : {setup['range_low']} — {setup['range_high']}\n"
-        f"Cassure de structure à : {setup['structure_break_level']}\n"
-        f"Confirmation(s) : {', '.join(confirmations)}"
-    )
+    lines = [
+        "<b>⚡ Setup CRT détecté</b>",
+        f"Symbole : <b>{setup['symbol']}</b>",
+        f"Range de référence : {setup['reference_tf']}",
+        f"Type de signal : {speed_label}",
+        f"Direction : {direction_label}",
+        f"Range : {setup['range_low']} — {setup['range_high']}",
+        f"Cassure de structure à : {setup['structure_break_level']}",
+        f"Confirmation(s) : {', '.join(confirmations)}",
+    ]
+
+    if setup.get("entry") is not None:
+        lines.append(f"🎯 Entrée (bord OB/milieu FVG) : {setup['entry']}")
+    lines.append(f"🛑 Stop loss (marge incluse) : {setup['stop_loss']}")
+    tp_note = " (cible étendue — indice synthétique)" if setup.get("extended_target") else ""
+    lines.append(f"🏁 Take profit{tp_note} : {setup['take_profit']}")
+    if setup.get("risk_reward"):
+        lines.append(f"⚖️ Ratio risque/récompense : ~1:{setup['risk_reward']}")
+
+    return "\n".join(lines)

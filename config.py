@@ -48,3 +48,16 @@ STATE_FILE = "state.json"
 # Timeframes où la confirmation est renforcée : FVG ET Order Block exigés
 # ensemble (au lieu de l'un ou l'autre) pour filtrer davantage le bruit.
 STRICT_CONFIRMATION_TIMEFRAMES = []
+
+# --- Gestion du risque ---
+
+# Marge de sécurité ajoutée au-delà de l'extrême du sweep pour le stop loss,
+# en pourcentage du prix (0.0005 = 0.05%). Évite d'être sorti par un simple spread.
+STOP_LOSS_BUFFER_PCT = 0.0005
+
+# Les indices synthétiques Deriv sont généralement plus volatils et permettent
+# souvent des ratios risque/récompense plus élevés que le forex/or/cryptos : on
+# étend leur take profit au-delà du simple bord opposé du range, proportionnellement
+# à la taille du range (0.5 = +50% de la taille du range au-delà du bord opposé).
+SYNTHETIC_INDEX_PREFIXES = ("R_", "1HZ", "stpRNG")
+SYNTHETIC_TP_EXTENSION_PCT = 0.5

@@ -1,4 +1,137 @@
 {
-  "pending": {},
+  "pending": {
+    "cryBTCUSD_H4_1789444800_M15": {
+      "symbol": "cryBTCUSD",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 76960.211,
+      "stop_loss": 76796.77340450001,
+      "take_profit": 77713.197,
+      "risk_reward": 4.61,
+      "counter_trend": false,
+      "alert_epoch": 1789463700
+    },
+    "R_10_D1_1789344000_M15": {
+      "symbol": "R_10",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 4912.486,
+      "stop_loss": 4918.310926499999,
+      "take_profit": 4823.352,
+      "risk_reward": 15.3,
+      "counter_trend": false,
+      "alert_epoch": 1789464600
+    },
+    "R_50_D1_1789344000_M15": {
+      "symbol": "R_50",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 91.6566,
+      "stop_loss": 91.29802815000001,
+      "take_profit": 94.43189999999998,
+      "risk_reward": 7.74,
+      "counter_trend": false,
+      "alert_epoch": 1789442100
+    },
+    "R_50_H4_1789444800_M15": {
+      "symbol": "R_50",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 91.6356,
+      "stop_loss": 91.20317560000001,
+      "take_profit": 93.32285,
+      "risk_reward": 3.9,
+      "counter_trend": false,
+      "alert_epoch": 1789468200
+    },
+    "R_75_D1_1789344000_M15": {
+      "symbol": "R_75",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 46000.5444,
+      "stop_loss": 45674.43066035001,
+      "take_profit": 51195.71415,
+      "risk_reward": 15.93,
+      "counter_trend": false,
+      "alert_epoch": 1789437600
+    },
+    "R_100_D1_1789344000_M15": {
+      "symbol": "R_100",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 647.42,
+      "stop_loss": 646.333005,
+      "take_profit": 525.12,
+      "risk_reward": 112.51,
+      "counter_trend": false,
+      "alert_epoch": 1789443000
+    },
+    "R_100_H4_1789444800_M15": {
+      "symbol": "R_100",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 617.88,
+      "stop_loss": 611.0343300000001,
+      "take_profit": 644.895,
+      "risk_reward": 3.95,
+      "counter_trend": false,
+      "alert_epoch": 1789459200
+    },
+    "1HZ10V_D1_1789344000_M15": {
+      "symbol": "1HZ10V",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 9566.18,
+      "stop_loss": 9551.951635,
+      "take_profit": 9688.6,
+      "risk_reward": 8.6,
+      "counter_trend": false,
+      "alert_epoch": 1789430400
+    },
+    "1HZ25V_D1_1789344000_M15": {
+      "symbol": "1HZ25V",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 877940.99,
+      "stop_loss": 879471.165825,
+      "take_profit": 844187.8,
+      "risk_reward": 22.06,
+      "counter_trend": false,
+      "alert_epoch": 1789460100
+    },
+    "1HZ25V_H4_1789444800_M15": {
+      "symbol": "1HZ25V",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 878286.63,
+      "stop_loss": 880580.6702999999,
+      "take_profit": 869242.01,
+      "risk_reward": 3.94,
+      "counter_trend": false,
+      "alert_epoch": 1789462800
+    },
+    "1HZ50V_D1_1789344000_M15": {
+      "symbol": "1HZ50V",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 239534.12,
+      "stop_loss": 240396.88837499998,
+      "take_profit": 227611.505,
+      "risk_reward": 13.82,
+      "counter_trend": false,
+      "alert_epoch": 1789462800
+    },
+    "1HZ100V_D1_1789344000_M15": {
+      "symbol": "1HZ100V",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 889.81,
+      "stop_loss": 896.28792,
+      "take_profit": 810.3100000000001,
+      "risk_reward": 12.27,
+      "counter_trend": false,
+      "alert_epoch": 1789436700
+    }
+  },
   "history": []
 }

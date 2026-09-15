@@ -43,6 +43,5 @@ def format_setup_message(setup: dict) -> str:
         f"Direction : {direction_label}\n"
         f"Range : {setup['range_low']} — {setup['range_high']}\n"
         f"Cassure de structure à : {setup['structure_break_level']}\n"
-        f"Confirmation(s) : {', '.join(confirmations)}\n"
-        f"⚠️ Analyse automatique — à valider manuellement avant toute décision de trading."
+        f"Confirmation(s) : {', '.join(confirmations)}"
     )

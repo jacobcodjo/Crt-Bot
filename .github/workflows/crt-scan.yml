@@ -2,11 +2,15 @@ name: CRT Trading Bot Scan
 
 on:
   schedule:
-    - cron: "*/5 * * * *"   # toutes les 5 minutes
+    - cron: "*/5 * * * *"    # toutes les 5 minutes (minimum fiable sur GitHub Actions)
   workflow_dispatch: {}       # permet un lancement manuel depuis GitHub
 
 permissions:
   contents: write
+
+concurrency:
+  group: crt-scan
+  cancel-in-progress: false   # met en file d'attente plutôt que d'annuler un scan en cours
 
 jobs:
   scan:
@@ -34,6 +38,7 @@ jobs:
         run: |
           git config user.name "crt-bot"
           git config user.email "crt-bot@users.noreply.github.com"
-          git add state.json
+          git add state.json trade_stats.json
           git diff --quiet --cached || git commit -m "Update state [skip ci]"
+          git pull --rebase origin main
           git push

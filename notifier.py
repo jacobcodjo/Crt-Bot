@@ -25,6 +25,36 @@ def is_synthetic_index(symbol: str) -> bool:
     return symbol.startswith(SYNTHETIC_INDEX_PREFIXES)
 
 
+SYNTHETIC_DISPLAY_NAMES = {
+    "R_10": "Volatility 10 Index",
+    "R_25": "Volatility 25 Index",
+    "R_50": "Volatility 50 Index",
+    "R_75": "Volatility 75 Index",
+    "R_100": "Volatility 100 Index",
+    "1HZ10V": "Volatility 10 (1s) Index",
+    "1HZ15V": "Volatility 15 (1s) Index",
+    "1HZ25V": "Volatility 25 (1s) Index",
+    "1HZ30V": "Volatility 30 (1s) Index",
+    "1HZ50V": "Volatility 50 (1s) Index",
+    "1HZ75V": "Volatility 75 (1s) Index",
+    "1HZ90V": "Volatility 90 (1s) Index",
+    "1HZ100V": "Volatility 100 (1s) Index",
+    "1HZ150V": "Volatility 150 (1s) Index",
+    "1HZ200V": "Volatility 200 (1s) Index",
+    "1HZ250V": "Volatility 250 (1s) Index",
+    "1HZ300V": "Volatility 300 (1s) Index",
+    "stpRNG": "Step Index",
+}
+
+
+def display_symbol(symbol: str) -> str:
+    if symbol.startswith("frx"):
+        return symbol[3:]
+    if symbol.startswith("cry"):
+        return symbol[3:]
+    return SYNTHETIC_DISPLAY_NAMES.get(symbol, symbol)
+
+
 def format_number(value, round_it: bool):
     if value is None:
         return None
@@ -54,7 +84,8 @@ def format_setup_message(setup: dict) -> str:
             round_it = False
 
     lines = [
-        f"{direction_emoji} <b>{setup['symbol']}</b> — {direction_word} ({setup['reference_tf']} → {setup['confirmation_tf']})",
+        f"{direction_emoji} <b>{display_symbol(setup['symbol'])}</b>",
+        f"{direction_word} ({setup['reference_tf']} → {setup['confirmation_tf']})",
     ]
 
     entry_value = format_number(setup.get("entry"), round_it)

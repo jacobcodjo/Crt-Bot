@@ -121,17 +121,6 @@
       "counter_trend": false,
       "alert_epoch": 1789581600
     },
-    "frxEURCAD_D1_1789430400_H1": {
-      "symbol": "frxEURCAD",
-      "direction": "bearish",
-      "confirmation_tf": "H1",
-      "entry": 1.60876,
-      "stop_loss": 1.6101746849999998,
-      "take_profit": 1.60303,
-      "risk_reward": 4.05,
-      "counter_trend": false,
-      "alert_epoch": 1789545600
-    },
     "frxAUDCAD_D1_1789430400_H1": {
       "symbol": "frxAUDCAD",
       "direction": "bearish",
@@ -164,17 +153,6 @@
       "risk_reward": 5.72,
       "counter_trend": false,
       "alert_epoch": 1789585200
-    },
-    "1HZ10V_H4_1789574400_M15": {
-      "symbol": "1HZ10V",
-      "direction": "bearish",
-      "confirmation_tf": "M15",
-      "entry": 9493.2,
-      "stop_loss": 9501.498375,
-      "take_profit": 9466.774999999998,
-      "risk_reward": 3.18,
-      "counter_trend": false,
-      "alert_epoch": 1789590600
     },
     "1HZ25V_D1_1789430400_H1": {
       "symbol": "1HZ25V",
@@ -384,6 +362,20 @@
       "counter_trend": false,
       "risk_reward": 6.71,
       "result": "SL"
+    },
+    {
+      "symbol": "frxEURCAD",
+      "direction": "bearish",
+      "counter_trend": false,
+      "risk_reward": 4.05,
+      "result": "TP"
+    },
+    {
+      "symbol": "1HZ10V",
+      "direction": "bearish",
+      "counter_trend": false,
+      "risk_reward": 3.18,
+      "result": "TP"
     }
   ]
 }

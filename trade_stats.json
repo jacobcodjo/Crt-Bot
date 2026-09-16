@@ -175,6 +175,17 @@
       "risk_reward": 3.83,
       "counter_trend": false,
       "alert_epoch": 1789588800
+    },
+    "cryXRPUSD_H4_1789574400_M15": {
+      "symbol": "cryXRPUSD",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 1.2998,
+      "stop_loss": 1.30615275,
+      "take_profit": 1.2484,
+      "risk_reward": 8.09,
+      "counter_trend": false,
+      "alert_epoch": 1789591500
     }
   },
   "history": [

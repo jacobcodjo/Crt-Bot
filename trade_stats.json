@@ -1,4 +1,38 @@
 {
-  "pending": {},
+  "pending": {
+    "frxUSDJPY_D1_1789430400_H1": {
+      "symbol": "frxUSDJPY",
+      "direction": "bearish",
+      "confirmation_tf": "H1",
+      "entry": 155.304,
+      "stop_loss": 155.5667445,
+      "take_profit": 154.406,
+      "risk_reward": 3.42,
+      "counter_trend": false,
+      "alert_epoch": 1789520400
+    },
+    "R_10_D1_1789430400_H1": {
+      "symbol": "R_10",
+      "direction": "bearish",
+      "confirmation_tf": "H1",
+      "entry": 4928.661,
+      "stop_loss": 4940.254892999999,
+      "take_profit": 4864.2165,
+      "risk_reward": 5.56,
+      "counter_trend": false,
+      "alert_epoch": 1789527600
+    },
+    "1HZ50V_D1_1789430400_H1": {
+      "symbol": "1HZ50V",
+      "direction": "bearish",
+      "confirmation_tf": "H1",
+      "entry": 240361.94,
+      "stop_loss": 242080.54978499998,
+      "take_profit": 228894.91999999998,
+      "risk_reward": 6.67,
+      "counter_trend": false,
+      "alert_epoch": 1789527600
+    }
+  },
   "history": []
 }

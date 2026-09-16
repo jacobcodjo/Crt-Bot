@@ -263,6 +263,17 @@
       "risk_reward": 4.7,
       "counter_trend": false,
       "alert_epoch": 1789600500
+    },
+    "frxCADJPY_H4_1789574400_M15": {
+      "symbol": "frxCADJPY",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 111.714,
+      "stop_loss": 111.73483949999999,
+      "take_profit": 111.151,
+      "risk_reward": 27.02,
+      "counter_trend": false,
+      "alert_epoch": 1789601400
     }
   },
   "history": [

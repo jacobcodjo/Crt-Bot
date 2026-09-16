@@ -112,5 +112,7 @@
   "frxEURCAD_H4_1789574400_M15": true,
   "content_frxEURCAD_bullish_1.60403_1.603038_1.60869": true,
   "frxCADJPY_H4_1789574400_M15": true,
-  "content_frxCADJPY_bearish_111.714_111.734839_111.151": true
+  "content_frxCADJPY_bearish_111.714_111.734839_111.151": true,
+  "frxUSDCHF_H4_1789574400_M15": true,
+  "content_frxUSDCHF_bearish_0.82585_0.826313_0.81776": true
 }

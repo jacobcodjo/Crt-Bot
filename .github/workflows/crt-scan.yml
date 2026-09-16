@@ -1,9 +1,7 @@
 name: CRT Trading Bot Scan
 
 on:
-  schedule:
-    - cron: "*/5 * * * *"    # toutes les 5 minutes (minimum fiable sur GitHub Actions)
-  workflow_dispatch: {}       # permet un lancement manuel depuis GitHub
+  workflow_dispatch: {}       # déclenché toutes les 5 min par un cronjob externe (cron-job.org)
 
 permissions:
   contents: write

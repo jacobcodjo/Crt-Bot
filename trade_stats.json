@@ -1,16 +1,5 @@
 {
   "pending": {
-    "frxUSDJPY_D1_1789430400_H1": {
-      "symbol": "frxUSDJPY",
-      "direction": "bearish",
-      "confirmation_tf": "H1",
-      "entry": 155.304,
-      "stop_loss": 155.5667445,
-      "take_profit": 154.406,
-      "risk_reward": 3.42,
-      "counter_trend": false,
-      "alert_epoch": 1789520400
-    },
     "R_10_D1_1789430400_H1": {
       "symbol": "R_10",
       "direction": "bearish",
@@ -208,6 +197,17 @@
       "risk_reward": 21.85,
       "counter_trend": false,
       "alert_epoch": 1789581600
+    },
+    "R_50_H4_1789560000_M15": {
+      "symbol": "R_50",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 91.9605,
+      "stop_loss": 91.75499955000001,
+      "take_profit": 94.45160000000001,
+      "risk_reward": 12.12,
+      "counter_trend": false,
+      "alert_epoch": 1789578900
     }
   },
   "history": [
@@ -322,6 +322,13 @@
       "counter_trend": false,
       "risk_reward": 3.61,
       "result": "TP"
+    },
+    {
+      "symbol": "frxUSDJPY",
+      "direction": "bearish",
+      "counter_trend": false,
+      "risk_reward": 3.42,
+      "result": "SL"
     }
   ]
 }

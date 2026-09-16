@@ -92,9 +92,11 @@ Pour un usage sérieux, crée ta propre app sur https://api.deriv.com pour obten
 
 ## 4. Personnaliser
 
-- **Symboles** : liste `SYMBOLS` dans `config.py` — actuellement forex majeurs, or (`frxXAUUSD`),
-  cryptos (`cryBTCUSD`, `cryETHUSD`, `cryLTCUSD`, `cryXRPUSD`), Volatility Index classiques
-  (`R_10`...`R_100`) et 1 seconde (`1HZ10V`...`1HZ100V`), Step Index (`stpRNG`).
+- **Symboles** : liste `SYMBOLS` dans `config.py` — actuellement forex majeurs et
+  mineurs (paires croisées sans USD), or (`frxXAUUSD`), cryptos (`cryBTCUSD`,
+  `cryETHUSD`, `cryLTCUSD`, `cryXRPUSD`), Volatility Index classiques (`R_10`,
+  `R_25`, `R_50`, `R_75`, `R_100`) et toutes les variantes 1 seconde disponibles
+  chez Deriv (`1HZ10V` à `1HZ300V`), Step Index (`stpRNG`) — 50 actifs au total.
 - **Fréquence de scan** : modifier le `cron` dans le workflow.
 - **Répartition référence/confirmation** : `REFERENCE_CONFIRMATION_MAP` dans
   `config.py` — modifier quels TF de confirmation sont associés à W1/D1/H4.

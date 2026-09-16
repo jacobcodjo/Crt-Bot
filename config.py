@@ -13,16 +13,25 @@ SYMBOLS = [
     # Forex majeurs
     "frxEURUSD", "frxGBPUSD", "frxUSDJPY", "frxUSDCHF", "frxAUDUSD", "frxUSDCAD",
 
+    # Forex mineures (paires croisées, sans USD)
+    "frxEURGBP", "frxEURJPY", "frxEURCHF", "frxEURAUD", "frxEURCAD", "frxEURNZD",
+    "frxGBPJPY", "frxGBPCHF", "frxGBPAUD", "frxGBPCAD", "frxGBPNZD",
+    "frxAUDCAD", "frxAUDCHF",
+    "frxCADCHF", "frxCADJPY",
+    "frxCHFJPY",
+    "frxNZDCAD", "frxNZDCHF",
+
     # Or
     "frxXAUUSD",
 
     # Cryptos
     "cryBTCUSD", "cryETHUSD", "cryLTCUSD", "cryXRPUSD",
 
-    # Volatility Index (classique)
+    # Volatility Index — classique (tick/2s), existe seulement pour 10/25/50/75/100
     "R_10", "R_25", "R_50", "R_75", "R_100",
-    # Volatility Index (variantes 1 seconde)
-    "1HZ10V", "1HZ25V", "1HZ50V", "1HZ75V", "1HZ100V",
+    # Volatility Index — variantes 1 seconde (liste complète actuelle chez Deriv)
+    "1HZ10V", "1HZ15V", "1HZ25V", "1HZ30V", "1HZ50V", "1HZ75V",
+    "1HZ90V", "1HZ100V", "1HZ150V", "1HZ200V", "1HZ250V", "1HZ300V",
 
     # Step Index
     "stpRNG",

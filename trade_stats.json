@@ -186,17 +186,6 @@
       "risk_reward": 6.71,
       "counter_trend": false,
       "alert_epoch": 1789585200
-    },
-    "cryXRPUSD_D1_1789430400_H1": {
-      "symbol": "cryXRPUSD",
-      "direction": "bullish",
-      "confirmation_tf": "H1",
-      "entry": 1.2755,
-      "stop_loss": 1.2621686,
-      "take_profit": 1.459,
-      "risk_reward": 13.76,
-      "counter_trend": false,
-      "alert_epoch": 1789567200
     }
   },
   "history": [
@@ -366,6 +355,13 @@
       "direction": "bearish",
       "counter_trend": false,
       "risk_reward": 9.49,
+      "result": "SL"
+    },
+    {
+      "symbol": "cryXRPUSD",
+      "direction": "bullish",
+      "counter_trend": false,
+      "risk_reward": 13.76,
       "result": "SL"
     }
   ]

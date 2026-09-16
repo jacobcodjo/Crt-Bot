@@ -121,16 +121,16 @@
       "counter_trend": false,
       "alert_epoch": 1789551900
     },
-    "1HZ75V_D1_1789430400_H1": {
-      "symbol": "1HZ75V",
-      "direction": "bullish",
+    "frxEURJPY_D1_1789430400_H1": {
+      "symbol": "frxEURJPY",
+      "direction": "bearish",
       "confirmation_tf": "H1",
-      "entry": 5658.04,
-      "stop_loss": 5581.917645,
-      "take_profit": 6293.775,
-      "risk_reward": 8.35,
-      "counter_trend": true,
-      "alert_epoch": 1789524000
+      "entry": 179.144,
+      "stop_loss": 179.401656,
+      "take_profit": 178.302,
+      "risk_reward": 3.27,
+      "counter_trend": false,
+      "alert_epoch": 1789520400
     }
   },
   "history": [
@@ -139,6 +139,13 @@
       "direction": "bearish",
       "counter_trend": false,
       "risk_reward": 4.01,
+      "result": "SL"
+    },
+    {
+      "symbol": "1HZ75V",
+      "direction": "bullish",
+      "counter_trend": true,
+      "risk_reward": 8.35,
       "result": "SL"
     }
   ]

@@ -26,5 +26,9 @@
   "1HZ75V_D1_1789430400_H1": true,
   "content_1HZ75V_bullish_5658.04_5581.917645_6293.775": true,
   "frxEURJPY_D1_1789430400_H1": true,
-  "content_frxEURJPY_bearish_179.144_179.401656_178.302": true
+  "content_frxEURJPY_bearish_179.144_179.401656_178.302": true,
+  "frxEURCAD_H4_1789531200_M15": true,
+  "content_frxEURCAD_bullish_1.60722_1.606616_1.61018": true,
+  "cryBTCUSD_H4_1789531200_M15": true,
+  "content_cryBTCUSD_bullish_75592.57_75466.074087_76067.234": true
 }

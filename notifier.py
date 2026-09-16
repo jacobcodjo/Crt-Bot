@@ -93,14 +93,14 @@ def format_setup_message(setup: dict) -> str:
     entry_value = format_number(setup.get("entry"), round_it)
     lines.append(f"Entrée : {entry_value if entry_value is not None else 'n/d'}")
     lines.append(f"SL : {format_number(setup['stop_loss'], round_it)}")
-    lines.append(f"TP1 (mi-range) : {format_number(setup['take_profit_mid'], round_it)}")
-    lines.append(f"TP2 (extrémité) : {format_number(setup['take_profit'], round_it)}{tp_tag}")
+    lines.append(f"TP1 : {format_number(setup['take_profit_mid'], round_it)}")
+    lines.append(f"TP2 : {format_number(setup['take_profit'], round_it)}{tp_tag}")
 
     if setup.get("risk_reward"):
-        lines.append(f"R:R (TP2) : ~1:{setup['risk_reward']}")
+        lines.append(f"R:R : ~1:{setup['risk_reward']}")
 
     if setup.get("fib_ote_confirmed"):
-        lines.append("📐 Zone Fibo OTE (61.8-79%)")
+        lines.append("Zone Fibo OTE (61.8-79%)")
 
     if setup.get("counter_trend"):
         trend_word = "haussière" if setup.get("trend") == "bullish" else "baissière"

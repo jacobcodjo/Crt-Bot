@@ -72,5 +72,11 @@
   "R_50_H4_1789560000_M15": true,
   "content_R_50_bullish_91.9605_91.755_94.4516": true,
   "frxEURCAD_D1_1789430400_H1": true,
-  "content_frxEURCAD_bearish_1.60876_1.610175_1.60303": true
+  "content_frxEURCAD_bearish_1.60876_1.610175_1.60303": true,
+  "frxAUDCAD_D1_1789430400_H1": true,
+  "content_frxAUDCAD_bearish_0.99374_0.995127_0.9894": true,
+  "frxXAUUSD_D1_1789430400_H1": true,
+  "content_frxXAUUSD_bearish_4341.85_4367.94288_4261.73": true,
+  "1HZ75V_H4_1789560000_M15": true,
+  "content_1HZ75V_bullish_5742.66_5726.605265_5986.91": true
 }

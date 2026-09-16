@@ -230,6 +230,17 @@
       "risk_reward": 3.32,
       "counter_trend": false,
       "alert_epoch": 1789596900
+    },
+    "frxNZDCHF_W1_1789084800_H4": {
+      "symbol": "frxNZDCHF",
+      "direction": "bullish",
+      "confirmation_tf": "H4",
+      "entry": 0.471,
+      "stop_loss": 0.47061457500000003,
+      "take_profit": 0.4766,
+      "risk_reward": 14.53,
+      "counter_trend": false,
+      "alert_epoch": 1789545600
     }
   },
   "history": [

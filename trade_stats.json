@@ -241,6 +241,17 @@
       "risk_reward": 3.06,
       "counter_trend": false,
       "alert_epoch": 1789569900
+    },
+    "1HZ30V_D1_1789430400_H1": {
+      "symbol": "1HZ30V",
+      "direction": "bullish",
+      "confirmation_tf": "H1",
+      "entry": 6426.393,
+      "stop_loss": 6383.4496785,
+      "take_profit": 6563.3905,
+      "risk_reward": 3.19,
+      "counter_trend": false,
+      "alert_epoch": 1789527600
     }
   },
   "history": [

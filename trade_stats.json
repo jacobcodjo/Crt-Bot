@@ -99,17 +99,6 @@
       "counter_trend": false,
       "alert_epoch": 1789520400
     },
-    "frxEURCAD_H4_1789531200_M15": {
-      "symbol": "frxEURCAD",
-      "direction": "bullish",
-      "confirmation_tf": "M15",
-      "entry": 1.60722,
-      "stop_loss": 1.60661629,
-      "take_profit": 1.61018,
-      "risk_reward": 4.9,
-      "counter_trend": false,
-      "alert_epoch": 1789558200
-    },
     "frxGBPAUD_W1_1789084800_H4": {
       "symbol": "frxGBPAUD",
       "direction": "bearish",
@@ -165,17 +154,6 @@
       "counter_trend": false,
       "alert_epoch": 1789534800
     },
-    "frxCHFJPY_H4_1789545600_M15": {
-      "symbol": "frxCHFJPY",
-      "direction": "bearish",
-      "confirmation_tf": "M15",
-      "entry": 189.662,
-      "stop_loss": 189.6057555,
-      "take_profit": 189.247,
-      "risk_reward": 7.38,
-      "counter_trend": false,
-      "alert_epoch": 1789569000
-    },
     "R_50_H4_1789545600_M15": {
       "symbol": "R_50",
       "direction": "bearish",
@@ -219,6 +197,17 @@
       "risk_reward": 3.77,
       "counter_trend": false,
       "alert_epoch": 1789542000
+    },
+    "cryXRPUSD_H4_1789560000_M15": {
+      "symbol": "cryXRPUSD",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 1.2671,
+      "stop_loss": 1.2591701000000002,
+      "take_profit": 1.2956,
+      "risk_reward": 3.59,
+      "counter_trend": false,
+      "alert_epoch": 1789578900
     }
   },
   "history": [
@@ -304,6 +293,20 @@
       "direction": "bearish",
       "counter_trend": false,
       "risk_reward": 3.12,
+      "result": "TP"
+    },
+    {
+      "symbol": "frxEURCAD",
+      "direction": "bullish",
+      "counter_trend": false,
+      "risk_reward": 4.9,
+      "result": "SL"
+    },
+    {
+      "symbol": "frxCHFJPY",
+      "direction": "bearish",
+      "counter_trend": false,
+      "risk_reward": 7.38,
       "result": "TP"
     }
   ]

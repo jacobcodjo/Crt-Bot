@@ -99,17 +99,6 @@
       "counter_trend": false,
       "alert_epoch": 1789531200
     },
-    "R_10_H4_1789531200_M15": {
-      "symbol": "R_10",
-      "direction": "bullish",
-      "confirmation_tf": "M15",
-      "entry": 4924.064,
-      "stop_loss": 4918.831354000001,
-      "take_profit": 4945.5355,
-      "risk_reward": 4.1,
-      "counter_trend": false,
-      "alert_epoch": 1789549200
-    },
     "R_25_H4_1789531200_M15": {
       "symbol": "R_25",
       "direction": "bullish",
@@ -165,6 +154,13 @@
       "counter_trend": false,
       "risk_reward": 3.75,
       "result": "TP"
+    },
+    {
+      "symbol": "R_10",
+      "direction": "bullish",
+      "counter_trend": false,
+      "risk_reward": 4.1,
+      "result": "SL"
     }
   ]
 }

@@ -252,6 +252,17 @@
       "risk_reward": 9.4,
       "counter_trend": false,
       "alert_epoch": 1789599600
+    },
+    "frxEURCAD_H4_1789574400_M15": {
+      "symbol": "frxEURCAD",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 1.60403,
+      "stop_loss": 1.60303808,
+      "take_profit": 1.60869,
+      "risk_reward": 4.7,
+      "counter_trend": false,
+      "alert_epoch": 1789600500
     }
   },
   "history": [

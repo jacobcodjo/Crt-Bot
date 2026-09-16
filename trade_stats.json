@@ -44,17 +44,6 @@
       "counter_trend": true,
       "alert_epoch": 1789344000
     },
-    "R_100_H4_1789531200_M15": {
-      "symbol": "R_100",
-      "direction": "bullish",
-      "confirmation_tf": "M15",
-      "entry": 638.47,
-      "stop_loss": 634.472605,
-      "take_profit": 666.44,
-      "risk_reward": 7.0,
-      "counter_trend": false,
-      "alert_epoch": 1789548300
-    },
     "1HZ90V_W1_1789257600_H4": {
       "symbol": "1HZ90V",
       "direction": "bearish",
@@ -193,6 +182,13 @@
       "direction": "bullish",
       "counter_trend": false,
       "risk_reward": 4.1,
+      "result": "SL"
+    },
+    {
+      "symbol": "R_100",
+      "direction": "bullish",
+      "counter_trend": false,
+      "risk_reward": 7.0,
       "result": "SL"
     }
   ]

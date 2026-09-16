@@ -32,6 +32,72 @@
       "risk_reward": 6.67,
       "counter_trend": false,
       "alert_epoch": 1789527600
+    },
+    "frxEURCHF_W1_1789084800_H4": {
+      "symbol": "frxEURCHF",
+      "direction": "bearish",
+      "confirmation_tf": "H4",
+      "entry": 0.94624,
+      "stop_loss": 0.9479337299999999,
+      "take_profit": 0.93976,
+      "risk_reward": 3.83,
+      "counter_trend": true,
+      "alert_epoch": 1789344000
+    },
+    "R_100_H4_1789531200_M15": {
+      "symbol": "R_100",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 638.47,
+      "stop_loss": 634.472605,
+      "take_profit": 666.44,
+      "risk_reward": 7.0,
+      "counter_trend": false,
+      "alert_epoch": 1789548300
+    },
+    "1HZ15V_W1_1789257600_H4": {
+      "symbol": "1HZ15V",
+      "direction": "bearish",
+      "confirmation_tf": "H4",
+      "entry": 13795.327,
+      "stop_loss": 13895.076066,
+      "take_profit": 13395.588,
+      "risk_reward": 4.01,
+      "counter_trend": false,
+      "alert_epoch": 1789459200
+    },
+    "1HZ90V_W1_1789257600_H4": {
+      "symbol": "1HZ90V",
+      "direction": "bearish",
+      "confirmation_tf": "H4",
+      "entry": 18450.607,
+      "stop_loss": 19052.724601500002,
+      "take_profit": 15304.6555,
+      "risk_reward": 5.22,
+      "counter_trend": false,
+      "alert_epoch": 1789344000
+    },
+    "1HZ90V_D1_1789430400_H1": {
+      "symbol": "1HZ90V",
+      "direction": "bearish",
+      "confirmation_tf": "H1",
+      "entry": 17996.37,
+      "stop_loss": 18263.211042,
+      "take_profit": 16214.027500000002,
+      "risk_reward": 6.68,
+      "counter_trend": false,
+      "alert_epoch": 1789527600
+    },
+    "1HZ250V_W1_1789257600_H4": {
+      "symbol": "1HZ250V",
+      "direction": "bearish",
+      "confirmation_tf": "H4",
+      "entry": 0.439,
+      "stop_loss": 0.4740669149999999,
+      "take_profit": 0.121775,
+      "risk_reward": 9.05,
+      "counter_trend": false,
+      "alert_epoch": 1789358400
     }
   },
   "history": []

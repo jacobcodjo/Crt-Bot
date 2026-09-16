@@ -77,17 +77,6 @@
       "counter_trend": false,
       "alert_epoch": 1789552800
     },
-    "frxCADCHF_W1_1789084800_H4": {
-      "symbol": "frxCADCHF",
-      "direction": "bearish",
-      "confirmation_tf": "H4",
-      "entry": 0.58935,
-      "stop_loss": 0.590545125,
-      "take_profit": 0.58505,
-      "risk_reward": 3.6,
-      "counter_trend": true,
-      "alert_epoch": 1789372800
-    },
     "1HZ250V_D1_1789430400_H1": {
       "symbol": "1HZ250V",
       "direction": "bullish",
@@ -373,6 +362,13 @@
       "direction": "bullish",
       "counter_trend": false,
       "risk_reward": 13.76,
+      "result": "SL"
+    },
+    {
+      "symbol": "frxCADCHF",
+      "direction": "bearish",
+      "counter_trend": true,
+      "risk_reward": 3.6,
       "result": "SL"
     }
   ]

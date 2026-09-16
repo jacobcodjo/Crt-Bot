@@ -165,17 +165,6 @@
       "counter_trend": false,
       "alert_epoch": 1789534800
     },
-    "1HZ15V_H4_1789545600_M15": {
-      "symbol": "1HZ15V",
-      "direction": "bullish",
-      "confirmation_tf": "M15",
-      "entry": 13764.845,
-      "stop_loss": 13748.158482,
-      "take_profit": 13860.169,
-      "risk_reward": 5.71,
-      "counter_trend": false,
-      "alert_epoch": 1789568100
-    },
     "frxUSDJPY_H4_1789545600_M15": {
       "symbol": "frxUSDJPY",
       "direction": "bearish",
@@ -313,6 +302,13 @@
       "counter_trend": false,
       "risk_reward": 3.06,
       "result": "SL"
+    },
+    {
+      "symbol": "1HZ15V",
+      "direction": "bullish",
+      "counter_trend": false,
+      "risk_reward": 5.71,
+      "result": "TP"
     }
   ]
 }

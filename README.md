@@ -11,8 +11,8 @@ Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
 
    | Référence | Confirmation |
    |---|---|
-   | W1 | H4, H1 |
-   | D1 | M30, M15 |
+   | W1 | H4 |
+   | D1 | H1 |
    | H4 | M15 |
 
    Cette répartition (`REFERENCE_CONFIRMATION_MAP` dans `config.py`) évite de

@@ -49,8 +49,8 @@ REFERENCE_TIMEFRAMES = ["W1", "D1", "H4"]
 # plus grand, pour éviter le bruit d'une confirmation trop fine par rapport à
 # l'ampleur du range (ex: confirmer un range hebdomadaire sur M15 serait disproportionné).
 REFERENCE_CONFIRMATION_MAP = {
-    "W1": ["H4", "H1"],
-    "D1": ["M30", "M15"],
+    "W1": ["H4"],
+    "D1": ["H1"],
     "H4": ["M15"],
 }
 

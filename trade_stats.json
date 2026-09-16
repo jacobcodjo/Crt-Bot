@@ -44,17 +44,6 @@
       "counter_trend": false,
       "alert_epoch": 1789506900
     },
-    "R_75_H4_1789488000_M15": {
-      "symbol": "R_75",
-      "direction": "bearish",
-      "confirmation_tf": "M15",
-      "entry": 47047.7664,
-      "stop_loss": 47225.29234575,
-      "take_profit": 45276.7825,
-      "risk_reward": 9.98,
-      "counter_trend": false,
-      "alert_epoch": 1789512300
-    },
     "R_100_H4_1789488000_M15": {
       "symbol": "R_100",
       "direction": "bearish",
@@ -66,27 +55,27 @@
       "counter_trend": false,
       "alert_epoch": 1789512300
     },
-    "1HZ10V_H4_1789488000_M15": {
-      "symbol": "1HZ10V",
+    "R_10_D1_1789430400_M15": {
+      "symbol": "R_10",
       "direction": "bearish",
       "confirmation_tf": "M15",
-      "entry": 9603.84,
-      "stop_loss": 9607.231215,
-      "take_profit": 9563.429999999998,
-      "risk_reward": 11.92,
+      "entry": 4931.282,
+      "stop_loss": 4938.649090499999,
+      "take_profit": 4864.2165,
+      "risk_reward": 9.1,
       "counter_trend": false,
-      "alert_epoch": 1789505100
+      "alert_epoch": 1789516800
     },
-    "1HZ50V_H4_1789488000_M15": {
+    "1HZ50V_H4_1789502400_M15": {
       "symbol": "1HZ50V",
-      "direction": "bearish",
+      "direction": "bullish",
       "confirmation_tf": "M15",
-      "entry": 239446.95,
-      "stop_loss": 239946.66337499997,
-      "take_profit": 236496.465,
-      "risk_reward": 5.9,
+      "entry": 238175.4,
+      "stop_loss": 236813.78387500002,
+      "take_profit": 242617.09499999997,
+      "risk_reward": 3.26,
       "counter_trend": false,
-      "alert_epoch": 1789512300
+      "alert_epoch": 1789518600
     }
   },
   "history": [
@@ -263,6 +252,27 @@
       "direction": "bearish",
       "counter_trend": false,
       "risk_reward": 4.91,
+      "result": "SL"
+    },
+    {
+      "symbol": "R_75",
+      "direction": "bearish",
+      "counter_trend": false,
+      "risk_reward": 9.98,
+      "result": "SL"
+    },
+    {
+      "symbol": "1HZ10V",
+      "direction": "bearish",
+      "counter_trend": false,
+      "risk_reward": 11.92,
+      "result": "TP"
+    },
+    {
+      "symbol": "1HZ50V",
+      "direction": "bearish",
+      "counter_trend": false,
+      "risk_reward": 5.9,
       "result": "SL"
     }
   ]

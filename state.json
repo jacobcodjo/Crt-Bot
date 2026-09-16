@@ -64,5 +64,9 @@
   "1HZ10V_H4_1789488000_M15": true,
   "content_1HZ10V_bearish_9603.84_9607.231215_9563.43": true,
   "1HZ50V_H4_1789488000_M15": true,
-  "content_1HZ50V_bearish_239446.95_239946.663375_236496.465": true
+  "content_1HZ50V_bearish_239446.95_239946.663375_236496.465": true,
+  "R_10_D1_1789430400_M15": true,
+  "content_R_10_bearish_4931.282_4938.64909_4864.2165": true,
+  "1HZ50V_H4_1789502400_M15": true,
+  "content_1HZ50V_bullish_238175.4_236813.783875_242617.095": true
 }

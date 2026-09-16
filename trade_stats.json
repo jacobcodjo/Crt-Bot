@@ -175,17 +175,6 @@
       "risk_reward": 3.61,
       "counter_trend": false,
       "alert_epoch": 1789534800
-    },
-    "1HZ100V_D1_1789430400_H1": {
-      "symbol": "1HZ100V",
-      "direction": "bullish",
-      "confirmation_tf": "H1",
-      "entry": 855.34,
-      "stop_loss": 834.9223300000001,
-      "take_profit": 924.9,
-      "risk_reward": 3.41,
-      "counter_trend": false,
-      "alert_epoch": 1789524000
     }
   },
   "history": [
@@ -222,6 +211,13 @@
       "direction": "bullish",
       "counter_trend": false,
       "risk_reward": 7.0,
+      "result": "SL"
+    },
+    {
+      "symbol": "1HZ100V",
+      "direction": "bullish",
+      "counter_trend": false,
+      "risk_reward": 3.41,
       "result": "SL"
     }
   ]

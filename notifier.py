@@ -85,7 +85,7 @@ def format_setup_message(setup: dict) -> str:
 
     lines = [
         f"{direction_emoji} <b>{display_symbol(setup['symbol'])}</b>",
-        f"{direction_word} ({setup['reference_tf']} → {setup['confirmation_tf']})",
+        f"{setup.get('order_type', direction_word).upper()} ({setup['reference_tf']} → {setup['confirmation_tf']})",
     ]
 
     entry_value = format_number(setup.get("entry"), round_it)

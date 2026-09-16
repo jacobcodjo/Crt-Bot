@@ -72,6 +72,10 @@ STRUCTURE_SWING_WINDOW = {
 }
 DEFAULT_STRUCTURE_SWING_WINDOW = 2
 
+# Tolérance (en % du prix) pour considérer que le prix actuel est "sur" la zone
+# d'entrée -> ordre au marché (Buy/Sell) plutôt qu'un ordre en attente (Limit/Stop).
+ORDER_TYPE_TOLERANCE_PCT = 0.0005
+
 CANDLE_COUNT = 150
 STATE_FILE = "state.json"
 STATS_FILE = "trade_stats.json"

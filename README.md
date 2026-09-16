@@ -27,6 +27,10 @@ Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
      offrent généralement un ratio risque/récompense plus favorable
    - Ratio risque/récompense approximatif — **seuls les setups avec un R:R ≥ 1:3
      déclenchent une alerte** (`MIN_RISK_REWARD` dans `config.py`)
+   - **Type d'ordre** (Buy/Sell/Buy Limit/Sell Limit/Buy Stop/Sell Stop), déterminé
+     en comparant l'entrée au prix actuel — comme sur une app de trading
+     (`ORDER_TYPE_TOLERANCE_PCT` dans `config.py` pour ajuster la tolérance
+     "prix déjà sur zone" = ordre au marché).
 5. Confirmation Fibonacci OTE (Optimal Trade Entry, retracement 61.8%-79% du
    mouvement impulsif après le sweep) — indiquée dans le message quand l'entrée
    tombe dans cette zone (`REQUIRE_FIB_OTE = True` dans `config.py` pour en faire
@@ -50,9 +54,11 @@ Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
 > (150 bougies, `CANDLE_COUNT`) — un trade qui met plus de temps que ça à atteindre
 > son SL/TP peut ne jamais être résolu et rester indéfiniment "en attente".
 
-Le bot tourne gratuitement via **GitHub Actions** (cron toutes les 5 minutes — le minimum
-fiable sur GitHub Actions ; en dessous, les exécutions peuvent être retardées voire
-ignorées par GitHub en cas de forte charge), sans serveur à héberger.
+Le bot tourne gratuitement via **GitHub Actions**, déclenché toutes les 5 minutes par un
+**cronjob externe sur [cron-job.org](https://cron-job.org)** — le `schedule:` interne de
+GitHub Actions s'est avéré peu fiable en pratique (délais de plusieurs heures, best-effort
+non garanti), donc le déclenchement se fait désormais via l'API GitHub
+(`workflow_dispatch`) plutôt que via le cron intégré.
 
 > ⚠️ Ceci est un outil d'aide à la décision basé sur une implémentation simplifiée
 > des concepts ICT / Smart Money Concepts. Ce n'est pas un conseil financier et la
@@ -87,8 +93,11 @@ Pour un usage sérieux, crée ta propre app sur https://api.deriv.com pour obten
    - `TELEGRAM_BOT_TOKEN`
    - `TELEGRAM_CHAT_ID`
    - `DERIV_APP_ID` (optionnel, sinon `1089` par défaut)
-4. Le workflow `.github/workflows/crt-scan.yml` se lance automatiquement toutes les 15 minutes.
-   Tu peux aussi le lancer manuellement depuis l'onglet **Actions** (`workflow_dispatch`).
+4. Le workflow `.github/workflows/crt-scan.yml` est déclenché toutes les 5 minutes par
+   un cronjob externe configuré sur cron-job.org (voir section ci-dessous), qui appelle
+   l'API GitHub (`POST /repos/<user>/<repo>/actions/workflows/crt-scan.yml/dispatches`
+   avec un token GitHub en en-tête `Authorization: Bearer <token>` et le corps
+   `{"ref":"main"}`). Tu peux aussi le lancer manuellement depuis l'onglet **Actions**.
 
 ## 4. Personnaliser
 
@@ -97,7 +106,8 @@ Pour un usage sérieux, crée ta propre app sur https://api.deriv.com pour obten
   `cryETHUSD`, `cryLTCUSD`, `cryXRPUSD`), Volatility Index classiques (`R_10`,
   `R_25`, `R_50`, `R_75`, `R_100`) et toutes les variantes 1 seconde disponibles
   chez Deriv (`1HZ10V` à `1HZ300V`), Step Index (`stpRNG`) — 50 actifs au total.
-- **Fréquence de scan** : modifier le `cron` dans le workflow.
+- **Fréquence de scan** : modifier l'intervalle du cronjob sur cron-job.org (le
+  `schedule:` du fichier `.yml` n'est plus utilisé).
 - **Répartition référence/confirmation** : `REFERENCE_CONFIRMATION_MAP` dans
   `config.py` — modifier quels TF de confirmation sont associés à W1/D1/H4.
 - **Sensibilité de la confirmation** : `STRUCTURE_SWING_WINDOW` dans `config.py`

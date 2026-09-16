@@ -27,6 +27,7 @@ from config import (
     REFERENCE_CONFIRMATION_MAP,
     STRUCTURE_SWING_WINDOW,
     DEFAULT_STRUCTURE_SWING_WINDOW,
+    ORDER_TYPE_TOLERANCE_PCT,
 )
 
 
@@ -236,6 +237,27 @@ def is_within_fib_ote(entry, zone_low, zone_high):
     return zone_low <= entry <= zone_high
 
 
+def classify_order_type(direction, entry, current_price, tolerance_pct=ORDER_TYPE_TOLERANCE_PCT):
+    """
+    Détermine le type d'ordre (comme sur une app de trading) en comparant la zone
+    d'entrée au prix actuel :
+    - Buy / Sell : le prix est déjà sur la zone -> exécution immédiate
+    - Buy Limit / Sell Limit : entrée en retracement, prix doit revenir en arrière
+    - Buy Stop / Sell Stop : entrée en cassure, prix doit continuer dans le même sens
+    """
+    if entry is None or not current_price:
+        return "Buy" if direction == "bullish" else "Sell"
+
+    diff_pct = abs(current_price - entry) / current_price
+    if diff_pct <= tolerance_pct:
+        return "Buy" if direction == "bullish" else "Sell"
+
+    if direction == "bullish":
+        return "Buy Limit" if entry < current_price else "Buy Stop"
+    else:
+        return "Sell Limit" if entry > current_price else "Sell Stop"
+
+
 def detect_trend(candles, swing_window=TREND_SWING_WINDOW, swing_count=TREND_SWING_COUNT,
                   sma_period=TREND_SMA_PERIOD):
     """
@@ -354,12 +376,16 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles_by_tf):
                     or (trend == "bearish" and sweep["direction"] == "bullish")
                 )
 
+                current_price = ltf_candles[-1]["close"]
+                order_type = classify_order_type(sweep["direction"], trade_levels["entry"], current_price)
+
                 setups.append({
                     "symbol": symbol,
                     "reference_tf": ref_tf,
                     "confirmation_tf": confirmation_tf,
                     "ref_epoch": ref_range["epoch"],
                     "direction": sweep["direction"],
+                    "order_type": order_type,
                     "range_high": ref_range["high"],
                     "range_low": ref_range["low"],
                     "sweep_candle": sweep["candle"],

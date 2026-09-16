@@ -142,17 +142,6 @@
       "risk_reward": 4.9,
       "counter_trend": false,
       "alert_epoch": 1789558200
-    },
-    "cryBTCUSD_H4_1789531200_M15": {
-      "symbol": "cryBTCUSD",
-      "direction": "bullish",
-      "confirmation_tf": "M15",
-      "entry": 75592.57,
-      "stop_loss": 75466.074087,
-      "take_profit": 76067.234,
-      "risk_reward": 3.75,
-      "counter_trend": false,
-      "alert_epoch": 1789548300
     }
   },
   "history": [
@@ -169,6 +158,13 @@
       "counter_trend": true,
       "risk_reward": 8.35,
       "result": "SL"
+    },
+    {
+      "symbol": "cryBTCUSD",
+      "direction": "bullish",
+      "counter_trend": false,
+      "risk_reward": 3.75,
+      "result": "TP"
     }
   ]
 }

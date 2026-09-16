@@ -153,6 +153,17 @@
       "risk_reward": 3.6,
       "counter_trend": true,
       "alert_epoch": 1789372800
+    },
+    "1HZ250V_D1_1789430400_H1": {
+      "symbol": "1HZ250V",
+      "direction": "bullish",
+      "confirmation_tf": "H1",
+      "entry": 0.35752,
+      "stop_loss": 0.335921955,
+      "take_profit": 0.441435,
+      "risk_reward": 3.89,
+      "counter_trend": false,
+      "alert_epoch": 1789549200
     }
   },
   "history": [

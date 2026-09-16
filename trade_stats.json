@@ -132,17 +132,6 @@
       "counter_trend": false,
       "alert_epoch": 1789581600
     },
-    "1HZ75V_H4_1789560000_M15": {
-      "symbol": "1HZ75V",
-      "direction": "bullish",
-      "confirmation_tf": "M15",
-      "entry": 5742.66,
-      "stop_loss": 5726.605265,
-      "take_profit": 5986.91,
-      "risk_reward": 15.21,
-      "counter_trend": true,
-      "alert_epoch": 1789584300
-    },
     "cryLTCUSD_D1_1789430400_H1": {
       "symbol": "cryLTCUSD",
       "direction": "bullish",
@@ -442,6 +431,13 @@
       "counter_trend": false,
       "risk_reward": 3.18,
       "result": "TP"
+    },
+    {
+      "symbol": "1HZ75V",
+      "direction": "bullish",
+      "counter_trend": true,
+      "risk_reward": 15.21,
+      "result": "SL"
     }
   ]
 }

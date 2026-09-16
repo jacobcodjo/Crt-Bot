@@ -48,5 +48,9 @@
   "frxUSDJPY_H4_1789545600_M15": true,
   "content_frxUSDJPY_bearish_155.228_155.318621_154.945": true,
   "frxCHFJPY_H4_1789545600_M15": true,
-  "content_frxCHFJPY_bearish_189.662_189.605755_189.247": true
+  "content_frxCHFJPY_bearish_189.662_189.605755_189.247": true,
+  "R_50_H4_1789545600_M15": true,
+  "content_R_50_bearish_93.3205_93.58717_91.382": true,
+  "1HZ25V_H4_1789545600_M15": true,
+  "content_1HZ25V_bearish_893133.26_896329.170615_879005.93": true
 }

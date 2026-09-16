@@ -142,6 +142,17 @@
       "risk_reward": 7.29,
       "counter_trend": false,
       "alert_epoch": 1789545600
+    },
+    "R_75_D1_1789430400_H1": {
+      "symbol": "R_75",
+      "direction": "bearish",
+      "confirmation_tf": "H1",
+      "entry": 47083.7456,
+      "stop_loss": 47487.5989335,
+      "take_profit": 43721.806000000004,
+      "risk_reward": 8.32,
+      "counter_trend": false,
+      "alert_epoch": 1789552800
     }
   },
   "history": [

@@ -164,6 +164,17 @@
       "risk_reward": 3.89,
       "counter_trend": false,
       "alert_epoch": 1789549200
+    },
+    "frxGBPCAD_D1_1789430400_H1": {
+      "symbol": "frxGBPCAD",
+      "direction": "bearish",
+      "confirmation_tf": "H1",
+      "entry": 1.87798,
+      "stop_loss": 1.879629345,
+      "take_profit": 1.87203,
+      "risk_reward": 3.61,
+      "counter_trend": false,
+      "alert_epoch": 1789534800
     }
   },
   "history": [

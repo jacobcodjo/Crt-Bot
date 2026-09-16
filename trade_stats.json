@@ -1,49 +1,5 @@
 {
   "pending": {
-    "R_10_H4_1789473600_M15": {
-      "symbol": "R_10",
-      "direction": "bullish",
-      "confirmation_tf": "M15",
-      "entry": 4899.484,
-      "stop_loss": 4894.365593,
-      "take_profit": 4937.6305,
-      "risk_reward": 7.45,
-      "counter_trend": false,
-      "alert_epoch": 1789489800
-    },
-    "1HZ100V_D1_1789344000_M30": {
-      "symbol": "1HZ100V",
-      "direction": "bearish",
-      "confirmation_tf": "M30",
-      "entry": 879.06,
-      "stop_loss": 896.28792,
-      "take_profit": 810.3100000000001,
-      "risk_reward": 3.99,
-      "counter_trend": false,
-      "alert_epoch": 1789435800
-    },
-    "1HZ100V_D1_1789344000_M15": {
-      "symbol": "1HZ100V",
-      "direction": "bearish",
-      "confirmation_tf": "M15",
-      "entry": 889.81,
-      "stop_loss": 896.28792,
-      "take_profit": 810.3100000000001,
-      "risk_reward": 12.27,
-      "counter_trend": false,
-      "alert_epoch": 1789436700
-    },
-    "1HZ25V_H4_1789488000_M15": {
-      "symbol": "1HZ25V",
-      "direction": "bullish",
-      "confirmation_tf": "M15",
-      "entry": 883128.12,
-      "stop_loss": 881072.56334,
-      "take_profit": 892337.3700000001,
-      "risk_reward": 4.48,
-      "counter_trend": false,
-      "alert_epoch": 1789506900
-    },
     "R_100_H4_1789488000_M15": {
       "symbol": "R_100",
       "direction": "bearish",
@@ -76,6 +32,127 @@
       "risk_reward": 3.26,
       "counter_trend": false,
       "alert_epoch": 1789518600
+    },
+    "frxGBPUSD_H4_1789516800_M15": {
+      "symbol": "frxGBPUSD",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 1.3487,
+      "stop_loss": 1.3493343299999998,
+      "take_profit": 1.34655,
+      "risk_reward": 3.39,
+      "counter_trend": false,
+      "alert_epoch": 1789539300
+    },
+    "frxUSDJPY_D1_1789430400_M15": {
+      "symbol": "frxUSDJPY",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 155.317,
+      "stop_loss": 155.50571399999998,
+      "take_profit": 154.406,
+      "risk_reward": 4.83,
+      "counter_trend": false,
+      "alert_epoch": 1789519500
+    },
+    "frxUSDCAD_D1_1789430400_M30": {
+      "symbol": "frxUSDCAD",
+      "direction": "bearish",
+      "confirmation_tf": "M30",
+      "entry": 1.39302,
+      "stop_loss": 1.39379655,
+      "take_profit": 1.38984,
+      "risk_reward": 4.1,
+      "counter_trend": false,
+      "alert_epoch": 1789533000
+    },
+    "frxUSDCAD_D1_1789430400_M15": {
+      "symbol": "frxUSDCAD",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 1.39326,
+      "stop_loss": 1.39379655,
+      "take_profit": 1.38984,
+      "risk_reward": 6.37,
+      "counter_trend": false,
+      "alert_epoch": 1789533000
+    },
+    "cryXRPUSD_H4_1789516800_M15": {
+      "symbol": "cryXRPUSD",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 1.2953,
+      "stop_loss": 1.30054995,
+      "take_profit": 1.2741,
+      "risk_reward": 4.04,
+      "counter_trend": false,
+      "alert_epoch": 1789535700
+    },
+    "R_25_H4_1789516800_M15": {
+      "symbol": "R_25",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 2712.615,
+      "stop_loss": 2719.3139775,
+      "take_profit": 2680.434,
+      "risk_reward": 4.8,
+      "counter_trend": false,
+      "alert_epoch": 1789535700
+    },
+    "R_50_H4_1789516800_M15": {
+      "symbol": "R_50",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 92.2806,
+      "stop_loss": 92.08203595,
+      "take_profit": 93.43084999999999,
+      "risk_reward": 5.79,
+      "counter_trend": false,
+      "alert_epoch": 1789534800
+    },
+    "1HZ10V_H4_1789516800_M15": {
+      "symbol": "1HZ10V",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 9527.56,
+      "stop_loss": 9515.509865000002,
+      "take_profit": 9607.395,
+      "risk_reward": 6.63,
+      "counter_trend": false,
+      "alert_epoch": 1789532100
+    },
+    "1HZ50V_D1_1789430400_M15": {
+      "symbol": "1HZ50V",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 239685.36,
+      "stop_loss": 241343.10124499997,
+      "take_profit": 228894.91999999998,
+      "risk_reward": 6.51,
+      "counter_trend": false,
+      "alert_epoch": 1789523100
+    },
+    "1HZ75V_D1_1789430400_M15": {
+      "symbol": "1HZ75V",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 5628.26,
+      "stop_loss": 5581.917645,
+      "take_profit": 6293.775,
+      "risk_reward": 14.36,
+      "counter_trend": true,
+      "alert_epoch": 1789524900
+    },
+    "stpRNG_H4_1789516800_M15": {
+      "symbol": "stpRNG",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 7578.2,
+      "stop_loss": 7570.213000000001,
+      "take_profit": 7602.75,
+      "risk_reward": 3.07,
+      "counter_trend": false,
+      "alert_epoch": 1789535700
     }
   },
   "history": [
@@ -273,6 +350,34 @@
       "direction": "bearish",
       "counter_trend": false,
       "risk_reward": 5.9,
+      "result": "SL"
+    },
+    {
+      "symbol": "R_10",
+      "direction": "bullish",
+      "counter_trend": false,
+      "risk_reward": 7.45,
+      "result": "TP"
+    },
+    {
+      "symbol": "1HZ100V",
+      "direction": "bearish",
+      "counter_trend": false,
+      "risk_reward": 3.99,
+      "result": "TP"
+    },
+    {
+      "symbol": "1HZ100V",
+      "direction": "bearish",
+      "counter_trend": false,
+      "risk_reward": 12.27,
+      "result": "TP"
+    },
+    {
+      "symbol": "1HZ25V",
+      "direction": "bullish",
+      "counter_trend": false,
+      "risk_reward": 4.48,
       "result": "SL"
     }
   ]

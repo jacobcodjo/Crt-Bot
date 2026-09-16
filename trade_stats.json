@@ -252,6 +252,17 @@
       "risk_reward": 3.15,
       "counter_trend": false,
       "alert_epoch": 1789596900
+    },
+    "frxUSDJPY_H4_1789574400_M15": {
+      "symbol": "frxUSDJPY",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 156.215,
+      "stop_loss": 156.3591405,
+      "take_profit": 154.86,
+      "risk_reward": 9.4,
+      "counter_trend": false,
+      "alert_epoch": 1789599600
     }
   },
   "history": [

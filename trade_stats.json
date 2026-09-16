@@ -186,6 +186,17 @@
       "risk_reward": 6.71,
       "counter_trend": false,
       "alert_epoch": 1789585200
+    },
+    "cryLTCUSD_D1_1789430400_H1": {
+      "symbol": "cryLTCUSD",
+      "direction": "bullish",
+      "confirmation_tf": "H1",
+      "entry": 50.69,
+      "stop_loss": 50.269852500000006,
+      "take_profit": 53.095,
+      "risk_reward": 5.72,
+      "counter_trend": false,
+      "alert_epoch": 1789585200
     }
   },
   "history": [

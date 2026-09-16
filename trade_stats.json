@@ -197,6 +197,17 @@
       "risk_reward": 3.12,
       "counter_trend": false,
       "alert_epoch": 1789568100
+    },
+    "frxCHFJPY_H4_1789545600_M15": {
+      "symbol": "frxCHFJPY",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 189.662,
+      "stop_loss": 189.6057555,
+      "take_profit": 189.247,
+      "risk_reward": 7.38,
+      "counter_trend": false,
+      "alert_epoch": 1789569000
     }
   },
   "history": [

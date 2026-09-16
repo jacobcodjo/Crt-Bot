@@ -198,17 +198,6 @@
       "counter_trend": false,
       "alert_epoch": 1789590600
     },
-    "cryLTCUSD_H4_1789574400_M15": {
-      "symbol": "cryLTCUSD",
-      "direction": "bearish",
-      "confirmation_tf": "M15",
-      "entry": 51.135,
-      "stop_loss": 51.3606675,
-      "take_profit": 50.195,
-      "risk_reward": 4.17,
-      "counter_trend": true,
-      "alert_epoch": 1789595100
-    },
     "frxEURUSD_H4_1789574400_M15": {
       "symbol": "frxEURUSD",
       "direction": "bullish",
@@ -481,6 +470,13 @@
       "direction": "bullish",
       "counter_trend": true,
       "risk_reward": 15.21,
+      "result": "SL"
+    },
+    {
+      "symbol": "cryLTCUSD",
+      "direction": "bearish",
+      "counter_trend": true,
+      "risk_reward": 4.17,
       "result": "SL"
     }
   ]

@@ -198,17 +198,6 @@
       "counter_trend": false,
       "alert_epoch": 1789581600
     },
-    "frxXAUUSD_D1_1789430400_H1": {
-      "symbol": "frxXAUUSD",
-      "direction": "bearish",
-      "confirmation_tf": "H1",
-      "entry": 4341.85,
-      "stop_loss": 4367.94288,
-      "take_profit": 4261.73,
-      "risk_reward": 3.07,
-      "counter_trend": false,
-      "alert_epoch": 1789581600
-    },
     "1HZ75V_H4_1789560000_M15": {
       "symbol": "1HZ75V",
       "direction": "bullish",
@@ -360,6 +349,13 @@
       "direction": "bearish",
       "counter_trend": false,
       "risk_reward": 7.27,
+      "result": "TP"
+    },
+    {
+      "symbol": "frxXAUUSD",
+      "direction": "bearish",
+      "counter_trend": false,
+      "risk_reward": 3.07,
       "result": "TP"
     }
   ]

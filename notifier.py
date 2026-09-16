@@ -104,9 +104,9 @@ def format_setup_message(setup: dict) -> str:
 
     if setup.get("counter_trend"):
         trend_word = "haussière" if setup.get("trend") == "bullish" else "baissière"
-        lines.append(f"⚠️ Contre-tendance (tendance de fond D1 {trend_word})")
+        lines.append(f"⚠️ Contre-tendance (D1 {trend_word})")
 
     if setup.get("in_killzone") is False:
-        lines.append("⏰ Hors killzone (Londres/NY)")
+        lines.append("⏰ Hors killzone")
 
     return "\n".join(lines)

@@ -55,17 +55,6 @@
       "counter_trend": false,
       "alert_epoch": 1789548300
     },
-    "1HZ15V_W1_1789257600_H4": {
-      "symbol": "1HZ15V",
-      "direction": "bearish",
-      "confirmation_tf": "H4",
-      "entry": 13795.327,
-      "stop_loss": 13895.076066,
-      "take_profit": 13395.588,
-      "risk_reward": 4.01,
-      "counter_trend": false,
-      "alert_epoch": 1789459200
-    },
     "1HZ90V_W1_1789257600_H4": {
       "symbol": "1HZ90V",
       "direction": "bearish",
@@ -98,7 +87,59 @@
       "risk_reward": 9.05,
       "counter_trend": false,
       "alert_epoch": 1789358400
+    },
+    "frxNZDCAD_W1_1789084800_H4": {
+      "symbol": "frxNZDCAD",
+      "direction": "bullish",
+      "confirmation_tf": "H4",
+      "entry": 0.80094,
+      "stop_loss": 0.7991702150000001,
+      "take_profit": 0.81409,
+      "risk_reward": 7.43,
+      "counter_trend": false,
+      "alert_epoch": 1789531200
+    },
+    "R_10_H4_1789531200_M15": {
+      "symbol": "R_10",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 4924.064,
+      "stop_loss": 4918.831354000001,
+      "take_profit": 4945.5355,
+      "risk_reward": 4.1,
+      "counter_trend": false,
+      "alert_epoch": 1789549200
+    },
+    "R_25_H4_1789531200_M15": {
+      "symbol": "R_25",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 2696.093,
+      "stop_loss": 2689.698478,
+      "take_profit": 2734.7560000000003,
+      "risk_reward": 6.05,
+      "counter_trend": false,
+      "alert_epoch": 1789551900
+    },
+    "1HZ75V_D1_1789430400_H1": {
+      "symbol": "1HZ75V",
+      "direction": "bullish",
+      "confirmation_tf": "H1",
+      "entry": 5658.04,
+      "stop_loss": 5581.917645,
+      "take_profit": 6293.775,
+      "risk_reward": 8.35,
+      "counter_trend": true,
+      "alert_epoch": 1789524000
     }
   },
-  "history": []
+  "history": [
+    {
+      "symbol": "1HZ15V",
+      "direction": "bearish",
+      "counter_trend": false,
+      "risk_reward": 4.01,
+      "result": "SL"
+    }
+  ]
 }

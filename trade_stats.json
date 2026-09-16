@@ -252,6 +252,17 @@
       "risk_reward": 3.19,
       "counter_trend": false,
       "alert_epoch": 1789527600
+    },
+    "R_75_H4_1789560000_M15": {
+      "symbol": "R_75",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 45953.8194,
+      "stop_loss": 45638.78909005,
+      "take_profit": 48027.3854,
+      "risk_reward": 6.58,
+      "counter_trend": false,
+      "alert_epoch": 1789574400
     }
   },
   "history": [

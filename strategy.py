@@ -13,6 +13,7 @@ système de trading garanti — à affiner et backtester avant tout usage réel.
 """
 
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 
 from config import (
     STRICT_CONFIRMATION_TIMEFRAMES,
@@ -28,6 +29,8 @@ from config import (
     STRUCTURE_SWING_WINDOW,
     DEFAULT_STRUCTURE_SWING_WINDOW,
     ORDER_TYPE_TOLERANCE_PCT,
+    KILLZONES_NY_TIME,
+    REQUIRE_KILLZONE_FOR_REAL_MARKETS,
 )
 
 
@@ -162,6 +165,21 @@ def is_synthetic_index(symbol):
     return symbol.startswith(SYNTHETIC_INDEX_PREFIXES)
 
 
+def is_in_killzone(epoch):
+    """
+    Vérifie si un epoch tombe dans une fenêtre killzone (heure de New York).
+    Ne s'applique qu'aux marchés réels — jamais appelé pour les indices synthétiques.
+    """
+    dt_ny = datetime.fromtimestamp(epoch, tz=ZoneInfo("America/New_York"))
+    minutes_of_day = dt_ny.hour * 60 + dt_ny.minute
+    for start_h, start_m, end_h, end_m in KILLZONES_NY_TIME:
+        start = start_h * 60 + start_m
+        end = end_h * 60 + end_m
+        if start <= minutes_of_day <= end:
+            return True
+    return False
+
+
 def compute_trade_levels(symbol, direction, range_high, range_low, sweep_candle, fvg, ob):
     """
     Calcule des niveaux de trade indicatifs à partir des éléments déjà détectés :
@@ -194,17 +212,26 @@ def compute_trade_levels(symbol, direction, range_high, range_low, sweep_candle,
     else:
         take_profit = range_low - extension
 
+    # Cible intermédiaire (T1) : le milieu du range, souvent visé en premier avant
+    # l'extrémité opposée (T2/take_profit) -- fixe, ne dépend pas de l'extension.
+    take_profit_mid = (range_high + range_low) / 2
+
     risk_reward = None
+    risk_reward_mid = None
     if entry is not None and entry != stop_loss:
         risk = abs(entry - stop_loss)
         reward = abs(take_profit - entry)
         risk_reward = round(reward / risk, 2) if risk > 0 else None
+        reward_mid = abs(take_profit_mid - entry)
+        risk_reward_mid = round(reward_mid / risk, 2) if risk > 0 else None
 
     return {
         "entry": entry,
         "stop_loss": stop_loss,
         "take_profit": take_profit,
+        "take_profit_mid": take_profit_mid,
         "risk_reward": risk_reward,
+        "risk_reward_mid": risk_reward_mid,
         "extended_target": extended_target,
     }
 
@@ -364,6 +391,16 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles_by_tf):
                 if trade_levels["risk_reward"] is None or trade_levels["risk_reward"] < MIN_RISK_REWARD:
                     continue
 
+                # Killzone : uniquement pertinent sur les marchés réels (forex, or,
+                # cryptos) -- None pour les indices synthétiques (non applicable,
+                # ils tournent 24/7 sans session de liquidité réelle).
+                if is_synthetic_index(symbol):
+                    in_killzone = None
+                else:
+                    in_killzone = is_in_killzone(sweep["candle"]["epoch"])
+                    if REQUIRE_KILLZONE_FOR_REAL_MARKETS and not in_killzone:
+                        continue  # sweep hors killzone -> setup ignoré
+
                 structure_candle = ltf_candles[structure["break_index"]]
                 fib_zone_low, fib_zone_high = compute_fib_ote(sweep["direction"], sweep["candle"], structure_candle)
                 fib_ote_confirmed = is_within_fib_ote(trade_levels["entry"], fib_zone_low, fib_zone_high)
@@ -393,11 +430,14 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles_by_tf):
                     "entry": trade_levels["entry"],
                     "stop_loss": trade_levels["stop_loss"],
                     "take_profit": trade_levels["take_profit"],
+                    "take_profit_mid": trade_levels["take_profit_mid"],
                     "risk_reward": trade_levels["risk_reward"],
+                    "risk_reward_mid": trade_levels["risk_reward_mid"],
                     "extended_target": trade_levels["extended_target"],
                     "fib_ote_confirmed": fib_ote_confirmed,
                     "trend": trend,
                     "counter_trend": counter_trend,
+                    "in_killzone": in_killzone,
                     "fvg": fvg,
                     "order_block": ob,
                 })

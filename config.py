@@ -76,6 +76,20 @@ DEFAULT_STRUCTURE_SWING_WINDOW = 2
 # d'entrée -> ordre au marché (Buy/Sell) plutôt qu'un ordre en attente (Limit/Stop).
 ORDER_TYPE_TOLERANCE_PCT = 0.0005
 
+# Killzones (heure de New York) : fenêtres horaires où un sweep a une vraie
+# validité institutionnelle. Ne s'applique QUE sur les marchés réels (forex, or,
+# cryptos) -- les indices synthétiques Deriv sont générés par algorithme, tournent
+# 24/7 et n'ont aucune session de liquidité réelle à manipuler, donc le concept
+# de killzone ne leur est pas applicable (jamais de tag/filtre sur ces actifs).
+KILLZONES_NY_TIME = [
+    (3, 0, 6, 0),     # Londres
+    (8, 30, 11, 30),  # New York
+]
+# False (par défaut) : la killzone est juste indiquée dans le message (tag
+# informatif si le sweep est HORS killzone). True : setup hors killzone ignoré
+# (filtre bloquant), uniquement sur les marchés réels.
+REQUIRE_KILLZONE_FOR_REAL_MARKETS = False
+
 CANDLE_COUNT = 150
 STATE_FILE = "state.json"
 STATS_FILE = "trade_stats.json"

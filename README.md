@@ -22,11 +22,12 @@ Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
    - **Entrée** : bord de l'Order Block le plus proche du prix (ou milieu du FVG si pas d'OB)
    - **Stop loss** : au-delà de l'extrême de la bougie de sweep, avec une marge de
      sécurité (`STOP_LOSS_BUFFER_PCT` dans `config.py`, 0.05% par défaut)
-   - **Take profit** : côté opposé du range — étendu pour les indices synthétiques
+   - **Deux cibles** : TP1 à mi-range (souvent visé en premier) et TP2 à
+     l'extrémité opposée du range — étendue pour les indices synthétiques
      (`SYNTHETIC_TP_EXTENSION_PCT`, +50% de la taille du range par défaut), qui
      offrent généralement un ratio risque/récompense plus favorable
-   - Ratio risque/récompense approximatif — **seuls les setups avec un R:R ≥ 1:3
-     déclenchent une alerte** (`MIN_RISK_REWARD` dans `config.py`)
+   - Ratio risque/récompense approximatif (calculé sur TP2) — **seuls les
+     setups avec un R:R ≥ 1:3 déclenchent une alerte** (`MIN_RISK_REWARD`)
    - **Type d'ordre** (Buy/Sell/Buy Limit/Sell Limit/Buy Stop/Sell Stop), déterminé
      en comparant l'entrée au prix actuel — comme sur une app de trading
      (`ORDER_TYPE_TOLERANCE_PCT` dans `config.py` pour ajuster la tolérance
@@ -42,13 +43,20 @@ Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
    moyenne mobile (`TREND_SMA_PERIOD`, 50 bougies D1 par défaut). Un setup à
    contre-tendance n'est **jamais bloqué**, juste signalé par un tag
    `⚠️ Contre-tendance` dans le message.
-7. **Suivi automatique des trades** : chaque alerte envoyée est enregistrée
+7. **Killzone** (Londres 3h-6h / New York 8h30-11h30, heure de New York),
+   uniquement sur les marchés réels (forex, or, cryptos) — les indices
+   synthétiques Deriv tournent 24/7 par algorithme sans session de liquidité
+   réelle, donc le concept ne leur est jamais appliqué. Informatif par défaut
+   (tag `⏰ Hors killzone` si le sweep a eu lieu en dehors de ces fenêtres) ;
+   `REQUIRE_KILLZONE_FOR_REAL_MARKETS = True` dans `config.py` pour en faire un
+   filtre bloquant.
+8. **Suivi automatique des trades** : chaque alerte envoyée est enregistrée
    (`trade_stats.json`). À chaque scan suivant, le bot vérifie si le SL ou le TP
    a été touché en premier (si les deux sont touchés dans la même bougie, hypothèse
    prudente : le SL a cédé). Un résumé du taux de réussite global, et séparé
    contre-tendance vs dans le sens de la tendance, s'affiche dans les logs
    GitHub Actions à chaque exécution.
-8. Envoi d'une alerte **Telegram** dès qu'un setup confirmé est détecté.
+9. Envoi d'une alerte **Telegram** dès qu'un setup confirmé est détecté.
 
 > ⚠️ Le suivi ne voit que les bougies encore présentes dans l'historique récupéré
 > (150 bougies, `CANDLE_COUNT`) — un trade qui met plus de temps que ça à atteindre

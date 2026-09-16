@@ -77,7 +77,9 @@ def format_setup_message(setup: dict) -> str:
         # le message devient trompeur -> on repasse en précision brute pour CETTE alerte.
         entry_raw = setup.get("entry")
         rounded_values = [
-            round(v, 2) for v in (entry_raw, setup["stop_loss"], setup["take_profit"])
+            round(v, 2) for v in (
+                entry_raw, setup["stop_loss"], setup["take_profit_mid"], setup["take_profit"]
+            )
             if v is not None
         ]
         if len(rounded_values) != len(set(rounded_values)):
@@ -91,10 +93,11 @@ def format_setup_message(setup: dict) -> str:
     entry_value = format_number(setup.get("entry"), round_it)
     lines.append(f"Entrée : {entry_value if entry_value is not None else 'n/d'}")
     lines.append(f"SL : {format_number(setup['stop_loss'], round_it)}")
-    lines.append(f"TP : {format_number(setup['take_profit'], round_it)}{tp_tag}")
+    lines.append(f"TP1 (mi-range) : {format_number(setup['take_profit_mid'], round_it)}")
+    lines.append(f"TP2 (extrémité) : {format_number(setup['take_profit'], round_it)}{tp_tag}")
 
     if setup.get("risk_reward"):
-        lines.append(f"R:R : ~1:{setup['risk_reward']}")
+        lines.append(f"R:R (TP2) : ~1:{setup['risk_reward']}")
 
     if setup.get("fib_ote_confirmed"):
         lines.append("📐 Zone Fibo OTE (61.8-79%)")
@@ -102,5 +105,8 @@ def format_setup_message(setup: dict) -> str:
     if setup.get("counter_trend"):
         trend_word = "haussière" if setup.get("trend") == "bullish" else "baissière"
         lines.append(f"⚠️ Contre-tendance (tendance de fond D1 {trend_word})")
+
+    if setup.get("in_killzone") is False:
+        lines.append("⏰ Hors killzone (Londres/NY)")
 
     return "\n".join(lines)

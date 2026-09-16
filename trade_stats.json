@@ -55,17 +55,6 @@
       "counter_trend": false,
       "alert_epoch": 1789344000
     },
-    "1HZ90V_D1_1789430400_H1": {
-      "symbol": "1HZ90V",
-      "direction": "bearish",
-      "confirmation_tf": "H1",
-      "entry": 17996.37,
-      "stop_loss": 18263.211042,
-      "take_profit": 16214.027500000002,
-      "risk_reward": 6.68,
-      "counter_trend": false,
-      "alert_epoch": 1789527600
-    },
     "1HZ250V_W1_1789257600_H4": {
       "symbol": "1HZ250V",
       "direction": "bearish",
@@ -231,17 +220,6 @@
       "counter_trend": false,
       "alert_epoch": 1789571700
     },
-    "R_25_H4_1789545600_M15": {
-      "symbol": "R_25",
-      "direction": "bearish",
-      "confirmation_tf": "M15",
-      "entry": 2707.988,
-      "stop_loss": 2717.4930675,
-      "take_profit": 2678.9069999999997,
-      "risk_reward": 3.06,
-      "counter_trend": false,
-      "alert_epoch": 1789569900
-    },
     "1HZ30V_D1_1789430400_H1": {
       "symbol": "1HZ30V",
       "direction": "bullish",
@@ -309,6 +287,20 @@
       "direction": "bullish",
       "counter_trend": false,
       "risk_reward": 6.58,
+      "result": "SL"
+    },
+    {
+      "symbol": "1HZ90V",
+      "direction": "bearish",
+      "counter_trend": false,
+      "risk_reward": 6.68,
+      "result": "SL"
+    },
+    {
+      "symbol": "R_25",
+      "direction": "bearish",
+      "counter_trend": false,
+      "risk_reward": 3.06,
       "result": "SL"
     }
   ]

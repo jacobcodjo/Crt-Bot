@@ -100,5 +100,7 @@
   "cryLTCUSD_H4_1789574400_M15": true,
   "content_cryLTCUSD_bearish_51.135_51.360667_50.195": true,
   "frxEURUSD_H4_1789574400_M15": true,
-  "content_frxEURUSD_bullish_1.14631_1.145577_1.15465": true
+  "content_frxEURUSD_bullish_1.14631_1.145577_1.15465": true,
+  "stpRNG_H4_1789574400_M15": true,
+  "content_stpRNG_bearish_7591.4_7598.29725_7568.5": true
 }

@@ -154,17 +154,6 @@
       "counter_trend": false,
       "alert_epoch": 1789588800
     },
-    "1HZ250V_H4_1789574400_M15": {
-      "symbol": "1HZ250V",
-      "direction": "bearish",
-      "confirmation_tf": "M15",
-      "entry": 0.38923,
-      "stop_loss": 0.397468635,
-      "take_profit": 0.36055000000000004,
-      "risk_reward": 3.48,
-      "counter_trend": false,
-      "alert_epoch": 1789591500
-    },
     "R_25_H4_1789574400_M15": {
       "symbol": "R_25",
       "direction": "bearish",
@@ -520,6 +509,13 @@
       "direction": "bearish",
       "counter_trend": false,
       "risk_reward": 21.85,
+      "result": "TP"
+    },
+    {
+      "symbol": "1HZ250V",
+      "direction": "bearish",
+      "counter_trend": false,
+      "risk_reward": 3.48,
       "result": "TP"
     }
   ]

@@ -102,11 +102,11 @@ def format_setup_message(setup: dict) -> str:
 
     tags = []
     if setup.get("fib_ote_confirmed"):
-        tags.append("📐")
+        tags.append("📐 OTE")
     if setup.get("counter_trend"):
-        tags.append("⚠️")
+        tags.append("⚠️Contre-tendance")
     if setup.get("in_killzone") is False:
-        tags.append("⏰")
+        tags.append("⏰ Hors killzone")
     if tags:
         lines.append(" ".join(tags))
 

@@ -52,5 +52,9 @@
   "1HZ50V_H4_1789632000_M15": true,
   "content_1HZ50V_bullish_235544.26_234925.39854_244597.005": true,
   "frxCHFJPY_D1_1789516800_H1": true,
-  "content_frxCHFJPY_bullish_188.802_188.842532_189.795": true
+  "content_frxCHFJPY_bullish_188.802_188.842532_189.795": true,
+  "1HZ10V_D1_1789516800_H1": true,
+  "content_1HZ10V_bullish_9450.83_9429.492895_9647.88": true,
+  "1HZ90V_H4_1789632000_M15": true,
+  "content_1HZ90V_bearish_18879.118_19151.745087_17166.9385": true
 }

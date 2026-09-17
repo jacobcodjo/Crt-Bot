@@ -91,7 +91,7 @@ def format_setup_message(setup: dict) -> str:
     lines = [
         f"{direction_emoji} <b>{display_symbol(setup['symbol'])}</b>",
         f"{order_type} ({setup['reference_tf']}→{setup['confirmation_tf']})",
-        f"E: {entry_value if entry_value is not None else 'n/d'}",
+        f"Entrée: {entry_value if entry_value is not None else 'n/d'}",
         f"SL: {format_number(setup['stop_loss'], round_it)}",
         f"TP1: {format_number(setup['take_profit_mid'], round_it)}",
         f"TP2: {format_number(setup['take_profit'], round_it)}{tp_tag}",
@@ -104,7 +104,7 @@ def format_setup_message(setup: dict) -> str:
     if setup.get("fib_ote_confirmed"):
         tags.append("📐 OTE")
     if setup.get("counter_trend"):
-        tags.append("⚠️Contre-tendance")
+        tags.append("⚠️ Contre-tendance")
     if setup.get("in_killzone") is False:
         tags.append("⏰ Hors killzone")
     if tags:

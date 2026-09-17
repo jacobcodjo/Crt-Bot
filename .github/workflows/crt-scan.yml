@@ -13,6 +13,7 @@ concurrency:
 jobs:
   scan:
     runs-on: ubuntu-latest
+    timeout-minutes: 10   # sécurité : un run qui traîne ne doit jamais bloquer la file d'attente
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4

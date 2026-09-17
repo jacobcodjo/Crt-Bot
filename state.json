@@ -116,5 +116,7 @@
   "frxUSDCHF_H4_1789574400_M15": true,
   "content_frxUSDCHF_bearish_0.82585_0.826313_0.81776": true,
   "frxEURJPY_H4_1789574400_M15": true,
-  "content_frxEURJPY_bearish_179.171_179.306609_178.708": true
+  "content_frxEURJPY_bearish_179.171_179.306609_178.708": true,
+  "1HZ250V_H4_1789588800_M15": true,
+  "content_1HZ250V_bullish_0.37183_0.364088_0.420415": true
 }

@@ -139,6 +139,20 @@
       "alert_epoch": 1789640100,
       "filled": true,
       "fill_epoch": 1789640100
+    },
+    "R_10_H4_1789617600_M15": {
+      "symbol": "R_10",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "order_type": "Buy",
+      "entry": 4893.773,
+      "stop_loss": 4888.8393575,
+      "take_profit": 4910.2195,
+      "risk_reward": 3.33,
+      "counter_trend": false,
+      "alert_epoch": 1789642800,
+      "filled": true,
+      "fill_epoch": 1789642800
     }
   },
   "history": [

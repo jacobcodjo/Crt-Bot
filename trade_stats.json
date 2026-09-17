@@ -275,17 +275,6 @@
       "counter_trend": false,
       "alert_epoch": 1789603200
     },
-    "frxEURAUD_H4_1789603200_M15": {
-      "symbol": "frxEURAUD",
-      "direction": "bullish",
-      "confirmation_tf": "M15",
-      "entry": 1.61323,
-      "stop_loss": 1.6118736599999999,
-      "take_profit": 1.61851,
-      "risk_reward": 3.89,
-      "counter_trend": false,
-      "alert_epoch": 1789619400
-    },
     "frxGBPAUD_H4_1789603200_M15": {
       "symbol": "frxGBPAUD",
       "direction": "bullish",
@@ -296,6 +285,39 @@
       "risk_reward": 5.38,
       "counter_trend": false,
       "alert_epoch": 1789623000
+    },
+    "frxAUDCHF_H4_1789603200_M15": {
+      "symbol": "frxAUDCHF",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 0.58658,
+      "stop_loss": 0.5870733899999999,
+      "take_profit": 0.58483,
+      "risk_reward": 3.55,
+      "counter_trend": true,
+      "alert_epoch": 1789617600
+    },
+    "1HZ10V_D1_1789516800_H1": {
+      "symbol": "1HZ10V",
+      "direction": "bullish",
+      "confirmation_tf": "H1",
+      "entry": 9445.21,
+      "stop_loss": 9429.492895,
+      "take_profit": 9647.880000000001,
+      "risk_reward": 12.89,
+      "counter_trend": false,
+      "alert_epoch": 1789621200
+    },
+    "1HZ150V_H4_1789603200_M15": {
+      "symbol": "1HZ150V",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 37.17,
+      "stop_loss": 37.79889,
+      "take_profit": 34.739999999999995,
+      "risk_reward": 3.86,
+      "counter_trend": false,
+      "alert_epoch": 1789617600
     }
   },
   "history": [
@@ -606,6 +628,13 @@
       "counter_trend": false,
       "risk_reward": 3.15,
       "result": "TP"
+    },
+    {
+      "symbol": "frxEURAUD",
+      "direction": "bullish",
+      "counter_trend": false,
+      "risk_reward": 3.89,
+      "result": "SL"
     }
   ]
 }

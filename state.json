@@ -140,5 +140,11 @@
   "frxEURAUD_H4_1789603200_M15": true,
   "content_frxEURAUD_bullish_1.61323_1.611874_1.61851": true,
   "frxGBPAUD_H4_1789603200_M15": true,
-  "content_frxGBPAUD_bullish_1.88164_1.880369_1.88848": true
+  "content_frxGBPAUD_bullish_1.88164_1.880369_1.88848": true,
+  "frxAUDCHF_H4_1789603200_M15": true,
+  "content_frxAUDCHF_bearish_0.58658_0.587073_0.58483": true,
+  "1HZ10V_D1_1789516800_H1": true,
+  "content_1HZ10V_bullish_9445.21_9429.492895_9647.88": true,
+  "1HZ150V_H4_1789603200_M15": true,
+  "content_1HZ150V_bearish_37.17_37.79889_34.74": true
 }

@@ -129,3 +129,23 @@ REQUIRE_FIB_OTE = False
 TREND_SWING_WINDOW = 4
 TREND_SWING_COUNT = 3
 TREND_SMA_PERIOD = 50
+
+# --- Filtre de gap de weekend ---
+# Le forex et l'or ferment le vendredi soir et rouvrent le dimanche soir : l'écart
+# de prix à la réouverture n'est pas un vrai sweep de liquidité, juste un effet de
+# fermeture de marché. Les cryptos et indices synthétiques tournent 24/7, jamais
+# concernés. Une bougie est considérée "gap" si l'écart avec la précédente dépasse
+# ce multiple de la granularité normale.
+WEEKEND_GAP_PREFIXES = ("frx",)
+WEEKEND_GAP_MULTIPLIER = 1.5
+
+# --- Nettoyage automatique (state.json / trade_stats.json) ---
+# Verrous de range + clés de contenu (state.json) plus vieux que ça sont purgés.
+STATE_MAX_AGE_DAYS = 30
+# Un ordre en attente (Limit/Stop) jamais rempli après ce délai est considéré
+# expiré (le setup n'est plus d'actualité) -> retiré des trades en attente,
+# archivé dans l'historique avec le résultat "EXPIRE" (comptabilisé séparément,
+# jamais comme gagnant/perdant).
+PENDING_MAX_AGE_DAYS = 7
+# Entrées d'historique (trades résolus/expirés) plus vieilles que ça sont purgées.
+TRADE_HISTORY_MAX_AGE_DAYS = 180

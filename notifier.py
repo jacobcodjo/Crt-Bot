@@ -85,28 +85,29 @@ def format_setup_message(setup: dict) -> str:
         if len(rounded_values) != len(set(rounded_values)):
             round_it = False
 
+    entry_value = format_number(setup.get("entry"), round_it)
+    order_type = setup.get("order_type", direction_word).upper()
+
     lines = [
         f"{direction_emoji} <b>{display_symbol(setup['symbol'])}</b>",
-        f"{setup.get('order_type', direction_word).upper()} ({setup['reference_tf']} → {setup['confirmation_tf']})",
+        f"{order_type} ({setup['reference_tf']}→{setup['confirmation_tf']})",
+        f"E: {entry_value if entry_value is not None else 'n/d'}",
+        f"SL: {format_number(setup['stop_loss'], round_it)}",
+        f"TP1: {format_number(setup['take_profit_mid'], round_it)}",
+        f"TP2: {format_number(setup['take_profit'], round_it)}{tp_tag}",
     ]
 
-    entry_value = format_number(setup.get("entry"), round_it)
-    lines.append(f"Entrée : {entry_value if entry_value is not None else 'n/d'}")
-    lines.append(f"SL : {format_number(setup['stop_loss'], round_it)}")
-    lines.append(f"TP1 : {format_number(setup['take_profit_mid'], round_it)}")
-    lines.append(f"TP2 : {format_number(setup['take_profit'], round_it)}{tp_tag}")
-
     if setup.get("risk_reward"):
-        lines.append(f"R:R : ~1:{setup['risk_reward']}")
+        lines.append(f"RR: 1:{setup['risk_reward']}")
 
+    tags = []
     if setup.get("fib_ote_confirmed"):
-        lines.append("Zone Fibo OTE (61.8-79%)")
-
+        tags.append("📐")
     if setup.get("counter_trend"):
-        trend_word = "haussière" if setup.get("trend") == "bullish" else "baissière"
-        lines.append(f"⚠️ Contre-tendance (D1 {trend_word})")
-
+        tags.append("⚠️")
     if setup.get("in_killzone") is False:
-        lines.append("⏰ Hors killzone (Londres/NY)")
+        tags.append("⏰")
+    if tags:
+        lines.append(" ".join(tags))
 
     return "\n".join(lines)

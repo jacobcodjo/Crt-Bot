@@ -2,8 +2,11 @@ from config import SYMBOLS, GRANULARITY, REFERENCE_CONFIRMATION_MAP, CANDLE_COUN
 from deriv_client import get_many_candles
 from strategy import analyze_symbol
 from notifier import send_telegram_message, format_setup_message
-from state_manager import load_state, save_state, is_new_setup, mark_setup_sent
-from trade_tracker import load_stats, save_stats, add_pending, resolve_pending, summarize
+from state_manager import load_state, save_state, is_new_setup, mark_setup_sent, prune_state
+from trade_tracker import (
+    load_stats, save_stats, add_pending, resolve_pending, summarize,
+    expire_stale_pending, prune_history,
+)
 
 # TF de référence réellement récupérés via l'API (W1 est dérivé des bougies D1,
 # pas de requête séparée nécessaire).
@@ -48,6 +51,18 @@ def run():
     if resolved:
         print(f"{len(resolved)} trade(s) résolu(s) ce passage.")
 
+    # Nettoyage automatique : verrous de range trop vieux, ordres jamais remplis
+    # après PENDING_MAX_AGE_DAYS (expirés), historique trop ancien.
+    pruned_state_count = prune_state(state)
+    expired_count = expire_stale_pending(stats)
+    pruned_history_count = prune_history(stats)
+    if pruned_state_count:
+        print(f"{pruned_state_count} entrée(s) de state.json purgée(s) (trop anciennes).")
+    if expired_count:
+        print(f"{expired_count} trade(s) en attente expiré(s) (jamais rempli).")
+    if pruned_history_count:
+        print(f"{pruned_history_count} entrée(s) d'historique purgée(s) (trop anciennes).")
+
     for symbol in SYMBOLS:
         htf_candles_by_tf = {}
         skip_symbol = False
@@ -87,13 +102,17 @@ def run():
                 add_pending(stats, setup)
                 any_new = True
 
-    if any_new:
-        save_state(state)
-    else:
+    if not any_new:
         print("Aucun nouveau setup détecté sur ce passage.")
 
-    if resolved or any_new:
-        save_stats(stats)
+    # Toujours sauvegarder : la purge (state.json) a pu retirer des entrées même
+    # sans nouvelle alerte -- ne jamais perdre cet effet silencieusement.
+    save_state(state)
+
+    # Toujours sauvegarder : même sans trade résolu ni nouvelle alerte, un ordre
+    # a pu passer de "en attente" à "rempli" (voir trade_tracker._check_entry_fill),
+    # ou être expiré/purgé -- une progression à ne jamais perdre silencieusement.
+    save_stats(stats)
 
     print(summarize(stats))
 

@@ -1,7 +1,8 @@
 import json
 import os
+import time
 
-from config import STATS_FILE
+from config import STATS_FILE, PENDING_MAX_AGE_DAYS, TRADE_HISTORY_MAX_AGE_DAYS
 
 
 def load_stats():
@@ -126,6 +127,7 @@ def resolve_pending(stats: dict, candles_lookup):
                 "counter_trend": trade["counter_trend"],
                 "risk_reward": trade["risk_reward"],
                 "result": result,
+                "resolved_epoch": c["epoch"],
             })
             resolved_keys.append(key)
 
@@ -135,12 +137,59 @@ def resolve_pending(stats: dict, candles_lookup):
     return resolved_keys
 
 
+def expire_stale_pending(stats: dict, max_age_days: float = PENDING_MAX_AGE_DAYS) -> int:
+    """
+    Un ordre en attente (Limit/Stop) jamais rempli après max_age_days est considéré
+    expiré : le setup n'est plus d'actualité (le mouvement recherché a eu lieu sans
+    lui, ou plus jamais). Archivé dans l'historique avec le résultat "EXPIRE"
+    (jamais compté comme gagnant/perdant, juste comme indicateur de taux de
+    remplissage -- utile notamment sur les indices synthétiques qui reviennent
+    rarement sur leur zone d'entrée).
+    Retourne le nombre de trades expirés.
+    """
+    cutoff = time.time() - max_age_days * 86400
+    expired_keys = [
+        key for key, trade in stats["pending"].items()
+        if not trade.get("filled") and trade["alert_epoch"] < cutoff
+    ]
+
+    for key in expired_keys:
+        trade = stats["pending"].pop(key)
+        stats["history"].append({
+            "symbol": trade["symbol"],
+            "direction": trade["direction"],
+            "order_type": trade["order_type"],
+            "counter_trend": trade["counter_trend"],
+            "risk_reward": trade["risk_reward"],
+            "result": "EXPIRE",
+            "resolved_epoch": time.time(),
+        })
+
+    return len(expired_keys)
+
+
+def prune_history(stats: dict, max_age_days: float = TRADE_HISTORY_MAX_AGE_DAYS) -> int:
+    """Retire de l'historique les entrées plus vieilles que max_age_days.
+    Retourne le nombre d'entrées purgées."""
+    cutoff = time.time() - max_age_days * 86400
+    before = len(stats["history"])
+    stats["history"] = [
+        h for h in stats["history"] if h.get("resolved_epoch", time.time()) >= cutoff
+    ]
+    return before - len(stats["history"])
+
+
 def summarize(stats: dict) -> str:
     """Construit un résumé texte du taux de réussite global et contre-tendance
-    vs dans le sens de la tendance, pour affichage dans les logs GitHub Actions."""
+    vs dans le sens de la tendance, pour affichage dans les logs GitHub Actions.
+    Les trades expirés (jamais remplis) sont exclus du taux de réussite -- ils
+    sont comptés séparément dans un taux de remplissage."""
     history = stats.get("history", [])
     if not history:
         return "Aucun trade résolu pour le moment."
+
+    resolved = [h for h in history if h["result"] in ("TP", "SL")]
+    expired = [h for h in history if h["result"] == "EXPIRE"]
 
     def win_rate(trades):
         if not trades:
@@ -148,14 +197,23 @@ def summarize(stats: dict) -> str:
         wins = sum(1 for t in trades if t["result"] == "TP")
         return round(100 * wins / len(trades), 1), len(trades)
 
-    overall = win_rate(history)
-    counter = win_rate([t for t in history if t["counter_trend"]])
-    aligned = win_rate([t for t in history if not t["counter_trend"]])
+    overall = win_rate(resolved)
+    counter = win_rate([t for t in resolved if t["counter_trend"]])
+    aligned = win_rate([t for t in resolved if not t["counter_trend"]])
 
-    lines = [f"Global : {overall[0]}% de réussite sur {overall[1]} trades résolus"]
+    lines = []
+    if overall:
+        lines.append(f"Global : {overall[0]}% de réussite sur {overall[1]} trades résolus")
     if counter:
         lines.append(f"Contre-tendance : {counter[0]}% sur {counter[1]} trades")
     if aligned:
         lines.append(f"Dans le sens de la tendance : {aligned[0]}% sur {aligned[1]} trades")
 
-    return " | ".join(lines)
+    total_with_expired = len(resolved) + len(expired)
+    if expired and total_with_expired:
+        fill_rate = round(100 * len(resolved) / total_with_expired, 1)
+        lines.append(
+            f"Taux de remplissage : {fill_rate}% ({len(resolved)} remplis / {len(expired)} expirés)"
+        )
+
+    return " | ".join(lines) if lines else "Aucun trade résolu pour le moment."

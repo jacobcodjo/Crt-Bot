@@ -60,14 +60,26 @@ Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
 8. **Suivi automatique des trades** : chaque alerte envoyée est enregistrée
    (`trade_stats.json`). Pour un ordre en attente (Buy/Sell Limit/Stop), le bot
    vérifie d'abord que le prix a réellement atteint la zone d'entrée avant de
-   commencer à chercher le SL/TP — un ordre jamais rempli reste "en attente"
-   indéfiniment plutôt que de fausser les statistiques. Un ordre au marché
-   (Buy/Sell) est considéré rempli dès l'alerte. Une fois rempli, le bot vérifie
-   si le SL ou le TP a été touché en premier (si les deux sont touchés dans la
-   même bougie, hypothèse prudente : le SL a cédé). Un résumé du taux de
-   réussite global, et séparé contre-tendance vs dans le sens de la tendance,
-   s'affiche dans les logs GitHub Actions à chaque exécution.
-9. Envoi d'une alerte **Telegram** dès qu'un setup confirmé est détecté.
+   commencer à chercher le SL/TP — un ordre jamais rempli après 7 jours
+   (`PENDING_MAX_AGE_DAYS`) expire et s'archive avec le résultat `EXPIRE`
+   (jamais compté comme gagnant/perdant, mais donne un vrai taux de remplissage,
+   utile notamment sur les indices synthétiques qui reviennent rarement sur leur
+   zone d'entrée). Un ordre au marché (Buy/Sell) est considéré rempli dès
+   l'alerte. Une fois rempli, le bot vérifie si le SL ou le TP a été touché en
+   premier (si les deux sont touchés dans la même bougie, hypothèse prudente :
+   le SL a cédé). Un résumé (taux de réussite global, contre-tendance vs
+   aligné, taux de remplissage) s'affiche dans les logs GitHub Actions.
+9. **Filtre de gap de weekend** (forex/or uniquement, jamais cryptos/synthétiques
+   qui tournent 24/7) : une bougie qui suit un écart temporel anormal (fermeture
+   de marché le weekend) n'est jamais comptée comme un sweep de liquidité —
+   évite les faux signaux causés par un simple gap d'ouverture plutôt qu'une
+   vraie manipulation intrabar (`WEEKEND_GAP_MULTIPLIER` dans `config.py`).
+10. **Nettoyage automatique** : les verrous de range et clés anti-doublon de
+    `state.json` plus vieux que 30 jours (`STATE_MAX_AGE_DAYS`), et l'historique
+    de `trade_stats.json` plus vieux que 180 jours (`TRADE_HISTORY_MAX_AGE_DAYS`),
+    sont purgés automatiquement à chaque scan — les fichiers restent légers
+    indéfiniment, sans intervention manuelle.
+11. Envoi d'une alerte **Telegram** dès qu'un setup confirmé est détecté.
 
 > ⚠️ Le suivi ne voit que les bougies encore présentes dans l'historique récupéré
 > (150 bougies, `CANDLE_COUNT`) — un trade qui met plus de temps que ça à atteindre

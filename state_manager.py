@@ -1,7 +1,8 @@
 import json
 import os
+import time
 
-from config import STATE_FILE
+from config import STATE_FILE, STATE_MAX_AGE_DAYS
 
 
 def load_state():
@@ -41,5 +42,22 @@ def is_new_setup(state: dict, setup: dict) -> bool:
 
 
 def mark_setup_sent(state: dict, setup: dict):
-    state[setup_key(setup)] = True
-    state[content_key(setup)] = True
+    # On stocke l'heure d'envoi (pas juste True) pour permettre la purge des
+    # entrées trop anciennes (voir prune_state).
+    now = time.time()
+    state[setup_key(setup)] = now
+    state[content_key(setup)] = now
+
+
+def prune_state(state: dict, max_age_days: float = STATE_MAX_AGE_DAYS) -> int:
+    """Retire les entrées plus vieilles que max_age_days. Retourne le nombre
+    d'entrées purgées. Une valeur non numérique (ex: ancien format `true`) est
+    traitée comme périmée -- se nettoie naturellement au premier passage."""
+    cutoff = time.time() - max_age_days * 86400
+    stale_keys = [
+        k for k, v in state.items()
+        if not isinstance(v, (int, float)) or v < cutoff
+    ]
+    for k in stale_keys:
+        del state[k]
+    return len(stale_keys)

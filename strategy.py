@@ -31,6 +31,9 @@ from config import (
     ORDER_TYPE_TOLERANCE_PCT,
     KILLZONES_NY_TIME,
     REQUIRE_KILLZONE_FOR_REAL_MARKETS,
+    GRANULARITY,
+    WEEKEND_GAP_PREFIXES,
+    WEEKEND_GAP_MULTIPLIER,
 )
 
 
@@ -94,13 +97,32 @@ def find_swing_highs_lows(candles, left=3, right=3):
     return highs, lows
 
 
-def detect_liquidity_sweep(ltf_candles, range_high, range_low, ref_epoch):
+def has_weekend_gaps(symbol):
+    """Forex et or ferment le marché le weekend -> sujets aux gaps. Cryptos et
+    indices synthétiques tournent 24/7, jamais concernés."""
+    return symbol.startswith(WEEKEND_GAP_PREFIXES)
+
+
+def is_gap_candle(candles, index, granularity_seconds, gap_multiplier=WEEKEND_GAP_MULTIPLIER):
+    """Une bougie est un 'gap' si l'écart avec la précédente dépasse largement la
+    granularité normale -- signe d'une fermeture de marché (weekend), pas d'un
+    vrai mouvement intrabar exploitable."""
+    if index == 0 or not granularity_seconds:
+        return True  # pas de bougie précédente pour comparer -> prudence
+    return (candles[index]["epoch"] - candles[index - 1]["epoch"]) > granularity_seconds * gap_multiplier
+
+
+def detect_liquidity_sweep(ltf_candles, range_high, range_low, ref_epoch,
+                            granularity_seconds=None, check_gaps=False):
     """Cherche une bougie qui dépasse le range de référence puis se referme
-    à l'intérieur (piège de liquidité / stop hunt)."""
+    à l'intérieur (piège de liquidité / stop hunt). Si check_gaps est actif
+    (forex/or), ignore les bougies qui suivent un gap de weekend."""
     events = []
     for i, c in enumerate(ltf_candles):
         if c["epoch"] <= ref_epoch:
             continue
+        if check_gaps and is_gap_candle(ltf_candles, i, granularity_seconds):
+            continue  # gap de weekend -> pas un vrai sweep, ignoré
         if c["high"] > range_high and c["close"] < range_high:
             events.append({"index": i, "direction": "bearish", "candle": c})
         if c["low"] < range_low and c["close"] > range_low:
@@ -370,7 +392,9 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles_by_tf):
                 continue
 
             sweeps = detect_liquidity_sweep(
-                ltf_candles, ref_range["high"], ref_range["low"], ref_range["epoch"]
+                ltf_candles, ref_range["high"], ref_range["low"], ref_range["epoch"],
+                granularity_seconds=GRANULARITY.get(confirmation_tf),
+                check_gaps=has_weekend_gaps(symbol),
             )
 
             for sweep in sweeps:

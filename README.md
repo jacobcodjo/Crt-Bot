@@ -19,7 +19,14 @@ Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
    confirmer un range large sur un timeframe disproportionnellement fin (bruyant).
 3. Confirmation avancée : **cassure de structure** + **Fair Value Gap** et/ou **Order Block**.
 4. Calcul de niveaux de trade indicatifs :
-   - **Entrée** : bord de l'Order Block le plus proche du prix (ou milieu du FVG si pas d'OB)
+   - **Entrée** :
+     - Marchés réels (forex, or, cryptos) : bord de l'Order Block le plus
+       proche du prix (ou milieu du FVG si pas d'OB) — ordre en attente
+       (Limit/Stop) qui suppose un retracement.
+     - **Indices synthétiques** : entrée immédiate à la clôture de la bougie de
+       cassure de structure (quasi ordre au marché) — ces actifs, générés par
+       algorithme, enchaînent souvent des mouvements directs sans jamais
+       revenir sur la zone OB/FVG, où un ordre en attente resterait non rempli.
    - **Stop loss** : au-delà de l'extrême de la bougie de sweep, avec une marge de
      sécurité (`STOP_LOSS_BUFFER_PCT` dans `config.py`, 0.05% par défaut)
    - **Deux cibles** : TP1 à mi-range (souvent visé en premier) et TP2 à
@@ -51,11 +58,15 @@ Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
    `REQUIRE_KILLZONE_FOR_REAL_MARKETS = True` dans `config.py` pour en faire un
    filtre bloquant.
 8. **Suivi automatique des trades** : chaque alerte envoyée est enregistrée
-   (`trade_stats.json`). À chaque scan suivant, le bot vérifie si le SL ou le TP
-   a été touché en premier (si les deux sont touchés dans la même bougie, hypothèse
-   prudente : le SL a cédé). Un résumé du taux de réussite global, et séparé
-   contre-tendance vs dans le sens de la tendance, s'affiche dans les logs
-   GitHub Actions à chaque exécution.
+   (`trade_stats.json`). Pour un ordre en attente (Buy/Sell Limit/Stop), le bot
+   vérifie d'abord que le prix a réellement atteint la zone d'entrée avant de
+   commencer à chercher le SL/TP — un ordre jamais rempli reste "en attente"
+   indéfiniment plutôt que de fausser les statistiques. Un ordre au marché
+   (Buy/Sell) est considéré rempli dès l'alerte. Une fois rempli, le bot vérifie
+   si le SL ou le TP a été touché en premier (si les deux sont touchés dans la
+   même bougie, hypothèse prudente : le SL a cédé). Un résumé du taux de
+   réussite global, et séparé contre-tendance vs dans le sens de la tendance,
+   s'affiche dans les logs GitHub Actions à chaque exécution.
 9. Envoi d'une alerte **Telegram** dès qu'un setup confirmé est détecté.
 
 > ⚠️ Le suivi ne voit que les bougies encore présentes dans l'historique récupéré

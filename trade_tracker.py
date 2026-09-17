@@ -23,23 +23,59 @@ def track_key(setup: dict) -> str:
 def add_pending(stats: dict, setup: dict):
     """Enregistre un setup fraîchement alerté comme trade en attente de résolution."""
     key = track_key(setup)
+    order_type = setup.get("order_type", "Buy" if setup["direction"] == "bullish" else "Sell")
     stats["pending"][key] = {
         "symbol": setup["symbol"],
         "direction": setup["direction"],
         "confirmation_tf": setup["confirmation_tf"],
+        "order_type": order_type,
         "entry": setup["entry"],
         "stop_loss": setup["stop_loss"],
         "take_profit": setup["take_profit"],
         "risk_reward": setup.get("risk_reward"),
         "counter_trend": bool(setup.get("counter_trend", False)),
         "alert_epoch": setup["sweep_candle"]["epoch"],
+        # Un ordre "Buy"/"Sell" (marché) est considéré rempli dès l'alerte.
+        # Un ordre Limit/Stop attend que le prix atteigne réellement la zone.
+        "filled": order_type in ("Buy", "Sell"),
+        "fill_epoch": setup["sweep_candle"]["epoch"] if order_type in ("Buy", "Sell") else None,
     }
+
+
+def _check_entry_fill(trade: dict, candles: list):
+    """Parcourt les bougies pour déterminer si le prix a atteint la zone d'entrée
+    d'un ordre en attente (Limit/Stop). Retourne l'epoch de remplissage, ou None."""
+    entry = trade["entry"]
+    if entry is None:
+        return None  # pas de zone d'entrée connue -> considéré non remplissable
+
+    for c in candles:
+        if c["epoch"] <= trade["alert_epoch"]:
+            continue
+
+        if trade["order_type"] == "Buy Limit":
+            hit = c["low"] <= entry
+        elif trade["order_type"] == "Sell Limit":
+            hit = c["high"] >= entry
+        elif trade["order_type"] == "Buy Stop":
+            hit = c["high"] >= entry
+        elif trade["order_type"] == "Sell Stop":
+            hit = c["low"] <= entry
+        else:
+            hit = True  # type inconnu -> ne bloque pas la résolution
+
+        if hit:
+            return c["epoch"]
+    return None
 
 
 def resolve_pending(stats: dict, candles_lookup):
     """
-    Parcourt les trades en attente et détermine, à partir des bougies disponibles
-    depuis l'alerte, si le stop loss ou le take profit a été touché en premier.
+    Parcourt les trades en attente. Pour un ordre Limit/Stop, vérifie d'abord que
+    le prix a bien atteint la zone d'entrée avant de chercher SL/TP -- sinon le
+    trade reste "en attente" indéfiniment (l'ordre ne s'est jamais rempli).
+    Une fois rempli (ou immédiatement pour un ordre au marché Buy/Sell), détermine
+    si le SL ou le TP a été touché en premier.
 
     candles_lookup : fonction (symbol, confirmation_tf) -> liste de bougies ou None.
     Retourne la liste des clés de trades résolus lors de cet appel.
@@ -51,9 +87,16 @@ def resolve_pending(stats: dict, candles_lookup):
         if not candles:
             continue
 
+        if not trade["filled"]:
+            fill_epoch = _check_entry_fill(trade, candles)
+            if fill_epoch is None:
+                continue  # toujours pas rempli -> on continue à attendre
+            trade["filled"] = True
+            trade["fill_epoch"] = fill_epoch
+
         result = None
         for c in candles:
-            if c["epoch"] <= trade["alert_epoch"]:
+            if c["epoch"] <= trade["fill_epoch"]:
                 continue
 
             if trade["direction"] == "bullish":
@@ -79,6 +122,7 @@ def resolve_pending(stats: dict, candles_lookup):
             stats["history"].append({
                 "symbol": trade["symbol"],
                 "direction": trade["direction"],
+                "order_type": trade["order_type"],
                 "counter_trend": trade["counter_trend"],
                 "risk_reward": trade["risk_reward"],
                 "result": result,

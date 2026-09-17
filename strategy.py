@@ -180,18 +180,28 @@ def is_in_killzone(epoch):
     return False
 
 
-def compute_trade_levels(symbol, direction, range_high, range_low, sweep_candle, fvg, ob):
+def compute_trade_levels(symbol, direction, range_high, range_low, sweep_candle, fvg, ob, structure_candle):
     """
     Calcule des niveaux de trade indicatifs à partir des éléments déjà détectés :
-    - Entrée : bord de l'Order Block le plus proche du prix actuel (le premier niveau
-      que le prix retesterait) si un OB est présent, sinon milieu du FVG.
+    - Entrée :
+        - Marchés réels (forex, or, cryptos) : bord de l'Order Block le plus
+          proche du prix actuel (le premier niveau que le prix retesterait) si un
+          OB est présent, sinon milieu du FVG -- un ordre en attente (Limit/Stop),
+          qui suppose un retracement avant la continuation.
+        - Indices synthétiques : entrée immédiate à la clôture de la bougie de
+          cassure de structure (quasi ordre au marché), PAS d'attente de
+          retracement. Ces actifs sont générés par algorithme et enchaînent
+          souvent des mouvements directs sans jamais revenir sur la zone OB/FVG
+          -- un ordre en attente y reste fréquemment non rempli.
     - Stop loss : au-delà de l'extrême de la bougie de sweep, avec une marge de
       sécurité (STOP_LOSS_BUFFER_PCT) pour éviter une sortie sur un simple spread.
     - Take profit : le côté opposé du range de référence — étendu proportionnellement
       à la taille du range pour les indices synthétiques (SYNTHETIC_TP_EXTENSION_PCT),
       qui offrent généralement un ratio risque/récompense plus favorable.
     """
-    if ob:
+    if is_synthetic_index(symbol):
+        entry = structure_candle["close"]
+    elif ob:
         entry = ob["high"] if direction == "bullish" else ob["low"]
     elif fvg:
         entry = (fvg["top"] + fvg["bottom"]) / 2
@@ -382,9 +392,11 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles_by_tf):
                     if not fvg and not ob:
                         continue  # pas de confirmation avancée -> setup ignoré
 
+                structure_candle = ltf_candles[structure["break_index"]]
+
                 trade_levels = compute_trade_levels(
                     symbol, sweep["direction"], ref_range["high"], ref_range["low"],
-                    sweep["candle"], fvg, ob
+                    sweep["candle"], fvg, ob, structure_candle
                 )
 
                 # Filtre R:R minimum : un setup dont le ratio ne l'atteint pas est ignoré.
@@ -401,7 +413,6 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles_by_tf):
                     if REQUIRE_KILLZONE_FOR_REAL_MARKETS and not in_killzone:
                         continue  # sweep hors killzone -> setup ignoré
 
-                structure_candle = ltf_candles[structure["break_index"]]
                 fib_zone_low, fib_zone_high = compute_fib_ote(sweep["direction"], sweep["candle"], structure_candle)
                 fib_ote_confirmed = is_within_fib_ote(trade_levels["entry"], fib_zone_low, fib_zone_high)
 

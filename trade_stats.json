@@ -296,6 +296,28 @@
       "risk_reward": 3.86,
       "counter_trend": false,
       "alert_epoch": 1789617600
+    },
+    "frxGBPUSD_D1_1789516800_H1": {
+      "symbol": "frxGBPUSD",
+      "direction": "bullish",
+      "confirmation_tf": "H1",
+      "entry": 1.3379,
+      "stop_loss": 1.3362815250000002,
+      "take_profit": 1.34954,
+      "risk_reward": 7.19,
+      "counter_trend": false,
+      "alert_epoch": 1789614000
+    },
+    "1HZ90V_H4_1789603200_M15": {
+      "symbol": "1HZ90V",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 17893.076,
+      "stop_loss": 17803.187953,
+      "take_profit": 18753.1435,
+      "risk_reward": 9.57,
+      "counter_trend": false,
+      "alert_epoch": 1789623000
     }
   },
   "history": [

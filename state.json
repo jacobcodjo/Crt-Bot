@@ -146,5 +146,9 @@
   "1HZ10V_D1_1789516800_H1": true,
   "content_1HZ10V_bullish_9445.21_9429.492895_9647.88": true,
   "1HZ150V_H4_1789603200_M15": true,
-  "content_1HZ150V_bearish_37.17_37.79889_34.74": true
+  "content_1HZ150V_bearish_37.17_37.79889_34.74": true,
+  "frxGBPUSD_D1_1789516800_H1": true,
+  "content_frxGBPUSD_bullish_1.3379_1.336282_1.34954": true,
+  "1HZ90V_H4_1789603200_M15": true,
+  "content_1HZ90V_bullish_17893.076_17803.187953_18753.1435": true
 }

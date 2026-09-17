@@ -32,5 +32,9 @@
   "frxGBPAUD_H4_1789617600_M15": true,
   "content_frxGBPAUD_bearish_1.88528_1.886423_1.88082": true,
   "frxGBPCAD_H4_1789617600_M15": true,
-  "content_frxGBPCAD_bearish_1.87521_1.876618_1.87098": true
+  "content_frxGBPCAD_bearish_1.87521_1.876618_1.87098": true,
+  "R_25_H4_1789617600_M15": true,
+  "content_R_25_bullish_2715.695_2709.098773_2737.999": true,
+  "R_100_H4_1789617600_M15": true,
+  "content_R_100_bullish_611.73_606.126785_644.39": true
 }

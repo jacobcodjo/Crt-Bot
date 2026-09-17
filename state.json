@@ -158,5 +158,7 @@
   "1HZ250V_H4_1789603200_M15": true,
   "content_1HZ250V_bullish_0.3573_0.354163_0.382745": true,
   "1HZ25V_H4_1789603200_M15": true,
-  "content_1HZ25V_bearish_887704.56_885880.969125_876898.23": true
+  "content_1HZ25V_bearish_887704.56_885880.969125_876898.23": true,
+  "1HZ50V_H4_1789603200_M15": true,
+  "content_1HZ50V_bullish_241936.52_240648.09576_245957.095": true
 }

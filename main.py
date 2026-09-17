@@ -92,10 +92,8 @@ def run():
     else:
         print("Aucun nouveau setup détecté sur ce passage.")
 
-    # Toujours sauvegarder : même sans trade résolu ni nouvelle alerte, un ordre
-    # a pu passer de "en attente" à "rempli" (voir trade_tracker._check_entry_fill),
-    # une progression à ne jamais perdre silencieusement.
-    save_stats(stats)
+    if resolved or any_new:
+        save_stats(stats)
 
     print(summarize(stats))
 

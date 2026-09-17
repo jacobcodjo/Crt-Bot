@@ -5,7 +5,7 @@ import websockets
 from config import DERIV_WS_URL, CANDLE_COUNT
 
 
-async def _fetch_candles_on_connection(ws, symbol, granularity, count, timeout=15):
+async def _fetch_candles_on_connection(ws, symbol, granularity, count):
     request = {
         "ticks_history": symbol,
         "adjust_start_time": 1,
@@ -16,7 +16,7 @@ async def _fetch_candles_on_connection(ws, symbol, granularity, count, timeout=1
         "granularity": granularity,
     }
     await ws.send(json.dumps(request))
-    response = json.loads(await asyncio.wait_for(ws.recv(), timeout=timeout))
+    response = json.loads(await ws.recv())
 
     if "error" in response:
         raise RuntimeError(f"Deriv API error for {symbol}: {response['error']['message']}")

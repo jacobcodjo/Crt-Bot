@@ -329,6 +329,17 @@
       "risk_reward": 8.11,
       "counter_trend": false,
       "alert_epoch": 1789627500
+    },
+    "1HZ25V_H4_1789603200_M15": {
+      "symbol": "1HZ25V",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 887704.56,
+      "stop_loss": 885880.969125,
+      "take_profit": 876898.23,
+      "risk_reward": 5.93,
+      "counter_trend": false,
+      "alert_epoch": 1789628400
     }
   },
   "history": [

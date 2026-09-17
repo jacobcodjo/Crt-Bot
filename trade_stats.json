@@ -176,17 +176,6 @@
       "counter_trend": false,
       "alert_epoch": 1789545600
     },
-    "frxGBPJPY_H4_1789574400_M15": {
-      "symbol": "frxGBPJPY",
-      "direction": "bearish",
-      "confirmation_tf": "M15",
-      "entry": 209.0,
-      "stop_loss": 209.2015485,
-      "take_profit": 208.366,
-      "risk_reward": 3.15,
-      "counter_trend": false,
-      "alert_epoch": 1789596900
-    },
     "frxUSDJPY_H4_1789574400_M15": {
       "symbol": "frxUSDJPY",
       "direction": "bearish",
@@ -588,6 +577,13 @@
       "counter_trend": false,
       "risk_reward": 10.26,
       "result": "SL"
+    },
+    {
+      "symbol": "frxGBPJPY",
+      "direction": "bearish",
+      "counter_trend": false,
+      "risk_reward": 3.15,
+      "result": "TP"
     }
   ]
 }

@@ -97,7 +97,7 @@ def format_setup_message(setup: dict) -> str:
     lines.append(f"TP2 : {format_number(setup['take_profit'], round_it)}{tp_tag}")
 
     if setup.get("risk_reward"):
-        lines.append(f"R:R (TP2) : ~1:{setup['risk_reward']}")
+        lines.append(f"R:R : ~1:{setup['risk_reward']}")
 
     if setup.get("fib_ote_confirmed"):
         lines.append("Zone Fibo OTE (61.8-79%)")

@@ -307,6 +307,17 @@
       "risk_reward": 7.19,
       "counter_trend": false,
       "alert_epoch": 1789614000
+    },
+    "frxUSDCAD_D1_1789516800_H1": {
+      "symbol": "frxUSDCAD",
+      "direction": "bearish",
+      "confirmation_tf": "H1",
+      "entry": 1.39922,
+      "stop_loss": 1.4002697849999999,
+      "take_profit": 1.39213,
+      "risk_reward": 6.75,
+      "counter_trend": false,
+      "alert_epoch": 1789610400
     }
   },
   "history": [

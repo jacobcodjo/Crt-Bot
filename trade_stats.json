@@ -99,17 +99,6 @@
       "counter_trend": false,
       "alert_epoch": 1789542000
     },
-    "frxAUDCAD_D1_1789430400_H1": {
-      "symbol": "frxAUDCAD",
-      "direction": "bearish",
-      "confirmation_tf": "H1",
-      "entry": 0.99374,
-      "stop_loss": 0.995127315,
-      "take_profit": 0.9894,
-      "risk_reward": 3.13,
-      "counter_trend": false,
-      "alert_epoch": 1789581600
-    },
     "cryLTCUSD_D1_1789430400_H1": {
       "symbol": "cryLTCUSD",
       "direction": "bullish",
@@ -630,6 +619,13 @@
       "direction": "bearish",
       "counter_trend": true,
       "risk_reward": 3.55,
+      "result": "SL"
+    },
+    {
+      "symbol": "frxAUDCAD",
+      "direction": "bearish",
+      "counter_trend": false,
+      "risk_reward": 3.13,
       "result": "SL"
     }
   ]

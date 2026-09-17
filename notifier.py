@@ -55,53 +55,46 @@ def display_symbol(symbol: str) -> str:
     return SYNTHETIC_DISPLAY_NAMES.get(symbol, symbol)
 
 
-def format_number(value, max_decimals):
+def format_number(value, round_it: bool):
     if value is None:
         return None
-    rounded = round(value, max_decimals)
+    if not round_it:
+        return value  # précision brute (forex, or, cryptos)
+    rounded = round(value, 2)
     if rounded == int(rounded):
         return str(int(rounded))
-    return f"{rounded:.{max_decimals}f}".rstrip("0").rstrip(".")
+    return f"{rounded:.2f}".rstrip("0").rstrip(".")
 
 
 def format_setup_message(setup: dict) -> str:
     direction_emoji = "🟢" if setup["direction"] == "bullish" else "🔴"
     direction_word = "ACHAT" if setup["direction"] == "bullish" else "VENTE"
     tp_tag = " 🌊" if setup.get("extended_target") else ""
-    synthetic = is_synthetic_index(setup["symbol"])
+    round_it = is_synthetic_index(setup["symbol"])
 
-    # Décimales max pour l'entrée/TP1/TP2 : 2 pour les indices synthétiques
-    # (comme avant), 4 pour les marchés réels (forex/or/cryptos) -- le SL n'est
-    # pas concerné par cette limite, il garde sa précision habituelle.
-    target_decimals = 2 if synthetic else 4
-    sl_decimals = 2 if synthetic else 6  # 6 = grande précision, pas de vraie limite pour le SL
-
-    entry_raw = setup.get("entry")
-    take_profit_mid = setup["take_profit_mid"]
-    take_profit = setup["take_profit"]
-
-    # Garde-fou : si l'arrondi fait coïncider deux niveaux (ex: entrée = TP1),
-    # le message devient trompeur -> on assouplit temporairement la limite pour
-    # CETTE alerte, jusqu'à ce que les valeurs redeviennent distinctes.
-    while target_decimals < 10:
+    if round_it:
+        # Garde-fou : si l'arrondi fait coïncider deux niveaux (ex: entrée = stop),
+        # le message devient trompeur -> on repasse en précision brute pour CETTE alerte.
+        entry_raw = setup.get("entry")
         rounded_values = [
-            round(v, target_decimals) for v in (entry_raw, take_profit_mid, take_profit)
+            round(v, 2) for v in (
+                entry_raw, setup["stop_loss"], setup["take_profit_mid"], setup["take_profit"]
+            )
             if v is not None
         ]
-        if len(rounded_values) == len(set(rounded_values)):
-            break
-        target_decimals += 1
+        if len(rounded_values) != len(set(rounded_values)):
+            round_it = False
 
-    entry_value = format_number(entry_raw, target_decimals)
+    entry_value = format_number(setup.get("entry"), round_it)
     order_type = setup.get("order_type", direction_word).upper()
 
     lines = [
         f"{direction_emoji} <b>{display_symbol(setup['symbol'])}</b>",
         f"{order_type} ({setup['reference_tf']}→{setup['confirmation_tf']})",
         f"E: {entry_value if entry_value is not None else 'n/d'}",
-        f"SL: {format_number(setup['stop_loss'], sl_decimals)}",
-        f"TP1: {format_number(take_profit_mid, target_decimals)}",
-        f"TP2: {format_number(take_profit, target_decimals)}{tp_tag}",
+        f"SL: {format_number(setup['stop_loss'], round_it)}",
+        f"TP1: {format_number(setup['take_profit_mid'], round_it)}",
+        f"TP2: {format_number(setup['take_profit'], round_it)}{tp_tag}",
     ]
 
     if setup.get("risk_reward"):

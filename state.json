@@ -118,5 +118,7 @@
   "frxEURJPY_H4_1789574400_M15": true,
   "content_frxEURJPY_bearish_179.171_179.306609_178.708": true,
   "1HZ250V_H4_1789588800_M15": true,
-  "content_1HZ250V_bullish_0.37183_0.364088_0.420415": true
+  "content_1HZ250V_bullish_0.37183_0.364088_0.420415": true,
+  "1HZ150V_H4_1789588800_M15": true,
+  "content_1HZ150V_bullish_36.2_35.70214_38.345": true
 }

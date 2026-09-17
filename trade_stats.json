@@ -285,6 +285,17 @@
       "risk_reward": 4.29,
       "counter_trend": false,
       "alert_epoch": 1789607700
+    },
+    "1HZ25V_H4_1789588800_M15": {
+      "symbol": "1HZ25V",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 882038.69,
+      "stop_loss": 880284.527555,
+      "take_profit": 895534.52,
+      "risk_reward": 7.69,
+      "counter_trend": false,
+      "alert_epoch": 1789612200
     }
   },
   "history": [

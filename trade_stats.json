@@ -286,17 +286,6 @@
       "counter_trend": false,
       "alert_epoch": 1789623000
     },
-    "frxAUDCHF_H4_1789603200_M15": {
-      "symbol": "frxAUDCHF",
-      "direction": "bearish",
-      "confirmation_tf": "M15",
-      "entry": 0.58658,
-      "stop_loss": 0.5870733899999999,
-      "take_profit": 0.58483,
-      "risk_reward": 3.55,
-      "counter_trend": true,
-      "alert_epoch": 1789617600
-    },
     "1HZ10V_D1_1789516800_H1": {
       "symbol": "1HZ10V",
       "direction": "bullish",
@@ -634,6 +623,13 @@
       "direction": "bullish",
       "counter_trend": false,
       "risk_reward": 3.89,
+      "result": "SL"
+    },
+    {
+      "symbol": "frxAUDCHF",
+      "direction": "bearish",
+      "counter_trend": true,
+      "risk_reward": 3.55,
       "result": "SL"
     }
   ]

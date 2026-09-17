@@ -72,5 +72,9 @@
   "frxEURNZD_D1_1789516800_H1": true,
   "content_frxEURNZD_bullish_2.00231_1.9995_2.01119": true,
   "frxEURUSD_H4_1789632000_M15": true,
-  "content_frxEURUSD_bearish_1.14876_1.149064_1.14674": true
+  "content_frxEURUSD_bearish_1.14876_1.149064_1.14674": true,
+  "frxUSDCAD_H4_1789632000_M15": true,
+  "content_frxUSDCAD_bullish_1.39773_1.396991_1.40016": true,
+  "R_75_H4_1789632000_M15": true,
+  "content_R_75_bullish_45340.6504_44845.633366_47094.9463": true
 }

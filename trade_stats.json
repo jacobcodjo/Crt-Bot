@@ -293,6 +293,34 @@
       "alert_epoch": 1789658100,
       "filled": false,
       "fill_epoch": null
+    },
+    "frxUSDCAD_H4_1789632000_M15": {
+      "symbol": "frxUSDCAD",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "order_type": "Buy Limit",
+      "entry": 1.39773,
+      "stop_loss": 1.3969911550000003,
+      "take_profit": 1.40016,
+      "risk_reward": 3.29,
+      "counter_trend": false,
+      "alert_epoch": 1789656300,
+      "filled": false,
+      "fill_epoch": null
+    },
+    "R_75_H4_1789632000_M15": {
+      "symbol": "R_75",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "order_type": "Buy",
+      "entry": 45340.6504,
+      "stop_loss": 44845.633366300004,
+      "take_profit": 47094.9463,
+      "risk_reward": 3.54,
+      "counter_trend": false,
+      "alert_epoch": 1789658100,
+      "filled": true,
+      "fill_epoch": 1789658100
     }
   },
   "history": [

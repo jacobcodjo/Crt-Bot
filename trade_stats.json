@@ -181,20 +181,6 @@
       "alert_epoch": 1789603200,
       "filled": false,
       "fill_epoch": null
-    },
-    "frxGBPCHF_W1_1789084800_H4": {
-      "symbol": "frxGBPCHF",
-      "direction": "bearish",
-      "confirmation_tf": "H4",
-      "order_type": "Sell Limit",
-      "entry": 1.10339,
-      "stop_loss": 1.1062228349999998,
-      "take_profit": 1.09367,
-      "risk_reward": 3.43,
-      "counter_trend": false,
-      "alert_epoch": 1789588800,
-      "filled": false,
-      "fill_epoch": null
     }
   },
   "history": [
@@ -268,6 +254,14 @@
       "order_type": "Buy",
       "counter_trend": false,
       "risk_reward": 5.01,
+      "result": "SL"
+    },
+    {
+      "symbol": "frxGBPCHF",
+      "direction": "bearish",
+      "order_type": "Sell Limit",
+      "counter_trend": false,
+      "risk_reward": 3.43,
       "result": "SL"
     }
   ]

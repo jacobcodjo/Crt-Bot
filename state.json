@@ -60,5 +60,7 @@
   "frxEURGBP_W1_1789084800_H4": true,
   "content_frxEURGBP_bullish_0.85668_0.855932_0.86": true,
   "1HZ30V_H4_1789632000_M15": true,
-  "content_1HZ30V_bullish_6336.121_6322.25829_6441.3815": true
+  "content_1HZ30V_bullish_6336.121_6322.25829_6441.3815": true,
+  "frxNZDCHF_D1_1789516800_H1": true,
+  "content_frxNZDCHF_bearish_0.47335_0.473837_0.46985": true
 }

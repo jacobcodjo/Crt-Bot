@@ -274,6 +274,17 @@
       "risk_reward": 9.95,
       "counter_trend": false,
       "alert_epoch": 1789610400
+    },
+    "frxEURNZD_W1_1789084800_H4": {
+      "symbol": "frxEURNZD",
+      "direction": "bearish",
+      "confirmation_tf": "H4",
+      "entry": 2.00216,
+      "stop_loss": 2.00808354,
+      "take_profit": 1.97363,
+      "risk_reward": 4.82,
+      "counter_trend": false,
+      "alert_epoch": 1789603200
     }
   },
   "history": [

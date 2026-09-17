@@ -296,6 +296,17 @@
       "risk_reward": 7.69,
       "counter_trend": false,
       "alert_epoch": 1789612200
+    },
+    "R_50_H4_1789588800_M15": {
+      "symbol": "R_50",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 91.7252,
+      "stop_loss": 92.08602,
+      "take_profit": 89.7953,
+      "risk_reward": 5.35,
+      "counter_trend": false,
+      "alert_epoch": 1789611300
     }
   },
   "history": [

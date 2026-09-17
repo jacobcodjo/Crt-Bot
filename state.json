@@ -136,5 +136,9 @@
   "R_50_H4_1789603200_M15": true,
   "content_R_50_bullish_90.9267_90.752201_92.7175": true,
   "frxEURNZD_W1_1789084800_H4": true,
-  "content_frxEURNZD_bearish_2.00216_2.008084_1.97363": true
+  "content_frxEURNZD_bearish_2.00216_2.008084_1.97363": true,
+  "frxEURAUD_H4_1789603200_M15": true,
+  "content_frxEURAUD_bullish_1.61323_1.611874_1.61851": true,
+  "frxGBPAUD_H4_1789603200_M15": true,
+  "content_frxGBPAUD_bullish_1.88164_1.880369_1.88848": true
 }

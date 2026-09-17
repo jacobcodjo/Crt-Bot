@@ -274,6 +274,28 @@
       "risk_reward": 4.82,
       "counter_trend": false,
       "alert_epoch": 1789603200
+    },
+    "frxEURAUD_H4_1789603200_M15": {
+      "symbol": "frxEURAUD",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 1.61323,
+      "stop_loss": 1.6118736599999999,
+      "take_profit": 1.61851,
+      "risk_reward": 3.89,
+      "counter_trend": false,
+      "alert_epoch": 1789619400
+    },
+    "frxGBPAUD_H4_1789603200_M15": {
+      "symbol": "frxGBPAUD",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "entry": 1.88164,
+      "stop_loss": 1.880369345,
+      "take_profit": 1.88848,
+      "risk_reward": 5.38,
+      "counter_trend": false,
+      "alert_epoch": 1789623000
     }
   },
   "history": [

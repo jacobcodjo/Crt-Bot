@@ -307,6 +307,17 @@
       "risk_reward": 5.35,
       "counter_trend": false,
       "alert_epoch": 1789611300
+    },
+    "1HZ75V_H4_1789588800_M15": {
+      "symbol": "1HZ75V",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "entry": 5785.69,
+      "stop_loss": 5806.992045,
+      "take_profit": 5572.535,
+      "risk_reward": 10.01,
+      "counter_trend": false,
+      "alert_epoch": 1789614900
     }
   },
   "history": [

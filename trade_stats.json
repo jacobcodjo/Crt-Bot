@@ -251,6 +251,20 @@
       "alert_epoch": 1789686000,
       "filled": true,
       "fill_epoch": 1789686000
+    },
+    "stpRNG_H4_1789660800_M15": {
+      "symbol": "stpRNG",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "order_type": "Buy",
+      "entry": 7549.8,
+      "stop_loss": 7537.6293,
+      "take_profit": 7588.6,
+      "risk_reward": 3.19,
+      "counter_trend": false,
+      "alert_epoch": 1789686900,
+      "filled": true,
+      "fill_epoch": 1789686900
     }
   },
   "history": [

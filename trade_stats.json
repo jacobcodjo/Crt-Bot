@@ -88,17 +88,6 @@
       "counter_trend": false,
       "alert_epoch": 1789549200
     },
-    "1HZ30V_D1_1789430400_H1": {
-      "symbol": "1HZ30V",
-      "direction": "bullish",
-      "confirmation_tf": "H1",
-      "entry": 6426.393,
-      "stop_loss": 6383.4496785,
-      "take_profit": 6563.3905,
-      "risk_reward": 3.19,
-      "counter_trend": false,
-      "alert_epoch": 1789527600
-    },
     "R_25_D1_1789430400_H1": {
       "symbol": "R_25",
       "direction": "bullish",
@@ -517,6 +506,13 @@
       "counter_trend": false,
       "risk_reward": 3.48,
       "result": "TP"
+    },
+    {
+      "symbol": "1HZ30V",
+      "direction": "bullish",
+      "counter_trend": false,
+      "risk_reward": 3.19,
+      "result": "SL"
     }
   ]
 }

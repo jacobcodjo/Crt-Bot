@@ -44,5 +44,9 @@
   "frxXAUUSD_W1_1789084800_H4": true,
   "content_frxXAUUSD_bullish_4276.19_4264.4667_4442.93": true,
   "frxGBPCHF_W1_1789084800_H4": true,
-  "content_frxGBPCHF_bearish_1.10339_1.106223_1.09367": true
+  "content_frxGBPCHF_bearish_1.10339_1.106223_1.09367": true,
+  "cryBTCUSD_H4_1789632000_M15": true,
+  "content_cryBTCUSD_bearish_76779.82_76914.468015_76139.688": true,
+  "cryXRPUSD_H4_1789632000_M15": true,
+  "content_cryXRPUSD_bearish_1.3061_1.309354_1.2913": true
 }

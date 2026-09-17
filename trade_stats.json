@@ -181,6 +181,34 @@
       "alert_epoch": 1789603200,
       "filled": false,
       "fill_epoch": null
+    },
+    "cryBTCUSD_H4_1789632000_M15": {
+      "symbol": "cryBTCUSD",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "order_type": "Sell Limit",
+      "entry": 76779.82,
+      "stop_loss": 76914.46801499999,
+      "take_profit": 76139.688,
+      "risk_reward": 4.75,
+      "counter_trend": true,
+      "alert_epoch": 1789649100,
+      "filled": false,
+      "fill_epoch": null
+    },
+    "cryXRPUSD_H4_1789632000_M15": {
+      "symbol": "cryXRPUSD",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "order_type": "Sell Limit",
+      "entry": 1.3061,
+      "stop_loss": 1.30935435,
+      "take_profit": 1.2913,
+      "risk_reward": 4.55,
+      "counter_trend": false,
+      "alert_epoch": 1789650000,
+      "filled": false,
+      "fill_epoch": null
     }
   },
   "history": [

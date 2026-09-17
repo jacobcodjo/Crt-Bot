@@ -1,1 +1,18 @@
-{}
+{
+  "frxGBPUSD_D1_1789516800_H1": true,
+  "content_frxGBPUSD_bullish_1.3379_1.336282_1.34954": true,
+  "frxUSDCAD_D1_1789516800_H1": true,
+  "content_frxUSDCAD_bearish_1.39922_1.40027_1.39213": true,
+  "frxEURCHF_W1_1789084800_H4": true,
+  "content_frxEURCHF_bearish_0.94624_0.947934_0.93976": true,
+  "frxEURNZD_W1_1789084800_H4": true,
+  "content_frxEURNZD_bearish_2.00216_2.008084_1.97363": true,
+  "frxGBPAUD_W1_1789084800_H4": true,
+  "content_frxGBPAUD_bearish_1.88925_1.891445_1.87325": true,
+  "frxNZDCAD_W1_1789084800_H4": true,
+  "content_frxNZDCAD_bullish_0.80094_0.79917_0.81409": true,
+  "frxNZDCHF_W1_1789084800_H4": true,
+  "content_frxNZDCHF_bullish_0.471_0.470615_0.4766": true,
+  "1HZ250V_W1_1789257600_H4": true,
+  "content_1HZ250V_bearish_0.40738_0.474067_0.121775": true
+}

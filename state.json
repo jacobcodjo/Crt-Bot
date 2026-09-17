@@ -122,5 +122,7 @@
   "1HZ150V_H4_1789588800_M15": true,
   "content_1HZ150V_bullish_36.2_35.70214_38.345": true,
   "1HZ10V_H4_1789588800_M15": true,
-  "content_1HZ10V_bullish_9444.84_9434.4804_9532.695": true
+  "content_1HZ10V_bullish_9444.84_9434.4804_9532.695": true,
+  "stpRNG_H4_1789588800_M15": true,
+  "content_stpRNG_bullish_7581.1_7574.6108_7608.95": true
 }

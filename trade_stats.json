@@ -139,20 +139,6 @@
       "alert_epoch": 1789711200,
       "filled": true,
       "fill_epoch": 1789711200
-    },
-    "frxCADJPY_H4_1789689600_M15": {
-      "symbol": "frxCADJPY",
-      "direction": "bearish",
-      "confirmation_tf": "M15",
-      "order_type": "Sell Limit",
-      "entry": 112.306,
-      "stop_loss": 112.4832135,
-      "take_profit": 111.606,
-      "risk_reward": 3.95,
-      "counter_trend": false,
-      "alert_epoch": 1789705800,
-      "filled": false,
-      "fill_epoch": null
     }
   },
   "history": [
@@ -209,6 +195,15 @@
       "risk_reward": 4.45,
       "result": "SL",
       "resolved_epoch": 1789502400
+    },
+    {
+      "symbol": "frxCADJPY",
+      "direction": "bearish",
+      "order_type": "Sell Limit",
+      "counter_trend": false,
+      "risk_reward": 3.95,
+      "result": "SL",
+      "resolved_epoch": 1789707600
     }
   ]
 }

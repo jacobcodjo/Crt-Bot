@@ -126,20 +126,6 @@
       "filled": true,
       "fill_epoch": 1789712100
     },
-    "1HZ250V_H4_1789689600_M15": {
-      "symbol": "1HZ250V",
-      "direction": "bullish",
-      "confirmation_tf": "M15",
-      "order_type": "Buy Stop",
-      "entry": 0.36818,
-      "stop_loss": 0.35788097,
-      "take_profit": 0.414145,
-      "risk_reward": 4.46,
-      "counter_trend": false,
-      "alert_epoch": 1789712100,
-      "filled": true,
-      "fill_epoch": 1789713000
-    },
     "frxCHFJPY_H4_1789689600_M15": {
       "symbol": "frxCHFJPY",
       "direction": "bearish",
@@ -151,8 +137,8 @@
       "risk_reward": 16.47,
       "counter_trend": false,
       "alert_epoch": 1789713000,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789716600
     },
     "frxEURCHF_H4_1789689600_M15": {
       "symbol": "frxEURCHF",
@@ -277,6 +263,15 @@
       "risk_reward": 8.07,
       "result": "SL",
       "resolved_epoch": 1789704000
+    },
+    {
+      "symbol": "1HZ250V",
+      "direction": "bullish",
+      "order_type": "Buy Stop",
+      "counter_trend": false,
+      "risk_reward": 4.46,
+      "result": "SL",
+      "resolved_epoch": 1789716600
     }
   ]
 }

@@ -196,20 +196,6 @@
       "filled": true,
       "fill_epoch": 1789683300
     },
-    "cryBTCUSD_H4_1789660800_M15": {
-      "symbol": "cryBTCUSD",
-      "direction": "bullish",
-      "confirmation_tf": "M15",
-      "order_type": "Buy Limit",
-      "entry": 76331.575,
-      "stop_loss": 76309.943941,
-      "take_profit": 76944.283,
-      "risk_reward": 28.33,
-      "counter_trend": false,
-      "alert_epoch": 1789686000,
-      "filled": true,
-      "fill_epoch": 1789690500
-    },
     "1HZ50V_H4_1789660800_M15": {
       "symbol": "1HZ50V",
       "direction": "bearish",
@@ -357,6 +343,15 @@
       "risk_reward": 4.61,
       "result": "SL",
       "resolved_epoch": 1789690500
+    },
+    {
+      "symbol": "cryBTCUSD",
+      "direction": "bullish",
+      "order_type": "Buy Limit",
+      "counter_trend": false,
+      "risk_reward": 28.33,
+      "result": "SL",
+      "resolved_epoch": 1789691400
     }
   ]
 }

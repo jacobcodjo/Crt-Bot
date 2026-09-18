@@ -154,20 +154,6 @@
       "filled": true,
       "fill_epoch": 1789372800
     },
-    "frxXAUUSD_H4_1789660800_M15": {
-      "symbol": "frxXAUUSD",
-      "direction": "bullish",
-      "confirmation_tf": "M15",
-      "order_type": "Buy",
-      "entry": 4345.37,
-      "stop_loss": 4339.699065,
-      "take_profit": 4372.44,
-      "risk_reward": 4.77,
-      "counter_trend": false,
-      "alert_epoch": 1789683300,
-      "filled": true,
-      "fill_epoch": 1789683300
-    },
     "1HZ50V_H4_1789660800_M15": {
       "symbol": "1HZ50V",
       "direction": "bearish",
@@ -209,20 +195,6 @@
       "alert_epoch": 1789696800,
       "filled": true,
       "fill_epoch": 1789696800
-    },
-    "cryBTCUSD_W1_1789257600_H4": {
-      "symbol": "cryBTCUSD",
-      "direction": "bullish",
-      "confirmation_tf": "H4",
-      "order_type": "Buy Limit",
-      "entry": 76067.234,
-      "stop_loss": 75278.12310950001,
-      "take_profit": 80405.37,
-      "risk_reward": 5.5,
-      "counter_trend": false,
-      "alert_epoch": 1789545600,
-      "filled": false,
-      "fill_epoch": null
     }
   },
   "history": [
@@ -369,6 +341,24 @@
       "risk_reward": 5.07,
       "result": "TP",
       "resolved_epoch": 1789696800
+    },
+    {
+      "symbol": "frxXAUUSD",
+      "direction": "bullish",
+      "order_type": "Buy",
+      "counter_trend": false,
+      "risk_reward": 4.77,
+      "result": "SL",
+      "resolved_epoch": 1789701300
+    },
+    {
+      "symbol": "cryBTCUSD",
+      "direction": "bullish",
+      "order_type": "Buy Limit",
+      "counter_trend": false,
+      "risk_reward": 5.5,
+      "result": "SL",
+      "resolved_epoch": 1789574400
     }
   ]
 }

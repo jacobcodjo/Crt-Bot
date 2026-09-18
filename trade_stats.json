@@ -112,20 +112,6 @@
       "filled": false,
       "fill_epoch": null
     },
-    "frxXAUUSD_D1_1789516800_H1": {
-      "symbol": "frxXAUUSD",
-      "direction": "bearish",
-      "confirmation_tf": "H1",
-      "order_type": "Sell Limit",
-      "entry": 4351.82,
-      "stop_loss": 4367.992905,
-      "take_profit": 4235.71,
-      "risk_reward": 7.18,
-      "counter_trend": false,
-      "alert_epoch": 1789664400,
-      "filled": true,
-      "fill_epoch": 1789668000
-    },
     "1HZ90V_D1_1789516800_H1": {
       "symbol": "1HZ90V",
       "direction": "bearish",
@@ -396,6 +382,15 @@
       "risk_reward": 4.36,
       "result": "SL",
       "resolved_epoch": 1789702200
+    },
+    {
+      "symbol": "frxXAUUSD",
+      "direction": "bearish",
+      "order_type": "Sell Limit",
+      "counter_trend": false,
+      "risk_reward": 7.18,
+      "result": "SL",
+      "resolved_epoch": 1789707600
     }
   ]
 }

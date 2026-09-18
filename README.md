@@ -2,23 +2,27 @@
 
 Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
 
-1. Range de référence = haut/bas de la dernière période **W1** (semaine complète,
-   dérivée des bougies D1), **D1** et **H4** clôturée.
-2. Détection d'un **sweep de liquidité** (fausse cassure) de ce range, sur un
-   timeframe de confirmation **proportionnel à la référence** (voir tableau
-   ci-dessous) — chaque paire référence/confirmation génère ses propres
-   alertes, étiquetées séparément dans le message Telegram.
+1. Range de référence (**HTF**) = haut/bas de la dernière période **W1** (semaine
+   complète, dérivée des bougies D1), **D1** ou **H4** clôturée.
+2. Cascade à 3 niveaux (méthodologie ICT top-down classique), voir
+   `TIMEFRAME_CASCADE` dans `config.py` :
 
-   | Référence | Confirmation |
-   |---|---|
-   | W1 | H4 |
-   | D1 | H1 |
-   | H4 | M15 |
+   | Référence (HTF) | Manipulation & POI (MTF) | Confirmation (LTF) |
+   |---|---|---|
+   | W1 | D1 | H4, H1 |
+   | D1 | H4 | H1, M15 |
+   | H4 | H1 | M15 |
 
-   Cette répartition (`REFERENCE_CONFIRMATION_MAP` dans `config.py`) évite de
-   confirmer un range large sur un timeframe disproportionnellement fin (bruyant).
-3. Confirmation avancée : **cassure de structure** + **Fair Value Gap** et/ou **Order Block**.
-4. Calcul de niveaux de trade indicatifs :
+   - **MTF** : détection du **sweep de liquidité** (fausse cassure du range HTF,
+     dépasse puis referme dedans) et du **POI** (Fair Value Gap et/ou Order Block)
+   - **LTF (confirmation)** : recherche de la **cassure de structure** — le
+     déclencheur final de l'alerte, sur un timeframe plus fin que le MTF
+
+   Chaque paire référence/confirmation génère ses propres alertes, étiquetées
+   séparément (`D1→H4→H1` par exemple) dans le message Telegram. Cette
+   répartition évite de confirmer un range large sur un timeframe
+   disproportionnellement fin (bruyant).
+3. Calcul de niveaux de trade indicatifs :
    - **Entrée** :
      - Marchés réels (forex, or, cryptos) : bord de l'Order Block le plus
        proche du prix (ou milieu du FVG si pas d'OB) — ordre en attente
@@ -39,24 +43,24 @@ Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
      en comparant l'entrée au prix actuel — comme sur une app de trading
      (`ORDER_TYPE_TOLERANCE_PCT` dans `config.py` pour ajuster la tolérance
      "prix déjà sur zone" = ordre au marché).
-5. Confirmation Fibonacci OTE (Optimal Trade Entry, retracement 61.8%-79% du
+4. Confirmation Fibonacci OTE (Optimal Trade Entry, retracement 61.8%-79% du
    mouvement impulsif après le sweep) — indiquée dans le message quand l'entrée
    tombe dans cette zone (`REQUIRE_FIB_OTE = True` dans `config.py` pour en faire
    un filtre obligatoire plutôt qu'une simple indication).
-6. Détection de la **tendance de fond** en D1, en combinant 3 critères :
+5. Détection de la **tendance de fond** en D1, en combinant 3 critères :
    fenêtre de swing élargie (`TREND_SWING_WINDOW`, 4 par défaut), 3 swing highs
    **et** 3 swing lows consécutifs tous croissants/décroissants
    (`TREND_SWING_COUNT`), confirmés par la position du prix par rapport à une
    moyenne mobile (`TREND_SMA_PERIOD`, 50 bougies D1 par défaut). Un setup à
    contre-tendance n'est **jamais bloqué**, juste signalé par un tag
    `⚠️ Contre-tendance` dans le message.
-7. **Killzone** (Londres 3h-6h / New York 8h30-11h30, heure de New York),
+6. **Killzone** (Londres 3h-6h / New York 8h30-11h30, heure de New York),
    uniquement sur le forex et l'or — indices synthétiques Deriv (algorithme,
    24/7) et cryptos (marché 24/7, session Londres/NY peu pertinente) en sont
    exemptés. Informatif par défaut (tag `⏰NY` si le sweep a eu lieu en dehors
    de ces fenêtres) ; `REQUIRE_KILLZONE_FOR_REAL_MARKETS = True` dans
    `config.py` pour en faire un filtre bloquant.
-8. **Suivi automatique des trades** : chaque alerte envoyée est enregistrée
+7. **Suivi automatique des trades** : chaque alerte envoyée est enregistrée
    (`trade_stats.json`). Pour un ordre en attente (Buy/Sell Limit/Stop), le bot
    vérifie d'abord que le prix a réellement atteint la zone d'entrée avant de
    commencer à chercher le SL/TP — un ordre jamais rempli après 7 jours
@@ -68,17 +72,17 @@ Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
    premier (si les deux sont touchés dans la même bougie, hypothèse prudente :
    le SL a cédé). Un résumé (taux de réussite global, contre-tendance vs
    aligné, taux de remplissage) s'affiche dans les logs GitHub Actions.
-9. **Filtre de gap de weekend** (forex/or uniquement, jamais cryptos/synthétiques
+8. **Filtre de gap de weekend** (forex/or uniquement, jamais cryptos/synthétiques
    qui tournent 24/7) : une bougie qui suit un écart temporel anormal (fermeture
    de marché le weekend) n'est jamais comptée comme un sweep de liquidité —
    évite les faux signaux causés par un simple gap d'ouverture plutôt qu'une
    vraie manipulation intrabar (`WEEKEND_GAP_MULTIPLIER` dans `config.py`).
-10. **Nettoyage automatique** : les verrous de range et clés anti-doublon de
+9. **Nettoyage automatique** : les verrous de range et clés anti-doublon de
     `state.json` plus vieux que 30 jours (`STATE_MAX_AGE_DAYS`), et l'historique
     de `trade_stats.json` plus vieux que 180 jours (`TRADE_HISTORY_MAX_AGE_DAYS`),
     sont purgés automatiquement à chaque scan — les fichiers restent légers
     indéfiniment, sans intervention manuelle.
-11. **Pools de liquidité (Equal Highs/Lows)** : détecte les sommets/creux quasi
+10. **Pools de liquidité (Equal Highs/Lows)** : détecte les sommets/creux quasi
     identiques (signe que plusieurs traders ont leurs stops au même niveau).
     Deux usages : tag `💧` si le sweep a réellement grabbé un pool détecté (plus
     de confluence) ; et surtout, si le **propre stop loss** du setup tombe sur
@@ -87,7 +91,7 @@ Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
     chassée. Réglages dans `config.py` : `LIQUIDITY_POOL_SWING_WINDOW`
     (fenêtre de détection des pivots) et `LIQUIDITY_POOL_TOLERANCE_PCT`
     (écart toléré pour considérer deux niveaux comme "égaux").
-12. Envoi d'une alerte **Telegram** dès qu'un setup confirmé est détecté.
+11. Envoi d'une alerte **Telegram** dès qu'un setup confirmé est détecté.
 
 > ⚠️ Le suivi ne voit que les bougies encore présentes dans l'historique récupéré
 > (150 bougies, `CANDLE_COUNT`) — un trade qui met plus de temps que ça à atteindre
@@ -143,12 +147,14 @@ Pour un usage sérieux, crée ta propre app sur https://api.deriv.com pour obten
 - **Symboles** : liste `SYMBOLS` dans `config.py` — actuellement forex majeurs et
   mineurs (paires croisées sans USD), or (`frxXAUUSD`), cryptos (`cryBTCUSD`,
   `cryETHUSD`, `cryLTCUSD`, `cryXRPUSD`), Volatility Index classiques (`R_10`,
-  `R_25`, `R_50`, `R_75`, `R_100`) et toutes les variantes 1 seconde disponibles
-  chez Deriv (`1HZ10V` à `1HZ300V`), Step Index (`stpRNG`) — 50 actifs au total.
+  `R_25`, `R_50`, `R_75`, `R_100`) et les variantes 1 seconde valides chez Deriv
+  (`1HZ10V` à `1HZ250V`, `1HZ200V`/`1HZ300V` n'existent pas), Step Index
+  (`stpRNG`) — 45 actifs au total.
 - **Fréquence de scan** : modifier l'intervalle du cronjob sur cron-job.org (le
   `schedule:` du fichier `.yml` n'est plus utilisé).
-- **Répartition référence/confirmation** : `REFERENCE_CONFIRMATION_MAP` dans
-  `config.py` — modifier quels TF de confirmation sont associés à W1/D1/H4.
+- **Cascade référence/MTF/confirmation** : `TIMEFRAME_CASCADE` dans
+  `config.py` — modifier quels TF de MTF et de confirmation sont associés à
+  W1/D1/H4.
 - **Sensibilité de la confirmation** : `STRUCTURE_SWING_WINDOW` dans `config.py`
   permet d'ajuster, par timeframe de confirmation, la fenêtre de détection des
   swing points lors de la cassure de structure (actuellement réduite à 1 pour

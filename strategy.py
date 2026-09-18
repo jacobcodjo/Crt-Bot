@@ -25,7 +25,7 @@ from config import (
     TREND_SWING_WINDOW,
     TREND_SWING_COUNT,
     TREND_SMA_PERIOD,
-    REFERENCE_CONFIRMATION_MAP,
+    TIMEFRAME_CASCADE,
     STRUCTURE_SWING_WINDOW,
     DEFAULT_STRUCTURE_SWING_WINDOW,
     ORDER_TYPE_TOLERANCE_PCT,
@@ -170,6 +170,16 @@ def detect_liquidity_sweep(ltf_candles, range_high, range_low, ref_epoch,
         if c["low"] < range_low and c["close"] > range_low:
             events.append({"index": i, "direction": "bullish", "candle": c})
     return events
+
+
+def find_index_after_epoch(candles, epoch):
+    """Retourne l'index de la première bougie dont l'epoch dépasse celui donné
+    (utilisé pour passer d'un epoch détecté sur le MTF à un point de départ
+    équivalent dans une série LTF). None si aucune bougie ne convient."""
+    for i, c in enumerate(candles):
+        if c["epoch"] > epoch:
+            return i
+    return None
 
 
 def detect_structure_shift(ltf_candles, sweep_index, direction, left=2, right=2):
@@ -412,15 +422,17 @@ def detect_trend(candles, swing_window=TREND_SWING_WINDOW, swing_count=TREND_SWI
     return "range"
 
 
-def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles_by_tf):
+def analyze_symbol(symbol, htf_candles_by_tf, candles_by_tf):
     """
-    Analyse un symbole sur les TF de référence (W1, D1, H4) et cherche un setup
-    CRT confirmé (sweep + structure shift + FVG/OB) sur le ou les timeframes de
-    confirmation associés à chaque référence (voir REFERENCE_CONFIRMATION_MAP).
+    Analyse un symbole selon une cascade à 3 niveaux (top-down, méthodologie
+    ICT classique), voir TIMEFRAME_CASCADE dans config.py :
+    - Référence (HTF) : W1 (dérivé des D1), D1, H4 -- le range CRT à sweeper.
+    - MTF : sweep de liquidité (manipulation) + détection du POI (FVG/Order Block).
+    - Confirmation (LTF) : cassure de structure -- le déclencheur final.
 
-    htf_candles_by_tf : dict {"D1": [...], "H4": [...]} (le range W1 est dérivé
-    des bougies D1, pas besoin de série séparée).
-    ltf_candles_by_tf : dict {"H4": [...], "H1": [...], "M30": [...], "M15": [...]}
+    htf_candles_by_tf : dict {"D1": [...], "H4": [...]}.
+    candles_by_tf : dict de toutes les séries disponibles, utilisées à la fois
+    comme MTF et comme LTF selon la cascade (ex: {"D1":..., "H4":..., "H1":..., "M15":...}).
     """
     setups = []
 
@@ -429,7 +441,7 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles_by_tf):
     trend_source = htf_candles_by_tf.get("D1")
     trend = detect_trend(trend_source) if trend_source else None
 
-    for ref_tf in REFERENCE_CONFIRMATION_MAP:
+    for ref_tf, cascade in TIMEFRAME_CASCADE.items():
         if ref_tf == "W1":
             ref_range = build_weekly_range(htf_candles_by_tf.get("D1"))
         else:
@@ -438,39 +450,67 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles_by_tf):
         if not ref_range:
             continue
 
-        for confirmation_tf in REFERENCE_CONFIRMATION_MAP[ref_tf]:
-            ltf_candles = ltf_candles_by_tf.get(confirmation_tf)
-            if not ltf_candles:
-                continue
+        mtf_tf = cascade["mtf"]
+        mtf_candles = candles_by_tf.get(mtf_tf)
+        if not mtf_candles:
+            continue
 
-            sweeps = detect_liquidity_sweep(
-                ltf_candles, ref_range["high"], ref_range["low"], ref_range["epoch"],
-                granularity_seconds=GRANULARITY.get(confirmation_tf),
-                check_gaps=has_weekend_gaps(symbol),
+        # --- Étage MTF : manipulation (sweep) + POI (FVG/Order Block) ---
+        sweeps = detect_liquidity_sweep(
+            mtf_candles, ref_range["high"], ref_range["low"], ref_range["epoch"],
+            granularity_seconds=GRANULARITY.get(mtf_tf),
+            check_gaps=has_weekend_gaps(symbol),
+        )
+
+        # Pools de liquidité (Equal Highs/Lows) sur le MTF -- calculés une fois,
+        # réutilisés pour chaque sweep détecté ci-dessous.
+        high_pools, low_pools = find_liquidity_pools(mtf_candles)
+
+        for sweep in sweeps:
+            fvg = detect_fvg(mtf_candles, sweep["index"], sweep["direction"])
+            ob = detect_order_block(mtf_candles, sweep["index"], sweep["direction"])
+
+            if mtf_tf in STRICT_CONFIRMATION_TIMEFRAMES:
+                if not (fvg and ob):
+                    continue  # confirmation renforcée : FVG ET Order Block exigés ensemble
+            else:
+                if not fvg and not ob:
+                    continue  # pas de POI -> setup ignoré
+
+            # Le sweep a-t-il réellement grabbé un pool de liquidité (EQH/EQL) ?
+            # Bearish -> on a swept un EQH (pool de highs) ; bullish -> un EQL.
+            pools_swept = high_pools if sweep["direction"] == "bearish" else low_pools
+            liquidity_grabbed = is_near_level(
+                sweep["candle"]["high" if sweep["direction"] == "bearish" else "low"], pools_swept
             )
 
-            # Pools de liquidité (Equal Highs/Lows) sur ce TF de confirmation --
-            # calculés une fois, réutilisés pour chaque sweep détecté ci-dessous.
-            high_pools, low_pools = find_liquidity_pools(ltf_candles)
+            # Killzone : uniquement pertinent sur les vrais marchés à session
+            # (forex, or) -- None pour les indices synthétiques et les cryptos,
+            # qui tournent 24/7 sans notion de session Londres/New York claire.
+            if is_killzone_exempt(symbol):
+                in_killzone = None
+            else:
+                in_killzone = is_in_killzone(sweep["candle"]["epoch"])
+                if REQUIRE_KILLZONE_FOR_REAL_MARKETS and not in_killzone:
+                    continue  # sweep hors killzone -> setup ignoré
 
-            for sweep in sweeps:
+            # --- Étage LTF (confirmation) : cassure de structure = déclencheur ---
+            for confirmation_tf in cascade["confirmation"]:
+                ltf_candles = candles_by_tf.get(confirmation_tf)
+                if not ltf_candles:
+                    continue
+
+                start_index = find_index_after_epoch(ltf_candles, sweep["candle"]["epoch"])
+                if start_index is None:
+                    continue
+
                 swing_window = STRUCTURE_SWING_WINDOW.get(confirmation_tf, DEFAULT_STRUCTURE_SWING_WINDOW)
                 structure = detect_structure_shift(
-                    ltf_candles, sweep["index"], sweep["direction"],
+                    ltf_candles, start_index, sweep["direction"],
                     left=swing_window, right=swing_window
                 )
                 if not structure:
                     continue
-
-                fvg = detect_fvg(ltf_candles, structure["break_index"], sweep["direction"])
-                ob = detect_order_block(ltf_candles, sweep["index"], sweep["direction"])
-
-                if confirmation_tf in STRICT_CONFIRMATION_TIMEFRAMES:
-                    if not (fvg and ob):
-                        continue  # confirmation renforcée : FVG ET Order Block exigés ensemble
-                else:
-                    if not fvg and not ob:
-                        continue  # pas de confirmation avancée -> setup ignoré
 
                 structure_candle = ltf_candles[structure["break_index"]]
 
@@ -478,11 +518,6 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles_by_tf):
                     symbol, sweep["direction"], ref_range["high"], ref_range["low"],
                     sweep["candle"], fvg, ob, structure_candle
                 )
-
-                # Le sweep a-t-il réellement grabbé un pool de liquidité (EQH/EQL) ?
-                # Bearish -> on a swept un EQH (pool de highs) ; bullish -> un EQL.
-                pools_swept = high_pools if sweep["direction"] == "bearish" else low_pools
-                liquidity_grabbed = is_near_level(sweep["candle"]["high" if sweep["direction"] == "bearish" else "low"], pools_swept)
 
                 # Le stop loss tombe-t-il lui-même sur un pool (EQH/EQL opposé) ?
                 # Si oui, on ne veut pas être la liquidité à notre tour -> marge
@@ -505,16 +540,6 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles_by_tf):
                 if trade_levels["risk_reward"] is None or trade_levels["risk_reward"] < MIN_RISK_REWARD:
                     continue
 
-                # Killzone : uniquement pertinent sur les vrais marchés à session
-                # (forex, or) -- None pour les indices synthétiques et les cryptos,
-                # qui tournent 24/7 sans notion de session Londres/New York claire.
-                if is_killzone_exempt(symbol):
-                    in_killzone = None
-                else:
-                    in_killzone = is_in_killzone(sweep["candle"]["epoch"])
-                    if REQUIRE_KILLZONE_FOR_REAL_MARKETS and not in_killzone:
-                        continue  # sweep hors killzone -> setup ignoré
-
                 fib_zone_low, fib_zone_high = compute_fib_ote(sweep["direction"], sweep["candle"], structure_candle)
                 fib_ote_confirmed = is_within_fib_ote(trade_levels["entry"], fib_zone_low, fib_zone_high)
 
@@ -532,6 +557,7 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles_by_tf):
                 setups.append({
                     "symbol": symbol,
                     "reference_tf": ref_tf,
+                    "mtf": mtf_tf,
                     "confirmation_tf": confirmation_tf,
                     "ref_epoch": ref_range["epoch"],
                     "direction": sweep["direction"],

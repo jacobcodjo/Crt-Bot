@@ -187,11 +187,20 @@ def classify_asset(symbol: str) -> str:
     return "Synthétiques"
 
 
+def classify_order_family(order_type: str) -> str:
+    if "Limit" in order_type:
+        return "Limit"
+    if "Stop" in order_type:
+        return "Stop"
+    return "Marché"
+
+
 def summarize(stats: dict) -> str:
     """Construit un résumé texte du taux de réussite global, contre-tendance
-    vs dans le sens de la tendance, et par classe d'actif, pour affichage dans
-    les logs GitHub Actions. Les trades expirés (jamais remplis) sont exclus du
-    taux de réussite -- ils sont comptés séparément dans un taux de remplissage."""
+    vs dans le sens de la tendance, par classe d'actif, et par famille d'ordre
+    (Limit/Stop/Marché), pour affichage dans les logs GitHub Actions. Les trades
+    expirés (jamais remplis) sont exclus du taux de réussite -- ils sont comptés
+    séparément dans un taux de remplissage."""
     history = stats.get("history", [])
     if not history:
         return "Aucun trade résolu pour le moment."
@@ -225,6 +234,16 @@ def summarize(stats: dict) -> str:
         wr = win_rate(by_class.get(class_name, []))
         if wr:
             lines.append(f"{class_name} : {wr[0]}% sur {wr[1]} trades")
+
+    # Ventilation par famille d'ordre (Limit vs Stop vs Marché)
+    by_order_family = {}
+    for t in resolved:
+        family = classify_order_family(t.get("order_type", ""))
+        by_order_family.setdefault(family, []).append(t)
+    for family_name in ("Limit", "Stop", "Marché"):
+        wr = win_rate(by_order_family.get(family_name, []))
+        if wr:
+            lines.append(f"{family_name} : {wr[0]}% sur {wr[1]} trades")
 
     total_with_expired = len(resolved) + len(expired)
     if expired and total_with_expired:

@@ -31,7 +31,7 @@ SYMBOLS = [
     "R_10", "R_25", "R_50", "R_75", "R_100",
     # Volatility Index — variantes 1 seconde (liste complète actuelle chez Deriv)
     "1HZ10V", "1HZ15V", "1HZ25V", "1HZ30V", "1HZ50V", "1HZ75V",
-    "1HZ90V", "1HZ100V", "1HZ150V", "1HZ200V", "1HZ250V", "1HZ300V",
+    "1HZ90V", "1HZ100V", "1HZ150V", "1HZ250V",
 
     # Step Index
     "stpRNG",
@@ -53,14 +53,17 @@ GRANULARITY = {
 # Bougies de référence pour le range. "W1" est dérivé des bougies D1 (voir ci-dessus).
 REFERENCE_TIMEFRAMES = ["W1", "D1", "H4"]
 
-# Répartition des timeframes de confirmation par référence : plus le range de
-# référence est large, plus la confirmation doit être sur un TF proportionnellement
-# plus grand, pour éviter le bruit d'une confirmation trop fine par rapport à
-# l'ampleur du range (ex: confirmer un range hebdomadaire sur M15 serait disproportionné).
-REFERENCE_CONFIRMATION_MAP = {
-    "W1": ["H4"],
-    "D1": ["H1"],
-    "H4": ["M15"],
+# Cascade à 3 niveaux (top-down, méthodologie ICT classique) :
+# - Référence (HTF) : la bougie CRT de référence (range à sweeper)
+# - "mtf" : timeframe où le sweep (manipulation) ET le POI (FVG/Order Block)
+#   sont détectés
+# - "confirmation" : timeframe(s), plus fin(s), où la cassure de structure
+#   (le déclencheur final de l'alerte) est recherchée
+# Chaque TF de confirmation tourne indépendamment et génère ses propres alertes.
+TIMEFRAME_CASCADE = {
+    "W1": {"mtf": "D1", "confirmation": ["H4", "H1"]},
+    "D1": {"mtf": "H4", "confirmation": ["H1", "M15"]},
+    "H4": {"mtf": "H1", "confirmation": ["M15"]},
 }
 
 # Fenêtre utilisée pour détecter les swing points lors de la cassure de structure

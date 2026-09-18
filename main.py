@@ -1,4 +1,4 @@
-from config import SYMBOLS, GRANULARITY, REFERENCE_CONFIRMATION_MAP, CANDLE_COUNT
+from config import SYMBOLS, GRANULARITY, TIMEFRAME_CASCADE, CANDLE_COUNT
 from deriv_client import get_many_candles
 from strategy import analyze_symbol
 from notifier import send_telegram_message, format_setup_message
@@ -12,14 +12,17 @@ from trade_tracker import (
 # pas de requête séparée nécessaire).
 FETCHED_REFERENCE_TIMEFRAMES = ["D1", "H4"]
 
-# Union de tous les TF de confirmation utilisés, toutes références confondues.
-CONFIRMATION_TIMEFRAMES = sorted({
-    tf for tfs in REFERENCE_CONFIRMATION_MAP.values() for tf in tfs
+# Tous les TF utilisés comme MTF (manipulation/POI) ou LTF (confirmation) dans
+# la cascade, toutes références confondues.
+CASCADE_TIMEFRAMES = sorted({
+    cascade["mtf"] for cascade in TIMEFRAME_CASCADE.values()
+} | {
+    tf for cascade in TIMEFRAME_CASCADE.values() for tf in cascade["confirmation"]
 })
 
-# Toutes les granularités à récupérer (références + confirmations, sans doublon
-# même si un TF sert aux deux, ex: H4 référence ET confirmation pour W1).
-ALL_TIMEFRAMES = list(dict.fromkeys(FETCHED_REFERENCE_TIMEFRAMES + CONFIRMATION_TIMEFRAMES))
+# Toutes les granularités à récupérer (références + MTF + confirmations, sans
+# doublon même si un TF sert à plusieurs rôles, ex: H4 référence ET MTF pour D1).
+ALL_TIMEFRAMES = list(dict.fromkeys(FETCHED_REFERENCE_TIMEFRAMES + CASCADE_TIMEFRAMES))
 
 
 def build_specs():
@@ -78,13 +81,16 @@ def run():
         if skip_symbol:
             continue
 
-        ltf_candles_by_tf = {}
-        for tf in CONFIRMATION_TIMEFRAMES:
+        # Utilisé à la fois comme MTF et comme LTF selon la cascade -- un seul
+        # dict, chaque TF n'est récupéré/stocké qu'une fois même s'il sert
+        # plusieurs rôles (ex: H4 référence ET MTF pour le range D1).
+        candles_by_tf = dict(htf_candles_by_tf)
+        for tf in CASCADE_TIMEFRAMES:
             candles = results.get((symbol, GRANULARITY[tf]))
             if not isinstance(candles, Exception) and candles:
-                ltf_candles_by_tf[tf] = candles
+                candles_by_tf[tf] = candles
 
-        setups = analyze_symbol(symbol, htf_candles_by_tf, ltf_candles_by_tf)
+        setups = analyze_symbol(symbol, htf_candles_by_tf, candles_by_tf)
 
         for setup in setups:
             if is_new_setup(state, setup):
@@ -93,7 +99,7 @@ def run():
                     send_telegram_message(message)
                     print(
                         f"[{symbol}] Alerte envoyée : {setup['direction']} sur "
-                        f"{setup['reference_tf']} (confirmation {setup['confirmation_tf']})"
+                        f"{setup['reference_tf']} (MTF {setup['mtf']}, confirmation {setup['confirmation_tf']})"
                     )
                 except Exception as e:
                     print(f"[{symbol}] Échec d'envoi Telegram : {e}")

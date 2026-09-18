@@ -179,8 +179,8 @@
       "risk_reward": 39.07,
       "counter_trend": false,
       "alert_epoch": 1789729200,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789738200
     },
     "cryXRPUSD_H4_1789704000_M15": {
       "symbol": "cryXRPUSD",
@@ -263,8 +263,8 @@
       "risk_reward": 4.32,
       "counter_trend": false,
       "alert_epoch": 1789733700,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789734600
     }
   },
   "history": [

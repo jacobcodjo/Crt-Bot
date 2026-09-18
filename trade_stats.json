@@ -209,6 +209,20 @@
       "alert_epoch": 1789729200,
       "filled": false,
       "fill_epoch": null
+    },
+    "frxEURJPY_H4_1789704000_M15": {
+      "symbol": "frxEURJPY",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "order_type": "Sell Limit",
+      "entry": 181.302,
+      "stop_loss": 181.11751349999997,
+      "take_profit": 179.76,
+      "risk_reward": 8.36,
+      "counter_trend": false,
+      "alert_epoch": 1789730100,
+      "filled": false,
+      "fill_epoch": null
     }
   },
   "history": [

@@ -149,3 +149,14 @@ STATE_MAX_AGE_DAYS = 30
 PENDING_MAX_AGE_DAYS = 7
 # Entrées d'historique (trades résolus/expirés) plus vieilles que ça sont purgées.
 TRADE_HISTORY_MAX_AGE_DAYS = 180
+
+# --- Pools de liquidité (Equal Highs / Equal Lows) ---
+# Fenêtre de swing utilisée pour repérer les pivots candidats à un pool.
+LIQUIDITY_POOL_SWING_WINDOW = 3
+# Deux pivots sont considérés comme le même pool si leur écart relatif ne
+# dépasse pas ce pourcentage.
+LIQUIDITY_POOL_TOLERANCE_PCT = 0.001
+# Marge additionnelle appliquée au stop loss s'il tombe sur un pool détecté
+# (évite de placer son propre stop exactement là où d'autres traders ont aussi
+# le leur -- pour ne pas être soi-même la liquidité chassée).
+STOP_LOSS_POOL_BUFFER_PCT = 0.001

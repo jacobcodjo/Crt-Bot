@@ -179,11 +179,19 @@ def prune_history(stats: dict, max_age_days: float = TRADE_HISTORY_MAX_AGE_DAYS)
     return before - len(stats["history"])
 
 
+def classify_asset(symbol: str) -> str:
+    if symbol.startswith("frx"):
+        return "Forex/Or"
+    if symbol.startswith("cry"):
+        return "Crypto"
+    return "Synthétiques"
+
+
 def summarize(stats: dict) -> str:
-    """Construit un résumé texte du taux de réussite global et contre-tendance
-    vs dans le sens de la tendance, pour affichage dans les logs GitHub Actions.
-    Les trades expirés (jamais remplis) sont exclus du taux de réussite -- ils
-    sont comptés séparément dans un taux de remplissage."""
+    """Construit un résumé texte du taux de réussite global, contre-tendance
+    vs dans le sens de la tendance, et par classe d'actif, pour affichage dans
+    les logs GitHub Actions. Les trades expirés (jamais remplis) sont exclus du
+    taux de réussite -- ils sont comptés séparément dans un taux de remplissage."""
     history = stats.get("history", [])
     if not history:
         return "Aucun trade résolu pour le moment."
@@ -208,6 +216,15 @@ def summarize(stats: dict) -> str:
         lines.append(f"Contre-tendance : {counter[0]}% sur {counter[1]} trades")
     if aligned:
         lines.append(f"Dans le sens de la tendance : {aligned[0]}% sur {aligned[1]} trades")
+
+    # Ventilation par classe d'actif
+    by_class = {}
+    for t in resolved:
+        by_class.setdefault(classify_asset(t["symbol"]), []).append(t)
+    for class_name in ("Forex/Or", "Crypto", "Synthétiques"):
+        wr = win_rate(by_class.get(class_name, []))
+        if wr:
+            lines.append(f"{class_name} : {wr[0]}% sur {wr[1]} trades")
 
     total_with_expired = len(resolved) + len(expired)
     if expired and total_with_expired:

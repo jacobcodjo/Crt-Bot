@@ -34,6 +34,9 @@ from config import (
     GRANULARITY,
     WEEKEND_GAP_PREFIXES,
     WEEKEND_GAP_MULTIPLIER,
+    LIQUIDITY_POOL_SWING_WINDOW,
+    LIQUIDITY_POOL_TOLERANCE_PCT,
+    STOP_LOSS_POOL_BUFFER_PCT,
 )
 
 
@@ -95,6 +98,45 @@ def find_swing_highs_lows(candles, left=3, right=3):
         if candles[i]["low"] == min(c["low"] for c in window):
             lows.append(i)
     return highs, lows
+
+
+def group_equal_levels(values, tolerance_pct=LIQUIDITY_POOL_TOLERANCE_PCT):
+    """Regroupe des valeurs proches (écart relatif <= tolerance_pct) en niveaux ;
+    ne retourne que les groupes d'au moins 2 valeurs (un seul pivot isolé n'est
+    pas un pool de liquidité, il en faut au moins deux à peu près égaux)."""
+    if not values:
+        return []
+    sorted_vals = sorted(values)
+    groups = []
+    current = [sorted_vals[0]]
+    for v in sorted_vals[1:]:
+        if abs(v - current[-1]) / current[-1] <= tolerance_pct:
+            current.append(v)
+        else:
+            if len(current) >= 2:
+                groups.append(sum(current) / len(current))
+            current = [v]
+    if len(current) >= 2:
+        groups.append(sum(current) / len(current))
+    return groups
+
+
+def find_liquidity_pools(candles, swing_window=LIQUIDITY_POOL_SWING_WINDOW,
+                          tolerance_pct=LIQUIDITY_POOL_TOLERANCE_PCT):
+    """
+    Détecte les pools de liquidité (Equal Highs / Equal Lows) : des sommets ou
+    creux quasi identiques, signe que plusieurs traders ont probablement placé
+    leurs stops au même niveau. Retourne (high_pools, low_pools), chacun une
+    liste de niveaux de prix.
+    """
+    highs_idx, lows_idx = find_swing_highs_lows(candles, swing_window, swing_window)
+    high_pools = group_equal_levels([candles[i]["high"] for i in highs_idx], tolerance_pct)
+    low_pools = group_equal_levels([candles[i]["low"] for i in lows_idx], tolerance_pct)
+    return high_pools, low_pools
+
+
+def is_near_level(price, levels, tolerance_pct=LIQUIDITY_POOL_TOLERANCE_PCT):
+    return any(abs(price - lvl) / lvl <= tolerance_pct for lvl in levels)
 
 
 def has_weekend_gaps(symbol):
@@ -185,6 +227,16 @@ def detect_order_block(candles, around_index, direction, window=5):
 
 def is_synthetic_index(symbol):
     return symbol.startswith(SYNTHETIC_INDEX_PREFIXES)
+
+
+def is_killzone_exempt(symbol):
+    """
+    Le concept de killzone suppose une vraie session de liquidité institutionnelle
+    (Londres/New York). Exempts : indices synthétiques (générés par algorithme,
+    24/7) ET cryptos (marché 24/7 lui aussi, sans notion de session claire liée
+    à Londres/New York comme le forex classique).
+    """
+    return is_synthetic_index(symbol) or symbol.startswith("cry")
 
 
 def is_in_killzone(epoch):
@@ -397,6 +449,10 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles_by_tf):
                 check_gaps=has_weekend_gaps(symbol),
             )
 
+            # Pools de liquidité (Equal Highs/Lows) sur ce TF de confirmation --
+            # calculés une fois, réutilisés pour chaque sweep détecté ci-dessous.
+            high_pools, low_pools = find_liquidity_pools(ltf_candles)
+
             for sweep in sweeps:
                 swing_window = STRUCTURE_SWING_WINDOW.get(confirmation_tf, DEFAULT_STRUCTURE_SWING_WINDOW)
                 structure = detect_structure_shift(
@@ -423,14 +479,36 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles_by_tf):
                     sweep["candle"], fvg, ob, structure_candle
                 )
 
+                # Le sweep a-t-il réellement grabbé un pool de liquidité (EQH/EQL) ?
+                # Bearish -> on a swept un EQH (pool de highs) ; bullish -> un EQL.
+                pools_swept = high_pools if sweep["direction"] == "bearish" else low_pools
+                liquidity_grabbed = is_near_level(sweep["candle"]["high" if sweep["direction"] == "bearish" else "low"], pools_swept)
+
+                # Le stop loss tombe-t-il lui-même sur un pool (EQH/EQL opposé) ?
+                # Si oui, on ne veut pas être la liquidité à notre tour -> marge
+                # additionnelle pour l'écarter du niveau détecté.
+                opposite_pools = high_pools if sweep["direction"] == "bullish" else low_pools
+                if is_near_level(trade_levels["stop_loss"], opposite_pools):
+                    buffer = trade_levels["stop_loss"] * STOP_LOSS_POOL_BUFFER_PCT
+                    if sweep["direction"] == "bullish":
+                        trade_levels["stop_loss"] -= buffer
+                    else:
+                        trade_levels["stop_loss"] += buffer
+                    # Le stop a changé -> le R:R doit être recalculé en conséquence.
+                    if trade_levels["entry"] is not None:
+                        risk = abs(trade_levels["entry"] - trade_levels["stop_loss"])
+                        if risk > 0:
+                            reward = abs(trade_levels["take_profit"] - trade_levels["entry"])
+                            trade_levels["risk_reward"] = round(reward / risk, 2)
+
                 # Filtre R:R minimum : un setup dont le ratio ne l'atteint pas est ignoré.
                 if trade_levels["risk_reward"] is None or trade_levels["risk_reward"] < MIN_RISK_REWARD:
                     continue
 
-                # Killzone : uniquement pertinent sur les marchés réels (forex, or,
-                # cryptos) -- None pour les indices synthétiques (non applicable,
-                # ils tournent 24/7 sans session de liquidité réelle).
-                if is_synthetic_index(symbol):
+                # Killzone : uniquement pertinent sur les vrais marchés à session
+                # (forex, or) -- None pour les indices synthétiques et les cryptos,
+                # qui tournent 24/7 sans notion de session Londres/New York claire.
+                if is_killzone_exempt(symbol):
                     in_killzone = None
                 else:
                     in_killzone = is_in_killzone(sweep["candle"]["epoch"])
@@ -473,6 +551,7 @@ def analyze_symbol(symbol, htf_candles_by_tf, ltf_candles_by_tf):
                     "trend": trend,
                     "counter_trend": counter_trend,
                     "in_killzone": in_killzone,
+                    "liquidity_grabbed": liquidity_grabbed,
                     "fvg": fvg,
                     "order_block": ob,
                 })

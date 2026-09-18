@@ -51,12 +51,11 @@ Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
    contre-tendance n'est **jamais bloqué**, juste signalé par un tag
    `⚠️ Contre-tendance` dans le message.
 7. **Killzone** (Londres 3h-6h / New York 8h30-11h30, heure de New York),
-   uniquement sur les marchés réels (forex, or, cryptos) — les indices
-   synthétiques Deriv tournent 24/7 par algorithme sans session de liquidité
-   réelle, donc le concept ne leur est jamais appliqué. Informatif par défaut
-   (tag `⏰ Hors killzone` si le sweep a eu lieu en dehors de ces fenêtres) ;
-   `REQUIRE_KILLZONE_FOR_REAL_MARKETS = True` dans `config.py` pour en faire un
-   filtre bloquant.
+   uniquement sur le forex et l'or — indices synthétiques Deriv (algorithme,
+   24/7) et cryptos (marché 24/7, session Londres/NY peu pertinente) en sont
+   exemptés. Informatif par défaut (tag `⏰NY` si le sweep a eu lieu en dehors
+   de ces fenêtres) ; `REQUIRE_KILLZONE_FOR_REAL_MARKETS = True` dans
+   `config.py` pour en faire un filtre bloquant.
 8. **Suivi automatique des trades** : chaque alerte envoyée est enregistrée
    (`trade_stats.json`). Pour un ordre en attente (Buy/Sell Limit/Stop), le bot
    vérifie d'abord que le prix a réellement atteint la zone d'entrée avant de
@@ -79,7 +78,16 @@ Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
     de `trade_stats.json` plus vieux que 180 jours (`TRADE_HISTORY_MAX_AGE_DAYS`),
     sont purgés automatiquement à chaque scan — les fichiers restent légers
     indéfiniment, sans intervention manuelle.
-11. Envoi d'une alerte **Telegram** dès qu'un setup confirmé est détecté.
+11. **Pools de liquidité (Equal Highs/Lows)** : détecte les sommets/creux quasi
+    identiques (signe que plusieurs traders ont leurs stops au même niveau).
+    Deux usages : tag `💧` si le sweep a réellement grabbé un pool détecté (plus
+    de confluence) ; et surtout, si le **propre stop loss** du setup tombe sur
+    un pool opposé, il est automatiquement écarté d'une marge supplémentaire
+    (`STOP_LOSS_POOL_BUFFER_PCT`) pour ne pas être soi-même la liquidité
+    chassée. Réglages dans `config.py` : `LIQUIDITY_POOL_SWING_WINDOW`
+    (fenêtre de détection des pivots) et `LIQUIDITY_POOL_TOLERANCE_PCT`
+    (écart toléré pour considérer deux niveaux comme "égaux").
+12. Envoi d'une alerte **Telegram** dès qu'un setup confirmé est détecté.
 
 > ⚠️ Le suivi ne voit que les bougies encore présentes dans l'historique récupéré
 > (150 bougies, `CANDLE_COUNT`) — un trade qui met plus de temps que ça à atteindre

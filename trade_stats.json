@@ -209,6 +209,20 @@
       "alert_epoch": 1789732800,
       "filled": true,
       "fill_epoch": 1789732800
+    },
+    "frxUSDCAD_D1_1789603200_H1": {
+      "symbol": "frxUSDCAD",
+      "direction": "bearish",
+      "confirmation_tf": "H1",
+      "order_type": "Sell",
+      "entry": 1.40065,
+      "stop_loss": 1.4016004499999999,
+      "take_profit": 1.3974,
+      "risk_reward": 3.42,
+      "counter_trend": false,
+      "alert_epoch": 1789747200,
+      "filled": true,
+      "fill_epoch": 1789747200
     }
   },
   "history": [

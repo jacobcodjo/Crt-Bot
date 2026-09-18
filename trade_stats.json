@@ -112,20 +112,6 @@
       "filled": true,
       "fill_epoch": 1789712100
     },
-    "frxEURCHF_H4_1789689600_M15": {
-      "symbol": "frxEURCHF",
-      "direction": "bullish",
-      "confirmation_tf": "M15",
-      "order_type": "Buy Limit",
-      "entry": 0.94552,
-      "stop_loss": 0.945357085,
-      "take_profit": 0.94713,
-      "risk_reward": 9.88,
-      "counter_trend": false,
-      "alert_epoch": 1789707600,
-      "filled": true,
-      "fill_epoch": 1789738200
-    },
     "1HZ150V_W1_1789257600_H4": {
       "symbol": "1HZ150V",
       "direction": "bullish",
@@ -265,20 +251,6 @@
       "alert_epoch": 1789739100,
       "filled": true,
       "fill_epoch": 1789739100
-    },
-    "frxGBPAUD_D1_1789603200_H1": {
-      "symbol": "frxGBPAUD",
-      "direction": "bullish",
-      "confirmation_tf": "H1",
-      "order_type": "Buy Limit",
-      "entry": 1.87664,
-      "stop_loss": 1.8744623,
-      "take_profit": 1.88848,
-      "risk_reward": 5.44,
-      "counter_trend": false,
-      "alert_epoch": 1789718400,
-      "filled": false,
-      "fill_epoch": null
     }
   },
   "history": [
@@ -479,6 +451,24 @@
       "risk_reward": 19.34,
       "result": "SL",
       "resolved_epoch": 1789739100
+    },
+    {
+      "symbol": "frxEURCHF",
+      "direction": "bullish",
+      "order_type": "Buy Limit",
+      "counter_trend": false,
+      "risk_reward": 9.88,
+      "result": "SL",
+      "resolved_epoch": 1789741800
+    },
+    {
+      "symbol": "frxGBPAUD",
+      "direction": "bullish",
+      "order_type": "Buy Limit",
+      "counter_trend": false,
+      "risk_reward": 5.44,
+      "result": "SL",
+      "resolved_epoch": 1789725600
     }
   ]
 }

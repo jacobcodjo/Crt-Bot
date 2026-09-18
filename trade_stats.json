@@ -221,8 +221,8 @@
       "risk_reward": 28.33,
       "counter_trend": false,
       "alert_epoch": 1789686000,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789690500
     },
     "1HZ50V_H4_1789660800_M15": {
       "symbol": "1HZ50V",

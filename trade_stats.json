@@ -182,20 +182,6 @@
       "filled": true,
       "fill_epoch": 1789686000
     },
-    "frxGBPJPY_D1_1789516800_H1": {
-      "symbol": "frxGBPJPY",
-      "direction": "bullish",
-      "confirmation_tf": "H1",
-      "order_type": "Buy",
-      "entry": 208.41,
-      "stop_loss": 208.199848,
-      "take_profit": 209.475,
-      "risk_reward": 5.07,
-      "counter_trend": true,
-      "alert_epoch": 1789671600,
-      "filled": true,
-      "fill_epoch": 1789671600
-    },
     "frxCHFJPY_D1_1789516800_H1": {
       "symbol": "frxCHFJPY",
       "direction": "bullish",
@@ -360,6 +346,15 @@
       "risk_reward": 3.19,
       "result": "SL",
       "resolved_epoch": 1789699500
+    },
+    {
+      "symbol": "frxGBPJPY",
+      "direction": "bullish",
+      "order_type": "Buy",
+      "counter_trend": true,
+      "risk_reward": 5.07,
+      "result": "TP",
+      "resolved_epoch": 1789696800
     }
   ]
 }

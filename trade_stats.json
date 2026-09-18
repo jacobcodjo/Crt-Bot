@@ -139,6 +139,48 @@
       "alert_epoch": 1789712100,
       "filled": true,
       "fill_epoch": 1789712100
+    },
+    "frxUSDJPY_H4_1789689600_M15": {
+      "symbol": "frxUSDJPY",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "order_type": "Sell Limit",
+      "entry": 157.049,
+      "stop_loss": 157.23057599999999,
+      "take_profit": 156.123,
+      "risk_reward": 5.1,
+      "counter_trend": false,
+      "alert_epoch": 1789706700,
+      "filled": false,
+      "fill_epoch": null
+    },
+    "frxGBPJPY_H4_1789689600_M15": {
+      "symbol": "frxGBPJPY",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "order_type": "Sell Limit",
+      "entry": 209.884,
+      "stop_loss": 210.221058,
+      "take_profit": 208.549,
+      "risk_reward": 3.96,
+      "counter_trend": false,
+      "alert_epoch": 1789705800,
+      "filled": false,
+      "fill_epoch": null
+    },
+    "1HZ250V_H4_1789689600_M15": {
+      "symbol": "1HZ250V",
+      "direction": "bullish",
+      "confirmation_tf": "M15",
+      "order_type": "Buy Stop",
+      "entry": 0.36818,
+      "stop_loss": 0.35788097,
+      "take_profit": 0.414145,
+      "risk_reward": 4.46,
+      "counter_trend": false,
+      "alert_epoch": 1789712100,
+      "filled": false,
+      "fill_epoch": null
     }
   },
   "history": [

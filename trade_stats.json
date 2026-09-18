@@ -237,6 +237,20 @@
       "alert_epoch": 1789650000,
       "filled": false,
       "fill_epoch": null
+    },
+    "cryLTCUSD_W1_1789257600_H4": {
+      "symbol": "cryLTCUSD",
+      "direction": "bullish",
+      "confirmation_tf": "H4",
+      "order_type": "Buy Limit",
+      "entry": 52.795,
+      "stop_loss": 51.309332500000004,
+      "take_profit": 59.39972,
+      "risk_reward": 4.45,
+      "counter_trend": false,
+      "alert_epoch": 1789473600,
+      "filled": false,
+      "fill_epoch": null
     }
   },
   "history": [

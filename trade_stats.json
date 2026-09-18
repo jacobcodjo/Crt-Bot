@@ -25,8 +25,8 @@
       "risk_reward": 3.0,
       "counter_trend": false,
       "alert_epoch": 1789732800,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789736400
     },
     "frxAUDCAD_D1_1789603200_M15": {
       "symbol": "frxAUDCAD",
@@ -39,8 +39,8 @@
       "risk_reward": 3.87,
       "counter_trend": false,
       "alert_epoch": 1789732800,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789733700
     },
     "cryLTCUSD_W1_1789257600_H4": {
       "symbol": "cryLTCUSD",
@@ -53,8 +53,8 @@
       "risk_reward": 3.98,
       "counter_trend": false,
       "alert_epoch": 1789603200,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789617600
     },
     "cryXRPUSD_W1_1789257600_H4": {
       "symbol": "cryXRPUSD",
@@ -67,36 +67,8 @@
       "risk_reward": 4.49,
       "counter_trend": false,
       "alert_epoch": 1789689600,
-      "filled": false,
-      "fill_epoch": null
-    },
-    "R_25_D1_1789603200_M15": {
-      "symbol": "R_25",
-      "direction": "bullish",
-      "confirmation_tf": "M15",
-      "order_type": "Buy Stop",
-      "entry": 2700.209,
-      "stop_loss": 2682.4940819999997,
-      "take_profit": 2753.5355,
-      "risk_reward": 3.01,
-      "counter_trend": false,
-      "alert_epoch": 1789704000,
-      "filled": false,
-      "fill_epoch": null
-    },
-    "R_50_D1_1789603200_M15": {
-      "symbol": "R_50",
-      "direction": "bullish",
-      "confirmation_tf": "M15",
-      "order_type": "Buy Stop",
-      "entry": 90.4752,
-      "stop_loss": 89.42526500000001,
-      "take_profit": 94.03030000000001,
-      "risk_reward": 3.39,
-      "counter_trend": false,
-      "alert_epoch": 1789704000,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789704000
     },
     "R_75_D1_1789603200_M15": {
       "symbol": "R_75",
@@ -109,8 +81,8 @@
       "risk_reward": 3.6,
       "counter_trend": false,
       "alert_epoch": 1789704000,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789704900
     },
     "R_100_W1_1789257600_H1": {
       "symbol": "R_100",
@@ -123,22 +95,8 @@
       "risk_reward": 11.08,
       "counter_trend": false,
       "alert_epoch": 1789689600,
-      "filled": false,
-      "fill_epoch": null
-    },
-    "R_100_D1_1789603200_M15": {
-      "symbol": "R_100",
-      "direction": "bullish",
-      "confirmation_tf": "M15",
-      "order_type": "Buy Stop",
-      "entry": 605.19,
-      "stop_loss": 594.4226400000001,
-      "take_profit": 683.3199999999999,
-      "risk_reward": 7.26,
-      "counter_trend": false,
-      "alert_epoch": 1789732800,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789693200
     },
     "1HZ15V_W1_1789257600_H1": {
       "symbol": "1HZ15V",
@@ -151,8 +109,8 @@
       "risk_reward": 4.69,
       "counter_trend": false,
       "alert_epoch": 1789689600,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789693200
     },
     "1HZ30V_W1_1789257600_H4": {
       "symbol": "1HZ30V",
@@ -165,8 +123,8 @@
       "risk_reward": 5.57,
       "counter_trend": false,
       "alert_epoch": 1789689600,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789704000
     },
     "1HZ30V_W1_1789257600_H1": {
       "symbol": "1HZ30V",
@@ -179,50 +137,8 @@
       "risk_reward": 10.99,
       "counter_trend": false,
       "alert_epoch": 1789689600,
-      "filled": false,
-      "fill_epoch": null
-    },
-    "1HZ75V_W1_1789257600_H1": {
-      "symbol": "1HZ75V",
-      "direction": "bullish",
-      "confirmation_tf": "H1",
-      "order_type": "Buy Stop",
-      "entry": 6069.43,
-      "stop_loss": 5794.831134999999,
-      "take_profit": 7229.01,
-      "risk_reward": 4.22,
-      "counter_trend": true,
-      "alert_epoch": 1789344000,
-      "filled": false,
-      "fill_epoch": null
-    },
-    "1HZ75V_D1_1789603200_H1": {
-      "symbol": "1HZ75V",
-      "direction": "bullish",
-      "confirmation_tf": "H1",
-      "order_type": "Buy Limit",
-      "entry": 5670.76,
-      "stop_loss": 5603.716740000001,
-      "take_profit": 6163.514999999999,
-      "risk_reward": 7.35,
-      "counter_trend": true,
-      "alert_epoch": 1789718400,
-      "filled": false,
-      "fill_epoch": null
-    },
-    "1HZ75V_D1_1789603200_M15": {
-      "symbol": "1HZ75V",
-      "direction": "bullish",
-      "confirmation_tf": "M15",
-      "order_type": "Buy Limit",
-      "entry": 5671.96,
-      "stop_loss": 5603.716740000001,
-      "take_profit": 6163.514999999999,
-      "risk_reward": 7.2,
-      "counter_trend": true,
-      "alert_epoch": 1789718400,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789693200
     },
     "1HZ150V_W1_1789257600_H1": {
       "symbol": "1HZ150V",
@@ -235,8 +151,8 @@
       "risk_reward": 3.59,
       "counter_trend": false,
       "alert_epoch": 1789603200,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789610400
     },
     "1HZ150V_D1_1789603200_M15": {
       "symbol": "1HZ150V",
@@ -249,8 +165,8 @@
       "risk_reward": 5.95,
       "counter_trend": true,
       "alert_epoch": 1789747200,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789756200
     },
     "1HZ250V_W1_1789257600_H4": {
       "symbol": "1HZ250V",
@@ -263,8 +179,8 @@
       "risk_reward": 4.28,
       "counter_trend": false,
       "alert_epoch": 1789344000,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789358400
     },
     "1HZ250V_W1_1789257600_H1": {
       "symbol": "1HZ250V",
@@ -277,8 +193,8 @@
       "risk_reward": 4.66,
       "counter_trend": false,
       "alert_epoch": 1789344000,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789347600
     },
     "1HZ250V_D1_1789603200_M15": {
       "symbol": "1HZ250V",
@@ -291,8 +207,8 @@
       "risk_reward": 5.47,
       "counter_trend": false,
       "alert_epoch": 1789761600,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789762500
     },
     "stpRNG_W1_1789257600_H4": {
       "symbol": "stpRNG",
@@ -305,8 +221,8 @@
       "risk_reward": 4.03,
       "counter_trend": false,
       "alert_epoch": 1789689600,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789732800
     },
     "stpRNG_D1_1789603200_M15": {
       "symbol": "stpRNG",
@@ -319,9 +235,64 @@
       "risk_reward": 4.77,
       "counter_trend": false,
       "alert_epoch": 1789704000,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789704900
     }
   },
-  "history": []
+  "history": [
+    {
+      "symbol": "R_25",
+      "direction": "bullish",
+      "order_type": "Buy Stop",
+      "counter_trend": false,
+      "risk_reward": 3.01,
+      "result": "SL",
+      "resolved_epoch": 1789723800
+    },
+    {
+      "symbol": "R_50",
+      "direction": "bullish",
+      "order_type": "Buy Stop",
+      "counter_trend": false,
+      "risk_reward": 3.39,
+      "result": "SL",
+      "resolved_epoch": 1789756200
+    },
+    {
+      "symbol": "R_100",
+      "direction": "bullish",
+      "order_type": "Buy Stop",
+      "counter_trend": false,
+      "risk_reward": 7.26,
+      "result": "SL",
+      "resolved_epoch": 1789748100
+    },
+    {
+      "symbol": "1HZ75V",
+      "direction": "bullish",
+      "order_type": "Buy Stop",
+      "counter_trend": true,
+      "risk_reward": 4.22,
+      "result": "SL",
+      "resolved_epoch": 1789459200
+    },
+    {
+      "symbol": "1HZ75V",
+      "direction": "bullish",
+      "order_type": "Buy Limit",
+      "counter_trend": true,
+      "risk_reward": 7.35,
+      "result": "SL",
+      "resolved_epoch": 1789732800
+    },
+    {
+      "symbol": "1HZ75V",
+      "direction": "bullish",
+      "order_type": "Buy Limit",
+      "counter_trend": true,
+      "risk_reward": 7.2,
+      "result": "SL",
+      "resolved_epoch": 1789735500
+    }
+  ]
 }

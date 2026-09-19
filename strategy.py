@@ -309,9 +309,13 @@ def compute_trade_levels(symbol, direction, range_high, range_low, sweep_candle,
       marge de sécurité (STOP_LOSS_BUFFER_PCT) pour éviter une sortie sur un
       simple spread. Volontairement laissé sur le sweep MTF (pas le LTF) :
       n'invalide la thèse que si toute la manipulation MTF est annulée.
-    - Take profit : le côté opposé du range de référence — étendu proportionnellement
-      à la taille du range pour les indices synthétiques (SYNTHETIC_TP_EXTENSION_PCT),
-      qui offrent généralement un ratio risque/récompense plus favorable.
+    - Take profit : **trois paliers**
+        1. Mi-range (souvent visé en premier)
+        2. Bord brut du range HTF (l'extrémité opposée, sans extension)
+        3. Expansion finale — le bord étendu proportionnellement à la taille du
+           range pour les indices synthétiques (SYNTHETIC_TP_EXTENSION_PCT),
+           qui offrent généralement un ratio risque/récompense plus favorable
+           (identique au palier 2 pour les marchés réels, sans extension).
     """
     if is_synthetic_index(symbol):
         entry = structure_candle["close"]
@@ -331,31 +335,41 @@ def compute_trade_levels(symbol, direction, range_high, range_low, sweep_candle,
     extended_target = is_synthetic_index(symbol)
     extension = range_size * SYNTHETIC_TP_EXTENSION_PCT if extended_target else 0
 
+    # Palier 2 : bord BRUT du range (sans extension) -- toujours le même,
+    # que l'actif soit synthétique ou non.
+    take_profit_range_edge = range_high if direction == "bullish" else range_low
+
+    # Palier 3 : expansion finale -- identique au palier 2 pour les marchés
+    # réels (extension = 0), étendu au-delà pour les indices synthétiques.
     if direction == "bullish":
         take_profit = range_high + extension
     else:
         take_profit = range_low - extension
 
-    # Cible intermédiaire (T1) : le milieu du range, souvent visé en premier avant
-    # l'extrémité opposée (T2/take_profit) -- fixe, ne dépend pas de l'extension.
+    # Palier 1 : le milieu du range, souvent visé en premier.
     take_profit_mid = (range_high + range_low) / 2
 
-    risk_reward = None
-    risk_reward_mid = None
-    if entry is not None and entry != stop_loss:
-        risk = abs(entry - stop_loss)
-        reward = abs(take_profit - entry)
-        risk_reward = round(reward / risk, 2) if risk > 0 else None
-        reward_mid = abs(take_profit_mid - entry)
-        risk_reward_mid = round(reward_mid / risk, 2) if risk > 0 else None
+    def calc_rr(target, entry_val, stop_val):
+        if entry_val is None or entry_val == stop_val:
+            return None
+        risk = abs(entry_val - stop_val)
+        if risk <= 0:
+            return None
+        return round(abs(target - entry_val) / risk, 2)
+
+    risk_reward = calc_rr(take_profit, entry, stop_loss)
+    risk_reward_mid = calc_rr(take_profit_mid, entry, stop_loss)
+    risk_reward_range = calc_rr(take_profit_range_edge, entry, stop_loss)
 
     return {
         "entry": entry,
         "stop_loss": stop_loss,
         "take_profit": take_profit,
         "take_profit_mid": take_profit_mid,
+        "take_profit_range_edge": take_profit_range_edge,
         "risk_reward": risk_reward,
         "risk_reward_mid": risk_reward_mid,
+        "risk_reward_range": risk_reward_range,
         "extended_target": extended_target,
     }
 
@@ -661,8 +675,10 @@ def analyze_symbol(symbol, htf_candles_by_tf, candles_by_tf):
                     "stop_loss": trade_levels["stop_loss"],
                     "take_profit": trade_levels["take_profit"],
                     "take_profit_mid": trade_levels["take_profit_mid"],
+                    "take_profit_range_edge": trade_levels["take_profit_range_edge"],
                     "risk_reward": trade_levels["risk_reward"],
                     "risk_reward_mid": trade_levels["risk_reward_mid"],
+                    "risk_reward_range": trade_levels["risk_reward_range"],
                     "extended_target": trade_levels["extended_target"],
                     "fib_ote_confirmed": fib_ote_confirmed,
                     "trend": trend,

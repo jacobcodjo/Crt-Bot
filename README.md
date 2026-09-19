@@ -43,11 +43,13 @@ Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
      une marge de sécurité (`STOP_LOSS_BUFFER_PCT` dans `config.py`, 0.05% par
      défaut) — volontairement laissé sur le MTF : n'invalide la thèse que si
      toute la manipulation est annulée, pas juste le déclencheur LTF local.
-   - **Deux cibles** : TP1 à mi-range (souvent visé en premier) et TP2 à
-     l'extrémité opposée du range — étendue pour les indices synthétiques
-     (`SYNTHETIC_TP_EXTENSION_PCT`, +50% de la taille du range par défaut), qui
-     offrent généralement un ratio risque/récompense plus favorable
-   - Ratio risque/récompense approximatif (calculé sur TP2) — **seuls les
+   - **Trois cibles** : TP1 à mi-range (souvent visé en premier), TP2 au bord
+     brut opposé du range HTF (sans extension), et TP3 = expansion finale —
+     étendue au-delà de TP2 pour les indices synthétiques
+     (`SYNTHETIC_TP_EXTENSION_PCT`, +50% de la taille du range par défaut, qui
+     offrent généralement un ratio risque/récompense plus favorable) ;
+     identique à TP2 pour les marchés réels (pas d'extension).
+   - Ratio risque/récompense approximatif (calculé sur TP3) — **seuls les
      setups avec un R:R ≥ 1:3 déclenchent une alerte** (`MIN_RISK_REWARD`)
    - **Type d'ordre** (Buy/Sell/Buy Limit/Sell Limit/Buy Stop/Sell Stop), déterminé
      en comparant l'entrée au prix actuel — comme sur une app de trading
@@ -185,6 +187,22 @@ export TELEGRAM_CHAT_ID="..."
 python main.py
 ```
 
+## 6. Backtest (validation historique)
+
+`backtest.py` rejoue 6 mois d'historique pour un actif de chaque classe
+(`frxEURUSD`, `frxXAUUSD`, `cryBTCUSD`, `R_75` par défaut, modifiables dans
+`BACKTEST_SYMBOLS`) et simule ce que le bot aurait détecté, en réutilisant
+exactement les mêmes fonctions que la production.
+
+**Se lance uniquement à la main** : onglet **Actions** → **CRT Backtest
+(manuel uniquement)** → **Run workflow**. Ne tourne jamais automatiquement, et
+n'écrit rien dans `state.json`/`trade_stats.json` — c'est un outil de
+validation, indépendant du bot en production.
+
+⚠️ Fait beaucoup plus de requêtes API qu'un scan normal (pagination sur
+plusieurs mois d'historique) — le job peut prendre plusieurs minutes. Ajuster
+`BACKTEST_MONTHS` dans `backtest.py` pour une profondeur d'historique différente.
+
 ## Structure du projet
 
 ```
@@ -196,6 +214,7 @@ crt-bot/
 ├── notifier.py             # Envoi des messages Telegram
 ├── state_manager.py         # Anti-doublons entre chaque exécution
 ├── trade_tracker.py          # Suivi des trades (résolution SL/TP, statistiques)
+├── backtest.py                 # Validation historique (déclenchement manuel uniquement)
 ├── state.json                # État persistant (committé automatiquement par le workflow)
 ├── trade_stats.json           # Historique des trades résolus (committé automatiquement)
 └── .github/workflows/crt-scan.yml  # Planification GitHub Actions

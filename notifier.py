@@ -78,6 +78,7 @@ def format_setup_message(setup: dict) -> str:
 
     entry_raw = setup.get("entry")
     take_profit_mid = setup["take_profit_mid"]
+    take_profit_range_edge = setup["take_profit_range_edge"]
     take_profit = setup["take_profit"]
 
     # Garde-fou : si l'arrondi fait coïncider deux niveaux (ex: entrée = TP1),
@@ -85,7 +86,9 @@ def format_setup_message(setup: dict) -> str:
     # CETTE alerte, jusqu'à ce que les valeurs redeviennent distinctes.
     while target_decimals < 10:
         rounded_values = [
-            round(v, target_decimals) for v in (entry_raw, take_profit_mid, take_profit)
+            round(v, target_decimals) for v in (
+                entry_raw, take_profit_mid, take_profit_range_edge, take_profit
+            )
             if v is not None
         ]
         if len(rounded_values) == len(set(rounded_values)):
@@ -101,8 +104,14 @@ def format_setup_message(setup: dict) -> str:
         f"Entrée: {entry_value if entry_value is not None else 'n/d'}",
         f"SL: {format_number(setup['stop_loss'], sl_decimals)}",
         f"TP1: {format_number(take_profit_mid, target_decimals)}",
-        f"TP2: {format_number(take_profit, target_decimals)}{tp_tag}",
+        f"TP2: {format_number(take_profit_range_edge, target_decimals)}",
     ]
+
+    # TP3 (expansion) uniquement quand il diffère réellement de TP2 (indices
+    # synthétiques) -- sur les marchés réels, TP2 = TP3 donc l'afficher deux
+    # fois serait redondant.
+    if setup.get("extended_target"):
+        lines.append(f"TP3: {format_number(take_profit, target_decimals)}{tp_tag}")
 
     if setup.get("risk_reward"):
         lines.append(f"RR: 1:{setup['risk_reward']}")

@@ -109,13 +109,13 @@ def format_setup_message(setup: dict) -> str:
 
     tags = []
     if setup.get("liquidity_grabbed"):
-        tags.append("💧")
+        tags.append("💧Liq")
     if setup.get("fib_ote_confirmed"):
-        tags.append("📐")
+        tags.append("📐OTE")
     if setup.get("counter_trend"):
-        tags.append("⚠️")
+        tags.append("⚠️CT")
     if setup.get("in_killzone") is False:
-        tags.append("⏰NY")
+        tags.append("⏰HorsKZ")
     if tags:
         lines.append(" ".join(tags))
 

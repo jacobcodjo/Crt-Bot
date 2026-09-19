@@ -70,20 +70,6 @@
       "filled": true,
       "fill_epoch": 1789704000
     },
-    "R_75_D1_1789603200_M15": {
-      "symbol": "R_75",
-      "direction": "bullish",
-      "confirmation_tf": "M15",
-      "order_type": "Buy Limit",
-      "entry": 45195.7824,
-      "stop_loss": 44621.2899941,
-      "take_profit": 47266.318400000004,
-      "risk_reward": 3.6,
-      "counter_trend": false,
-      "alert_epoch": 1789704000,
-      "filled": true,
-      "fill_epoch": 1789704900
-    },
     "R_100_W1_1789257600_H1": {
       "symbol": "R_100",
       "direction": "bearish",
@@ -372,6 +358,15 @@
       "risk_reward": 3.98,
       "result": "SL",
       "resolved_epoch": 1789772400
+    },
+    {
+      "symbol": "R_75",
+      "direction": "bullish",
+      "order_type": "Buy Limit",
+      "counter_trend": false,
+      "risk_reward": 3.6,
+      "result": "SL",
+      "resolved_epoch": 1789782300
     }
   ]
 }

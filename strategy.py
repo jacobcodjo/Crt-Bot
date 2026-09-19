@@ -190,17 +190,19 @@ def detect_structure_shift(ltf_candles, sweep_index, direction, left=2, right=2)
     if direction == "bearish":
         if not lows:
             return None
-        pivot_level = ltf_candles[lows[-1]]["low"]
+        pivot_index = lows[-1]
+        pivot_level = ltf_candles[pivot_index]["low"]
         for j in range(sweep_index + 1, len(ltf_candles)):
             if ltf_candles[j]["close"] < pivot_level:
-                return {"break_index": j, "level": pivot_level}
+                return {"break_index": j, "level": pivot_level, "pivot_index": pivot_index}
     else:
         if not highs:
             return None
-        pivot_level = ltf_candles[highs[-1]]["high"]
+        pivot_index = highs[-1]
+        pivot_level = ltf_candles[pivot_index]["high"]
         for j in range(sweep_index + 1, len(ltf_candles)):
             if ltf_candles[j]["close"] > pivot_level:
-                return {"break_index": j, "level": pivot_level}
+                return {"break_index": j, "level": pivot_level, "pivot_index": pivot_index}
     return None
 
 
@@ -235,6 +237,31 @@ def detect_order_block(candles, around_index, direction, window=5):
     return None
 
 
+def detect_breaker_block(candles, pivot_index, direction, window=5):
+    """
+    Cherche un Breaker Block : la bougie opposée au setup, juste autour du pivot
+    qui vient d'être cassé (structure shift), dont la zone a été franchie puis
+    reprise -- son rôle s'inverse en zone d'entrée dans le sens du setup.
+    Approximation simplifiée : la dernière bougie dans le sens du mouvement
+    initial (celui qui a été invalidé) trouvée autour du pivot cassé.
+    Bullish (le pivot cassé est un plus haut) : dernière bougie HAUSSIÈRE autour
+    du pivot (celle qui formait la résistance, maintenant support).
+    Bearish (le pivot cassé est un plus bas) : dernière bougie BAISSIÈRE autour
+    du pivot (celle qui formait le support, maintenant résistance).
+    """
+    start = max(0, pivot_index - window)
+    end = min(len(candles) - 1, pivot_index + window)
+    for i in range(end, start - 1, -1):
+        c = candles[i]
+        is_bearish = c["close"] < c["open"]
+        is_bullish = c["close"] > c["open"]
+        if direction == "bullish" and is_bullish:
+            return {"index": i, "high": c["high"], "low": c["low"]}
+        if direction == "bearish" and is_bearish:
+            return {"index": i, "high": c["high"], "low": c["low"]}
+    return None
+
+
 def is_synthetic_index(symbol):
     return symbol.startswith(SYNTHETIC_INDEX_PREFIXES)
 
@@ -264,33 +291,36 @@ def is_in_killzone(epoch):
     return False
 
 
-def compute_trade_levels(symbol, direction, range_high, range_low, sweep_candle, fvg, ob, structure_candle):
+def compute_trade_levels(symbol, direction, range_high, range_low, sweep_candle, entry_poi, structure_candle):
     """
     Calcule des niveaux de trade indicatifs à partir des éléments déjà détectés :
     - Entrée :
-        - Marchés réels (forex, or, cryptos) : bord de l'Order Block le plus
-          proche du prix actuel (le premier niveau que le prix retesterait) si un
-          OB est présent, sinon milieu du FVG -- un ordre en attente (Limit/Stop),
-          qui suppose un retracement avant la continuation.
+        - Marchés réels (forex, or, cryptos) : bord de l'entry_poi LTF détecté
+          au niveau de la cassure de structure -- Order Block en priorité, puis
+          Breaker Block, puis milieu du FVG (voir analyze_symbol pour l'ordre
+          de recherche) -- un ordre en attente (Limit/Stop), qui suppose que le
+          prix revient sur la zone qui a précisément provoqué la cassure.
         - Indices synthétiques : entrée immédiate à la clôture de la bougie de
           cassure de structure (quasi ordre au marché), PAS d'attente de
           retracement. Ces actifs sont générés par algorithme et enchaînent
-          souvent des mouvements directs sans jamais revenir sur la zone OB/FVG
+          souvent des mouvements directs sans jamais revenir sur une zone POI
           -- un ordre en attente y reste fréquemment non rempli.
-    - Stop loss : au-delà de l'extrême de la bougie de sweep, avec une marge de
-      sécurité (STOP_LOSS_BUFFER_PCT) pour éviter une sortie sur un simple spread.
+    - Stop loss : au-delà de l'extrême de la bougie de sweep (MTF), avec une
+      marge de sécurité (STOP_LOSS_BUFFER_PCT) pour éviter une sortie sur un
+      simple spread. Volontairement laissé sur le sweep MTF (pas le LTF) :
+      n'invalide la thèse que si toute la manipulation MTF est annulée.
     - Take profit : le côté opposé du range de référence — étendu proportionnellement
       à la taille du range pour les indices synthétiques (SYNTHETIC_TP_EXTENSION_PCT),
       qui offrent généralement un ratio risque/récompense plus favorable.
     """
     if is_synthetic_index(symbol):
         entry = structure_candle["close"]
-    elif ob:
-        entry = ob["high"] if direction == "bullish" else ob["low"]
-    elif fvg:
-        entry = (fvg["top"] + fvg["bottom"]) / 2
-    else:
+    elif entry_poi is None:
         entry = None
+    elif entry_poi["kind"] in ("ob", "breaker"):
+        entry = entry_poi["high"] if direction == "bullish" else entry_poi["low"]
+    else:  # "fvg"
+        entry = (entry_poi["top"] + entry_poi["bottom"]) / 2
 
     if direction == "bullish":
         stop_loss = sweep_candle["low"] * (1 - STOP_LOSS_BUFFER_PCT)
@@ -550,9 +580,34 @@ def analyze_symbol(symbol, htf_candles_by_tf, candles_by_tf):
 
                 structure_candle = ltf_candles[structure["break_index"]]
 
+                # POI LTF pour l'entrée -- cherché précisément là où la cassure
+                # de structure s'est produite, priorité Order Block > Breaker
+                # Block > FVG. Contrairement au POI MTF (qui valide le setup),
+                # celui-ci fournit le niveau d'entrée réel.
+                ltf_window = max(1, structure["break_index"] - start_index)
+                entry_poi = None
+                poi_kind = None
+                ltf_ob = detect_order_block(ltf_candles, structure["break_index"], sweep["direction"], window=ltf_window)
+                if ltf_ob:
+                    entry_poi = {"kind": "ob", "high": ltf_ob["high"], "low": ltf_ob["low"]}
+                    poi_kind = "OB"
+                else:
+                    ltf_breaker = detect_breaker_block(ltf_candles, structure["pivot_index"], sweep["direction"])
+                    if ltf_breaker:
+                        entry_poi = {"kind": "breaker", "high": ltf_breaker["high"], "low": ltf_breaker["low"]}
+                        poi_kind = "Breaker"
+                    else:
+                        ltf_fvg = detect_fvg(ltf_candles, structure["break_index"], sweep["direction"])
+                        if ltf_fvg:
+                            entry_poi = {"kind": "fvg", "top": ltf_fvg["top"], "bottom": ltf_fvg["bottom"]}
+                            poi_kind = "FVG"
+
+                if entry_poi is None and not is_synthetic_index(symbol):
+                    continue  # aucun POI LTF -> pas d'entrée précise sur un marché réel -> setup ignoré
+
                 trade_levels = compute_trade_levels(
                     symbol, sweep["direction"], ref_range["high"], ref_range["low"],
-                    sweep["candle"], fvg, ob, structure_candle
+                    sweep["candle"], entry_poi, structure_candle
                 )
 
                 # Le stop loss tombe-t-il lui-même sur un pool (EQH/EQL opposé) ?
@@ -614,6 +669,7 @@ def analyze_symbol(symbol, htf_candles_by_tf, candles_by_tf):
                     "counter_trend": counter_trend,
                     "in_killzone": in_killzone,
                     "liquidity_grabbed": liquidity_grabbed,
+                    "ltf_poi_kind": poi_kind,
                     "fvg": fvg,
                     "order_block": ob,
                 })

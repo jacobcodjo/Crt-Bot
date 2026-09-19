@@ -29,15 +29,20 @@ Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
    disproportionnellement fin (bruyant).
 3. Calcul de niveaux de trade indicatifs :
    - **Entrée** :
-     - Marchés réels (forex, or, cryptos) : bord de l'Order Block le plus
-       proche du prix (ou milieu du FVG si pas d'OB) — ordre en attente
-       (Limit/Stop) qui suppose un retracement.
+     - Marchés réels (forex, or, cryptos) : recherché précisément **au niveau
+       de la cassure de structure (LTF)**, dans cet ordre de priorité —
+       **Order Block**, sinon **Breaker Block**, sinon **FVG** (milieu). Si
+       aucun des trois n'est trouvé, le setup est ignoré sur ces marchés.
+       Ordre en attente (Limit/Stop) qui suppose un retour sur la zone qui a
+       précisément provoqué la cassure.
      - **Indices synthétiques** : entrée immédiate à la clôture de la bougie de
        cassure de structure (quasi ordre au marché) — ces actifs, générés par
        algorithme, enchaînent souvent des mouvements directs sans jamais
-       revenir sur la zone OB/FVG, où un ordre en attente resterait non rempli.
-   - **Stop loss** : au-delà de l'extrême de la bougie de sweep, avec une marge de
-     sécurité (`STOP_LOSS_BUFFER_PCT` dans `config.py`, 0.05% par défaut)
+       revenir sur une zone POI, où un ordre en attente resterait non rempli.
+   - **Stop loss** : au-delà de l'extrême de la bougie de sweep **(MTF)**, avec
+     une marge de sécurité (`STOP_LOSS_BUFFER_PCT` dans `config.py`, 0.05% par
+     défaut) — volontairement laissé sur le MTF : n'invalide la thèse que si
+     toute la manipulation est annulée, pas juste le déclencheur LTF local.
    - **Deux cibles** : TP1 à mi-range (souvent visé en premier) et TP2 à
      l'extrémité opposée du range — étendue pour les indices synthétiques
      (`SYNTHETIC_TP_EXTENSION_PCT`, +50% de la taille du range par défaut), qui

@@ -153,6 +153,20 @@
       "alert_epoch": 1789856100,
       "filled": true,
       "fill_epoch": 1789856400
+    },
+    "R_25_D1_1789689600_H1": {
+      "symbol": "R_25",
+      "direction": "bullish",
+      "confirmation_tf": "H1",
+      "order_type": "Buy",
+      "entry": 2652.007,
+      "stop_loss": 2636.7679565000003,
+      "take_profit": 2737.565,
+      "risk_reward": 5.61,
+      "counter_trend": false,
+      "alert_epoch": 1789848000,
+      "filled": true,
+      "fill_epoch": 1789848000
     }
   },
   "history": [

@@ -13,6 +13,20 @@
       "alert_epoch": 1789810200,
       "filled": false,
       "fill_epoch": null
+    },
+    "R_50_H4_1789790400_M15": {
+      "symbol": "R_50",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "order_type": "Sell Stop",
+      "entry": 90.5557,
+      "stop_loss": 91.37420156865,
+      "take_profit": 87.99095,
+      "risk_reward": 3.13,
+      "counter_trend": false,
+      "alert_epoch": 1789808400,
+      "filled": false,
+      "fill_epoch": null
     }
   },
   "history": [

@@ -10,7 +10,7 @@ from trade_tracker import (
 
 # TF de référence réellement récupérés via l'API (W1 est dérivé des bougies D1,
 # pas de requête séparée nécessaire).
-FETCHED_REFERENCE_TIMEFRAMES = ["D1", "H4"]
+FETCHED_REFERENCE_TIMEFRAMES = ["D1", "H4", "H1"]
 
 # Tous les TF utilisés comme MTF (manipulation/POI) ou LTF (confirmation) dans
 # la cascade, toutes références confondues.

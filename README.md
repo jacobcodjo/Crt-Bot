@@ -3,23 +3,28 @@
 Bot Python qui applique la méthodologie **Candle Range Trading (CRT)** :
 
 1. Range de référence (**HTF**) = haut/bas de la dernière période **W1** (semaine
-   complète, dérivée des bougies D1), **D1** ou **H4** clôturée.
+   complète, dérivée des bougies D1), **D1**, **H4** ou **H1** clôturée.
 2. Cascade à 3 niveaux (méthodologie ICT top-down classique), voir
    `TIMEFRAME_CASCADE` dans `config.py` :
 
    | Référence (HTF) | Manipulation & POI (MTF) | Confirmation (LTF) |
    |---|---|---|
-   | W1 | D1 | H4, H1 |
-   | D1 | H4 | H1, M15 |
+   | W1 | D1 | H4 |
+   | D1 | H4 | H1 |
    | H4 | H1 | M15 |
+   | H1 | M15 | M5 |
 
    - **MTF** : détection du **sweep de liquidité** (fausse cassure du range HTF,
      dépasse puis referme dedans) et du **POI** (Fair Value Gap et/ou Order Block)
    - **LTF (confirmation)** : recherche de la **cassure de structure** — le
-     déclencheur final de l'alerte, sur un timeframe plus fin que le MTF
+     déclencheur final de l'alerte, sur un timeframe plus fin que le MTF. Le
+     prix doit avoir réellement touché la zone du POI (MTF) entre le sweep et
+     la cassure, sinon le setup est rejeté (garantit que la confirmation LTF
+     et le POI parlent bien du même mouvement, pas deux détections déconnectées).
 
    Chaque paire référence/confirmation génère ses propres alertes, étiquetées
-   séparément (`D1→H4→H1` par exemple) dans le message Telegram. Cette
+   séparément (seul le timeframe de confirmation apparaît dans le message
+   Telegram, ex : `(M5)`). Cette
    répartition évite de confirmer un range large sur un timeframe
    disproportionnellement fin (bruyant).
 3. Calcul de niveaux de trade indicatifs :

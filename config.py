@@ -51,7 +51,7 @@ GRANULARITY = {
 }
 
 # Bougies de référence pour le range. "W1" est dérivé des bougies D1 (voir ci-dessus).
-REFERENCE_TIMEFRAMES = ["W1", "D1", "H4"]
+REFERENCE_TIMEFRAMES = ["W1", "D1", "H4", "H1"]
 
 # Cascade à 3 niveaux (top-down, méthodologie ICT classique) :
 # - Référence (HTF) : la bougie CRT de référence (range à sweeper)
@@ -61,9 +61,10 @@ REFERENCE_TIMEFRAMES = ["W1", "D1", "H4"]
 #   (le déclencheur final de l'alerte) est recherchée
 # Chaque TF de confirmation tourne indépendamment et génère ses propres alertes.
 TIMEFRAME_CASCADE = {
-    "W1": {"mtf": "D1", "confirmation": ["H4", "H1"]},
-    "D1": {"mtf": "H4", "confirmation": ["H1", "M15"]},
+    "W1": {"mtf": "D1", "confirmation": ["H4"]},
+    "D1": {"mtf": "H4", "confirmation": ["H1"]},
     "H4": {"mtf": "H1", "confirmation": ["M15"]},
+    "H1": {"mtf": "M15", "confirmation": ["M5"]},
 }
 
 # Fenêtre utilisée pour détecter les swing points lors de la cassure de structure

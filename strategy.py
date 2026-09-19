@@ -358,6 +358,34 @@ def is_within_fib_ote(entry, zone_low, zone_high):
     return zone_low <= entry <= zone_high
 
 
+def poi_zone(fvg, ob):
+    """Combine le FVG et/ou l'Order Block détectés sur le MTF en une seule zone
+    de prix (low, high). Retourne None si aucun des deux n'est présent."""
+    lows, highs = [], []
+    if ob:
+        lows.append(ob["low"])
+        highs.append(ob["high"])
+    if fvg:
+        lows.append(fvg["bottom"])
+        highs.append(fvg["top"])
+    if not lows:
+        return None
+    return min(lows), max(highs)
+
+
+def ltf_reacted_from_poi(ltf_candles, start_index, break_index, zone_low, zone_high):
+    """
+    Vérifie que le prix a réellement touché la zone du POI (MTF) à un moment
+    donné entre le sweep et la cassure de structure (LTF) -- garantit que la
+    confirmation LTF est cohérente avec le POI qui l'a "provoquée", plutôt que
+    deux détections indépendantes sans lien de prix garanti.
+    """
+    for c in ltf_candles[start_index:break_index + 1]:
+        if c["low"] <= zone_high and c["high"] >= zone_low:
+            return True
+    return False
+
+
 def classify_order_type(direction, entry, current_price, tolerance_pct=ORDER_TYPE_TOLERANCE_PCT):
     """
     Détermine le type d'ordre (comme sur une app de trading) en comparant la zone
@@ -510,6 +538,14 @@ def analyze_symbol(symbol, htf_candles_by_tf, candles_by_tf):
                     left=swing_window, right=swing_window
                 )
                 if not structure:
+                    continue
+
+                # Cohérence POI (MTF) <-> cassure de structure (LTF) : le prix
+                # doit avoir réellement touché la zone du POI entre le sweep et
+                # la cassure, sinon les deux détections ne parlent pas du même
+                # mouvement -> setup ignoré.
+                zone = poi_zone(fvg, ob)
+                if not zone or not ltf_reacted_from_poi(ltf_candles, start_index, structure["break_index"], *zone):
                     continue
 
                 structure_candle = ltf_candles[structure["break_index"]]

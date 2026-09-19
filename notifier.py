@@ -97,8 +97,8 @@ def format_setup_message(setup: dict) -> str:
 
     lines = [
         f"{direction_emoji} <b>{display_symbol(setup['symbol'])}</b>",
-        f"{order_type} ({setup['reference_tf']}→{setup.get('mtf', '?')}→{setup['confirmation_tf']})",
-        f"E: {entry_value if entry_value is not None else 'n/d'}",
+        f"{order_type} ({setup['confirmation_tf']})",
+        f"Entrée: {entry_value if entry_value is not None else 'n/d'}",
         f"SL: {format_number(setup['stop_loss'], sl_decimals)}",
         f"TP1: {format_number(take_profit_mid, target_decimals)}",
         f"TP2: {format_number(take_profit, target_decimals)}{tp_tag}",

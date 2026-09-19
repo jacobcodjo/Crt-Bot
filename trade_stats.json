@@ -25,8 +25,8 @@
       "risk_reward": 3.0,
       "counter_trend": false,
       "alert_epoch": 1789732800,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789736400
     },
     "cryLTCUSD_W1_1789257600_H4": {
       "symbol": "cryLTCUSD",
@@ -39,8 +39,8 @@
       "risk_reward": 3.98,
       "counter_trend": false,
       "alert_epoch": 1789603200,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789617600
     },
     "cryXRPUSD_W1_1789257600_H4": {
       "symbol": "cryXRPUSD",
@@ -53,8 +53,8 @@
       "risk_reward": 4.49,
       "counter_trend": false,
       "alert_epoch": 1789689600,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789704000
     },
     "1HZ90V_W1_1789257600_H4": {
       "symbol": "1HZ90V",
@@ -67,8 +67,8 @@
       "risk_reward": 3.5,
       "counter_trend": false,
       "alert_epoch": 1789689600,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789732800
     },
     "1HZ250V_W1_1789257600_H4": {
       "symbol": "1HZ250V",
@@ -81,8 +81,8 @@
       "risk_reward": 4.28,
       "counter_trend": false,
       "alert_epoch": 1789344000,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789358400
     },
     "stpRNG_W1_1789257600_H4": {
       "symbol": "stpRNG",
@@ -95,8 +95,8 @@
       "risk_reward": 4.03,
       "counter_trend": false,
       "alert_epoch": 1789689600,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789732800
     }
   },
   "history": []

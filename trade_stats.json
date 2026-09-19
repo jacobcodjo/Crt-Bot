@@ -1,4 +1,33 @@
 {
-  "pending": {},
+  "pending": {
+    "cryBTCUSD_W1_1789257600_H4": {
+      "symbol": "cryBTCUSD",
+      "direction": "bullish",
+      "confirmation_tf": "H4",
+      "order_type": "Buy Limit",
+      "entry": 76709.894,
+      "stop_loss": 75940.25187949999,
+      "take_profit": 80405.37,
+      "risk_reward": 4.8,
+      "counter_trend": false,
+      "alert_epoch": 1789603200,
+      "filled": false,
+      "fill_epoch": null
+    },
+    "cryBTCUSD_H1_1789804800_M5": {
+      "symbol": "cryBTCUSD",
+      "direction": "bearish",
+      "confirmation_tf": "M5",
+      "order_type": "Sell Limit",
+      "entry": 81379.146,
+      "stop_loss": 81454.6059495,
+      "take_profit": 81040.503,
+      "risk_reward": 4.49,
+      "counter_trend": true,
+      "alert_epoch": 1789810200,
+      "filled": false,
+      "fill_epoch": null
+    }
+  },
   "history": []
 }

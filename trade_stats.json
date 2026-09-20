@@ -125,6 +125,20 @@
       "alert_epoch": 1789905600,
       "filled": true,
       "fill_epoch": 1789905600
+    },
+    "1HZ25V_H1_1789905600_M5": {
+      "symbol": "1HZ25V",
+      "direction": "bearish",
+      "confirmation_tf": "M5",
+      "order_type": "Sell",
+      "entry": 890916.94,
+      "stop_loss": 892271.7129,
+      "take_profit": 886227.935,
+      "risk_reward": 3.46,
+      "counter_trend": false,
+      "alert_epoch": 1789911000,
+      "filled": true,
+      "fill_epoch": 1789911000
     }
   },
   "history": [

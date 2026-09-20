@@ -1,4 +1,89 @@
 {
-  "pending": {},
+  "pending": {
+    "frxGBPAUD_D1_1789603200_H1": {
+      "symbol": "frxGBPAUD",
+      "direction": "bullish",
+      "confirmation_tf": "H1",
+      "order_type": "Buy Limit",
+      "entry": 1.87499,
+      "stop_loss": 1.8732928850000001,
+      "take_profit": 1.88848,
+      "risk_reward": 7.95,
+      "counter_trend": false,
+      "alert_epoch": 1789704000,
+      "filled": false,
+      "fill_epoch": null
+    },
+    "cryBTCUSD_W1_1789257600_H4": {
+      "symbol": "cryBTCUSD",
+      "direction": "bullish",
+      "confirmation_tf": "H4",
+      "order_type": "Buy Limit",
+      "entry": 76709.894,
+      "stop_loss": 75940.25187949999,
+      "take_profit": 80405.37,
+      "risk_reward": 4.8,
+      "counter_trend": false,
+      "alert_epoch": 1789603200,
+      "filled": false,
+      "fill_epoch": null
+    },
+    "cryLTCUSD_W1_1789257600_H4": {
+      "symbol": "cryLTCUSD",
+      "direction": "bullish",
+      "confirmation_tf": "H4",
+      "order_type": "Buy Limit",
+      "entry": 50.865,
+      "stop_loss": 50.169902500000006,
+      "take_profit": 59.39972,
+      "risk_reward": 12.28,
+      "counter_trend": false,
+      "alert_epoch": 1789516800,
+      "filled": false,
+      "fill_epoch": null
+    },
+    "1HZ90V_W1_1789257600_H4": {
+      "symbol": "1HZ90V",
+      "direction": "bearish",
+      "confirmation_tf": "H4",
+      "order_type": "Sell Limit",
+      "entry": 18257.068,
+      "stop_loss": 19100.279367,
+      "take_profit": 15304.6555,
+      "risk_reward": 3.5,
+      "counter_trend": false,
+      "alert_epoch": 1789689600,
+      "filled": false,
+      "fill_epoch": null
+    },
+    "1HZ250V_W1_1789257600_H4": {
+      "symbol": "1HZ250V",
+      "direction": "bearish",
+      "confirmation_tf": "H4",
+      "order_type": "Sell Limit",
+      "entry": 0.40738,
+      "stop_loss": 0.4740669149999999,
+      "take_profit": 0.121775,
+      "risk_reward": 4.28,
+      "counter_trend": false,
+      "alert_epoch": 1789344000,
+      "filled": false,
+      "fill_epoch": null
+    },
+    "stpRNG_W1_1789257600_H4": {
+      "symbol": "stpRNG",
+      "direction": "bullish",
+      "confirmation_tf": "H4",
+      "order_type": "Buy Stop",
+      "entry": 7582.0,
+      "stop_loss": 7529.6333,
+      "take_profit": 7792.950000000001,
+      "risk_reward": 4.03,
+      "counter_trend": false,
+      "alert_epoch": 1789689600,
+      "filled": false,
+      "fill_epoch": null
+    }
+  },
   "history": []
 }

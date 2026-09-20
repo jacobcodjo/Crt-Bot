@@ -167,6 +167,20 @@
       "alert_epoch": 1789934400,
       "filled": true,
       "fill_epoch": 1789934400
+    },
+    "1HZ90V_H4_1789920000_M15": {
+      "symbol": "1HZ90V",
+      "direction": "bearish",
+      "confirmation_tf": "M15",
+      "order_type": "Sell",
+      "entry": 18371.383,
+      "stop_loss": 18681.882272999996,
+      "take_profit": 17396.384,
+      "risk_reward": 3.14,
+      "counter_trend": false,
+      "alert_epoch": 1789938000,
+      "filled": true,
+      "fill_epoch": 1789938000
     }
   },
   "history": [

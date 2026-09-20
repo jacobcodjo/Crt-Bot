@@ -151,8 +151,8 @@
       "risk_reward": 3.03,
       "counter_trend": false,
       "alert_epoch": 1789927200,
-      "filled": false,
-      "fill_epoch": null
+      "filled": true,
+      "fill_epoch": 1789928100
     }
   },
   "history": [

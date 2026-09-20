@@ -44,11 +44,12 @@ jobs:
           fi
           git commit -m "Update state [skip ci]"
           for i in 1 2 3 4 5; do
-            # -X ours : en cas de conflit (ex: state.json modifié à la main entre
-            # temps), on garde automatiquement la version de CE run plutôt que
-            # d'échouer -- ces fichiers sont générés par le bot, pas censés être
-            # fusionnés ligne à ligne comme du texte.
-            git pull --rebase -X ours origin main && git push && exit 0
+            # -X theirs : en cas de conflit (ex: state.json modifié à la main
+            # entre temps), on garde la version fraîchement calculée par CE run.
+            # ATTENTION : dans un rebase, "ours"/"theirs" sont INVERSÉS par
+            # rapport à un merge classique -- "theirs" désigne ici notre propre
+            # commit en cours de rejeu, pas la branche distante.
+            git pull --rebase -X theirs origin main && git push && exit 0
             echo "Push échoué (tentative $i), nouvelle tentative dans 5s..."
             sleep 5
           done

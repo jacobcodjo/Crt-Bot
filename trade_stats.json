@@ -84,20 +84,6 @@
       "filled": true,
       "fill_epoch": 1789891200
     },
-    "1HZ250V_H4_1789876800_M15": {
-      "symbol": "1HZ250V",
-      "direction": "bullish",
-      "confirmation_tf": "M15",
-      "order_type": "Buy Limit",
-      "entry": 0.36077,
-      "stop_loss": 0.352993415,
-      "take_profit": 0.38693999999999995,
-      "risk_reward": 3.37,
-      "counter_trend": false,
-      "alert_epoch": 1789898400,
-      "filled": true,
-      "fill_epoch": 1789899300
-    },
     "R_75_H4_1789876800_M15": {
       "symbol": "R_75",
       "direction": "bullish",
@@ -172,6 +158,15 @@
       "risk_reward": 4.16,
       "result": "SL",
       "resolved_epoch": 1789902000
+    },
+    {
+      "symbol": "1HZ250V",
+      "direction": "bullish",
+      "order_type": "Buy Limit",
+      "counter_trend": false,
+      "risk_reward": 3.37,
+      "result": "SL",
+      "resolved_epoch": 1789904700
     }
   ]
 }

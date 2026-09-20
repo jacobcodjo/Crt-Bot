@@ -137,22 +137,8 @@
       "risk_reward": 3.17,
       "counter_trend": false,
       "alert_epoch": 1789905600,
-      "filled": false,
-      "fill_epoch": null
-    },
-    "1HZ150V_H4_1789891200_M15": {
-      "symbol": "1HZ150V",
-      "direction": "bearish",
-      "confirmation_tf": "M15",
-      "order_type": "Sell",
-      "entry": 34.87,
-      "stop_loss": 35.19759,
-      "take_profit": 33.24,
-      "risk_reward": 4.98,
-      "counter_trend": true,
-      "alert_epoch": 1789916400,
       "filled": true,
-      "fill_epoch": 1789916400
+      "fill_epoch": 1789909200
     }
   },
   "history": [

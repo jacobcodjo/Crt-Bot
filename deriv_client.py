@@ -35,23 +35,43 @@ async def _fetch_candles_on_connection(ws, symbol, granularity, count, timeout=1
     ]
 
 
-async def fetch_many(specs):
+async def fetch_many(specs, max_connection_retries=3):
     """
     Récupère plusieurs séries de bougies en réutilisant UNE seule connexion
     WebSocket, au lieu d'en ouvrir une par requête.
+
+    Si la connexion elle-même est rejetée (ex: HTTP 520 Cloudflare, panne
+    ponctuelle), retente plusieurs fois avec un court délai avant d'abandonner
+    -- un rejet isolé ne doit pas faire échouer tout le scan.
 
     specs : liste de tuples (symbol, granularity, count)
     Retourne : dict { (symbol, granularity): [candles] ou Exception en cas d'erreur }
     """
     results = {}
-    async with websockets.connect(DERIV_WS_URL, ping_interval=20) as ws:
-        for symbol, granularity, count in specs:
-            try:
-                candles = await _fetch_candles_on_connection(ws, symbol, granularity, count)
-                results[(symbol, granularity)] = candles
-            except Exception as e:
-                results[(symbol, granularity)] = e
-            await asyncio.sleep(0.2)  # ménage l'API Deriv (évite le rate-limit)
+    last_connection_error = None
+
+    for attempt in range(1, max_connection_retries + 1):
+        try:
+            async with websockets.connect(DERIV_WS_URL, ping_interval=20) as ws:
+                for symbol, granularity, count in specs:
+                    try:
+                        candles = await _fetch_candles_on_connection(ws, symbol, granularity, count)
+                        results[(symbol, granularity)] = candles
+                    except Exception as e:
+                        results[(symbol, granularity)] = e
+                    await asyncio.sleep(0.2)  # ménage l'API Deriv (évite le rate-limit)
+            return results
+        except Exception as e:
+            last_connection_error = e
+            print(f"Connexion WebSocket refusée (tentative {attempt}/{max_connection_retries}) : {e}")
+            if attempt < max_connection_retries:
+                await asyncio.sleep(10)
+
+    # Toutes les tentatives de connexion ont échoué -> chaque requête prévue
+    # est marquée en erreur, pour que le reste du scan continue proprement
+    # (symboles simplement ignorés ce passage, comme pour toute autre erreur).
+    for symbol, granularity, count in specs:
+        results.setdefault((symbol, granularity), last_connection_error)
     return results
 
 

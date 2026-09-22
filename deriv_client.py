@@ -5,6 +5,15 @@ import websockets
 
 from config import DERIV_WS_URL, CANDLE_COUNT
 
+# Cloudflare (devant l'infrastructure Deriv) peut identifier et rejeter les
+# clients dont le User-Agent ne ressemble pas à un navigateur -- la valeur par
+# défaut de la bibliothèque `websockets` ("Python/x.y websockets/X.Y") est un
+# signal de bot évident. On la remplace par un User-Agent de navigateur classique.
+BROWSER_USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+)
+
 
 async def _fetch_candles_on_connection(ws, symbol, granularity, count, timeout=15):
     request = {
@@ -52,7 +61,9 @@ async def fetch_many(specs, max_connection_retries=3):
 
     for attempt in range(1, max_connection_retries + 1):
         try:
-            async with websockets.connect(DERIV_WS_URL, ping_interval=20) as ws:
+            async with websockets.connect(
+                DERIV_WS_URL, ping_interval=20, user_agent_header=BROWSER_USER_AGENT
+            ) as ws:
                 for symbol, granularity, count in specs:
                     try:
                         candles = await _fetch_candles_on_connection(ws, symbol, granularity, count)
@@ -82,7 +93,9 @@ def get_many_candles(specs):
 
 # --- Conservé pour compatibilité : récupération unitaire (une connexion par appel) ---
 async def fetch_candles(symbol, granularity, count=CANDLE_COUNT):
-    async with websockets.connect(DERIV_WS_URL, ping_interval=20) as ws:
+    async with websockets.connect(
+        DERIV_WS_URL, ping_interval=20, user_agent_header=BROWSER_USER_AGENT
+    ) as ws:
         return await _fetch_candles_on_connection(ws, symbol, granularity, count)
 
 
@@ -97,7 +110,9 @@ async def fetch_history_range(symbol, granularity, target_start_epoch, count_per
     all_candles = {}
     cursor_end = int(time.time())
 
-    async with websockets.connect(DERIV_WS_URL, ping_interval=20) as ws:
+    async with websockets.connect(
+        DERIV_WS_URL, ping_interval=20, user_agent_header=BROWSER_USER_AGENT
+    ) as ws:
         while cursor_end > target_start_epoch:
             request = {
                 "ticks_history": symbol,
